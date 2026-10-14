@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Phase 0 legacy Android runtime feasibility experiment",
+  "source": {
+    "repository": "https://github.com/brunodev85/winlator-app",
+    "commit": "3981d86efa4f333b2a34a7da8b6521476cd8c8b9",
+    "archiveSha256": "9b0a026546d87e13a5622d05c65b513d651226a53f4add822f26909411703ba4",
+    "licenseFile": "vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9/LICENSE"
+  },
+  "binaryBundle": {
+    "url": "https://github.com/brunodev85/winlator/releases/download/v11.2.0/Winlator_11.2.apk",
+    "sha256": "ea5c81bf0e5b90a6b9ccb8007121ab6738c8646a5a60b341ce0ac2b33f1d100a",
+    "versionCode": 33,
+    "wine": "10.10",
+    "box64": "0.4.4",
+    "vortek": "2.1",
+    "gladio": "1.1",
+    "turnip": "26.2.0",
+    "dxvk": "2.4.1"
+  },
+  "smokeProfile": {
+    "architecture": "x86_64 Windows PE32+",
+    "display": "Winlator X server / GDI",
+    "graphicsDriver": "vortek,gladio",
+    "dxwrapper": "wined3d",
+    "resolution": "800x600",
+    "game": "Nexus-PC original target-click smoke game",
+    "gameSource": "../test/windows/smoke.c",
+    "gameLicense": "../test/windows/LICENSE",
+    "minimumAndroidApi": 31,
+    "experimentalTargetAndroidApi": 28
+  },
+  "hostAdaptations": {
+    "applicationId": "com.nexuspc",
+    "filesystemPathReplacement": "/data/data/com.winlator/ -> /data/data/com.nexuspc//",
+    "method": "equal-length byte replacement in rootfs, rootfs patches, container pattern and Box64 archives"
+  }
+}

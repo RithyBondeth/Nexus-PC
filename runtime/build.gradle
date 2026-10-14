@@ -1,0 +1,29 @@
+plugins { id 'com.android.library' }
+
+android {
+    namespace 'com.winlator'
+    compileSdk 36
+    defaultConfig { minSdk 31 }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['compat', 'vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9/app/src/main/java']
+            res.srcDirs = ['vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9/app/src/main/res']
+            assets.srcDirs = ['vendor/binary/assets']
+            jniLibs.srcDirs = ['vendor/binary/lib']
+        }
+    }
+}
+dependencies {
+    api 'androidx.appcompat:appcompat:1.4.0'
+    api 'androidx.preference:preference:1.2.1'
+    api 'com.google.android.material:material:1.4.0'
+    api 'com.github.luben:zstd-jni:1.5.2-3@aar'
+    implementation 'org.tukaani:xz:1.7'
+    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation 'androidx.lifecycle:lifecycle-process:2.5.1'
+}

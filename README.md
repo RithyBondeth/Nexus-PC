@@ -18,3 +18,13 @@ Simply import your DRM-free game directory or archive, and the app automatically
 * **🧠 Automated Cloud Profile Matching:** Automatically detects your device chipset and fetches community-verified execution flags via a lightweight cloud backend.
 * **🌐 Universal SoC Abstraction:** Future-proof architecture featuring server-side alias normalization to instantly support evolving Qualcomm Snapdragon tiers (Gen 2, Gen 3, Elite, and beyond) without client app updates.
 * **🎮 Smart Touch & Controller Overlays:** Automatically maps contextual on-screen gamepads or translates inputs directly via zero-latency C++ XInput bridges.
+
+## Implementation status
+
+Phase 0 device feasibility is verified on Xiaomi 17 Pro: stock Vulkan presentation
+and an original Windows GDI game via pinned Wine/Box64, including input and clean
+shutdown. The standalone diagnostic app lives in
+[`app/feasibility`](app/feasibility). See the [feasibility gate and phase sequence](docs/phase-0-feasibility.md)
+for build instructions and pending device checks. The runtime and product features above
+are planned; this proof does not establish general game compatibility. The runtime
+spike uses legacy Android targeting; production-runtime integration remains future work.
