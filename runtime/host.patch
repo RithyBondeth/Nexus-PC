@@ -14,11 +14,10 @@
 +            });
          }
          else AppUtils.restartApplication(this);
-@@ -514,4 +515,7 @@
+@@ -514,3 +515,6 @@
              String desktopName = shortcut != null || getIntent().hasExtra("exec_path") ? "nogui" : "shell";
              String guestExecutable = "wine explorer /desktop="+desktopName+","+xServer.screenInfo+" "+getWineStartCommand();
 +            if (getIntent().getBooleanExtra("nexus_smoke", false)) {
 +                guestExecutable = "wine " + getIntent().getStringExtra("exec_path");
 +            }
              guestProgramLauncherComponent.setGuestExecutable(guestExecutable);
- 
