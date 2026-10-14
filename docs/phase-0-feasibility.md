@@ -3,6 +3,10 @@
 Status: in progress. No physical Android device connected on 2026-10-14.
 The diagnostic app is a standalone spike, not the production app.
 
+Local validation: Flutter analysis passed, both widget tests passed, the ARM64
+NDK C++ syntax check passed with warnings treated as errors, and the debug ARM64
+APK built successfully. These checks do not establish device/runtime compatibility.
+
 ## Run
 
 Requires Flutter 3.44.8, Java 17, Android SDK, NDK 28.2.13676358,
