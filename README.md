@@ -28,3 +28,9 @@ shutdown. The standalone diagnostic app lives in
 for build instructions and pending device checks. The runtime and product features above
 are planned; this proof does not establish general game compatibility. The runtime
 spike uses legacy Android targeting; production-runtime integration remains future work.
+
+Phase 1 adds the separate modern-target app in [`app/production`](app/production):
+typed Dart/Kotlin APIs, C++ Vulkan device profiling, bounded diagnostics, generated
+bridge checks and Android build CI. Its target-API-36 packaged native helper passed
+on the Xiaomi; Windows runtime integration remains unavailable in this app.
+See [Phase 1 acceptance and limitations](docs/phase-1-foundation.md).

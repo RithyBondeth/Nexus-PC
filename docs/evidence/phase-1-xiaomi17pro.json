@@ -1,0 +1,21 @@
+{
+  "checkId": "20261014T134313Z-78840",
+  "deviceProfile": true,
+  "model": "25098PN5AC",
+  "socModel": "SM8850",
+  "ramBytes": 11556110336,
+  "cpuAbis": ["arm64-v8a"],
+  "renderer": "Adreno (TM) 840",
+  "vulkanVersion": "1.4.295",
+  "targetApi": 36,
+  "modernTarget": true,
+  "packagedExecution": true,
+  "helperExitCode": 0,
+  "invalidPathRejected": true,
+  "prepareUnavailable": true,
+  "runtimeUnavailable": true,
+  "stopUnavailable": true,
+  "logLimitRejected": true,
+  "boundedLogs": true,
+  "passed": true
+}
