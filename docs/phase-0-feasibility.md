@@ -15,9 +15,30 @@ ADB reports model `25098PN5AC`, Android 16 / API 36, hardware `qcom`, board
 The Android GPU service reports `Adreno (TM) 840`, Vulkan API version `4210983`.
 These observations describe the stock driver, not Mesa Turnip compatibility.
 
-APK installation was attempted and rejected by the phone with
-`INSTALL_FAILED_USER_RESTRICTED: Install canceled by user`. App-level surface
-tests remain pending until device installation is allowed. CI validation passed.
+Streamed APK installation was rejected with `INSTALL_FAILED_USER_RESTRICTED`.
+Installation succeeded using `adb install --no-streaming -r`. The Flutter app
+hardware report agrees with ADB, including `ramBytes: 11556110336`.
+
+On-device native results: instance creation, Android surface creation and device
+enumeration returned `VK_SUCCESS` (0). Queue 0 supports graphics and presentation.
+The swapchain acquired an image, cleared it blue, and presented successfully.
+A device screenshot confirmed visible blue output. Returning from the home screen
+and a cold app restart were also exercised; the latter presented successfully.
+This is a one-frame smoke test using the stock driver, not a sustained renderer or
+validation of Mesa Turnip, DXVK, Wine, Box64, audio, input or game execution.
+
+The activity re-creates and destroys all Vulkan resources on each size/surface
+callback. The debug build accepts `--ez surfaceProbe true` on MainActivity so
+tests can launch app-owned diagnostics without enabling system input injection.
+
+```sh
+adb install --no-streaming -r build/app/outputs/flutter-apk/app-debug.apk
+adb shell am force-stop com.nexuspc.nexus_probe
+adb shell am start -W -n com.nexuspc.nexus_probe/.MainActivity --ez surfaceProbe true
+adb logcat -d -s NexusProbe:I
+```
+
+Initial CI validation passed. Updated native rendering changes require another CI run.
 
 ## Run
 
@@ -35,14 +56,14 @@ flutter run
 
 Run the device probe and copy its report. Open the native Vulkan surface probe
 and record its GPU, Vulkan version and queue support results. Result code 0
-means success. This creates an Android Vulkan surface; it does not yet create a
-swapchain or render frames. It must not be reported as a rendering test.
+means success. The native test creates a swapchain and presents a single blue
+frame. The report explicitly separates frame presentation from Windows execution.
 
 ## Acceptance gate before merging this phase
 
 - [x] Record actual Snapdragon hardware identifiers, RAM and ARM64 ABI.
-- [ ] Create Vulkan instance and Android surface on the device.
-- [ ] Implement and demonstrate swapchain frame presentation and lifecycle recovery.
+- [x] Create Vulkan instance and Android surface on the device.
+- [x] Implement and demonstrate one-frame swapchain presentation, home return and cold restart.
 - [ ] Select and pin compatible runtime builds with their source/license records.
 - [ ] Integrate guest display, audio and input transport. A Vulkan SurfaceView
       alone does not route Wine's desktop display into Android.

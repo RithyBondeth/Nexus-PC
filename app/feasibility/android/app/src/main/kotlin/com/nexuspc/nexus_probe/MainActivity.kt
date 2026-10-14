@@ -2,12 +2,22 @@ package com.nexuspc.nexus_probe
 
 import android.app.ActivityManager
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.os.Bundle
 import android.os.Build
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null &&
+            applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+            intent.getBooleanExtra("surfaceProbe", false)) {
+            startActivity(Intent(this, SurfaceProbeActivity::class.java))
+        }
+    }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "nexuspc/feasibility")

@@ -3,6 +3,7 @@
 #include <vulkan/vulkan.h>
 #include <sstream>
 #include <vector>
+#include "frame.h"
 
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_nexuspc_nexus_1probe_SurfaceProbeActivity_probeSurface(
@@ -12,6 +13,7 @@ Java_com_nexuspc_nexus_1probe_SurfaceProbeActivity_probeSurface(
     VkInstance instance = VK_NULL_HANDLE;
     VkSurfaceKHR vkSurface = VK_NULL_HANDLE;
     std::ostringstream report;
+    bool frameAttempted = false;
     const char* extensions[] = {VK_KHR_SURFACE_EXTENSION_NAME,
                                VK_KHR_ANDROID_SURFACE_EXTENSION_NAME};
     VkApplicationInfo app{};
@@ -56,6 +58,11 @@ Java_com_nexuspc_nexus_1probe_SurfaceProbeActivity_probeSurface(
                             report << "Queue " << i << " graphics="
                                    << bool(families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
                                    << " present=" << supported << " result=" << result << '\n';
+                            if (!frameAttempted && result == VK_SUCCESS && supported &&
+                                (families[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)) {
+                                frameAttempted = true;
+                                report << nexus::presentFrame(device, vkSurface, i, window);
+                            }
                         }
                     }
                 } else report << "Device enumeration failed: " << result << '\n';
@@ -65,6 +72,7 @@ Java_com_nexuspc_nexus_1probe_SurfaceProbeActivity_probeSurface(
     if (vkSurface) vkDestroySurfaceKHR(instance, vkSurface, nullptr);
     if (instance) vkDestroyInstance(instance, nullptr);
     ANativeWindow_release(window);
-    report << "Frame rendering and Windows game execution: NOT VALIDATED";
+    if (!frameAttempted) report << "Frame presentation: NOT TESTED (no compatible queue)\n";
+    report << "Windows game execution: NOT VALIDATED";
     return env->NewStringUTF(report.str().c_str());
 }
