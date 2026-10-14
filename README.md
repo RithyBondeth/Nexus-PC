@@ -34,3 +34,8 @@ typed Dart/Kotlin APIs, C++ Vulkan device profiling, bounded diagnostics, genera
 bridge checks and Android build CI. Its target-API-36 packaged native helper passed
 on the Xiaomi; Windows runtime integration remains unavailable in this app.
 See [Phase 1 acceptance and limitations](docs/phase-1-foundation.md).
+
+Phase 2 adds Home, Library, Device and Settings navigation, shared live device
+status, accessible adaptive layouts and session-only appearance controls.
+Game import and Windows runtime integration are still unavailable. See
+[Phase 2 behavior and validation](docs/phase-2-shell.md) for acceptance status.

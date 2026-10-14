@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nexus_app/main.dart';
+import 'package:nexus_app/foundation/foundation_screen.dart';
 import 'package:nexus_app/platform/nexus_platform.dart';
 
 RuntimeStatus unavailable() => RuntimeStatus(
@@ -162,7 +163,9 @@ void main() {
     final host = FakeHost()..failProfile = true;
     final platform = PigeonNexusPlatform(host: host);
     addTearDown(platform.close);
-    await tester.pumpWidget(NexusApp(platform: platform));
+    await tester.pumpWidget(
+      MaterialApp(home: FoundationScreen(platform: platform)),
+    );
     await tester.pumpAndSettle();
     expect(find.textContaining('Device check failed:'), findsOneWidget);
     host.failProfile = false;

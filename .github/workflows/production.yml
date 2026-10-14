@@ -29,13 +29,15 @@ jobs:
         run: |
           bash ../../tools/generate-production-api.sh
           git diff --exit-code -- lib/platform/nexus_api.g.dart android/app/src/main/kotlin/com/nexuspc/app/NexusApi.g.kt
-      - run: dart format --output=none --set-exit-if-changed lib pigeons test
+      - run: dart format --output=none --set-exit-if-changed lib pigeons test integration_test test_driver
       - run: flutter analyze
       - run: flutter test
       - run: flutter build apk --debug --target-platform android-arm64
-      - name: Android lint and unsigned release compilation
+      - name: Android lint
         working-directory: app/production/android
-        run: ./gradlew lintDebug assembleRelease -Ptarget-platform=android-arm64
+        run: ./gradlew lintDebug
+      - name: Unsigned production release compilation
+        run: flutter build apk --release --target-platform android-arm64 -t lib/main.dart
       - uses: actions/upload-artifact@v4
         with:
           name: nexus-pc-production-debug

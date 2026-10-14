@@ -12,12 +12,14 @@ CMake 3.22.1. From this directory:
 ```sh
 flutter pub get --enforce-lockfile
 bash ../../tools/generate-production-api.sh
-dart format --output=none --set-exit-if-changed lib pigeons test
+dart format --output=none --set-exit-if-changed lib pigeons test integration_test test_driver
 flutter analyze
 flutter test
 flutter build apk --debug --target-platform android-arm64
 cd android
-./gradlew lintDebug assembleRelease -Ptarget-platform=android-arm64
+./gradlew lintDebug
+cd ..
+flutter build apk --release --target-platform android-arm64 -t lib/main.dart
 ```
 
 Generated Dart/Kotlin bindings are committed. Change `pigeons/nexus_api.dart`,
@@ -44,3 +46,9 @@ artifacts, not distributable releases.
 
 See [Phase 1 acceptance](../../docs/phase-1-foundation.md) and the
 [bridge decision](../../docs/architecture/0001-production-bridge.md).
+
+The Phase 2 shell adds Home, Library, Device and Settings. Appearance follows the
+system at launch and can be changed for the current session. Library import is
+explicitly disabled until Phase 3. Native diagnostics remain accessible on Device.
+See [Phase 2 validation](../../docs/phase-2-shell.md), including the repeatable
+physical-device UI test and restoring the normal APK afterward.
