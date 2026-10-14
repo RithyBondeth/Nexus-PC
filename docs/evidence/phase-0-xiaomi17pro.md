@@ -35,6 +35,7 @@ PASS: guest rendered, received input, exited 0; no live guest processes.
 ```
 
 Screenshot: [Windows guest rendered with Targets hit: 1](phase-0-windows.png).
+Two consecutive bounded direct-launch test runs passed all required markers.
 Android returned to MainActivity. After Wine's normal server linger, inspection
 of the test package's UID found no live Wine/Box64/.exe processes.
 

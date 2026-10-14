@@ -1,6 +1,6 @@
 # Phase 0: feasibility evidence
 
-Status: device feasibility checks passed on Xiaomi 17 Pro; final CI/merge pending.
+Status: verified Phase 0 engineering proof on Xiaomi 17 Pro, 2026-10-14.
 The diagnostic app is a standalone spike, not the production app.
 
 Local validation: Flutter analysis passed, both widget tests passed, the ARM64
@@ -48,7 +48,8 @@ The guest evidence records `WINDOW_CREATED`, `FRAME_PAINTED`,
 After Wine's normal daemon linger, no live Wine/Box64 processes remain for the
 test package, and Android returns to the Flutter activity. The final smoke adapter
 launches the fixed executable directly through Wine because the upstream Explorer/
-helper path hung on a repeat run. The bounded automated direct-launch check passes.
+helper path hung on a repeat run. Two consecutive bounded automated direct-launch
+checks passed.
 
 The runtime is integrated as a pinned Android library; assets/native binaries
 come from a checksum-verified official Winlator APK. Source/license and component
