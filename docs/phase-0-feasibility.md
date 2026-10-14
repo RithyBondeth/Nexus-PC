@@ -1,11 +1,23 @@
 # Phase 0: feasibility evidence
 
-Status: in progress. No physical Android device connected on 2026-10-14.
+Status: in progress. Xiaomi 17 Pro connected and ADB authorized on 2026-10-14.
 The diagnostic app is a standalone spike, not the production app.
 
 Local validation: Flutter analysis passed, both widget tests passed, the ARM64
 NDK C++ syntax check passed with warnings treated as errors, and the debug ARM64
 APK built successfully. These checks do not establish device/runtime compatibility.
+
+## First device observations
+
+ADB reports model `25098PN5AC`, Android 16 / API 36, hardware `qcom`, board
+`canoe`, SoC manufacturer `QTI`, SoC model `SM8850`, and ABI `arm64-v8a`.
+`/proc/meminfo` reports `MemTotal: 11285264 kB` (about 10.8 GiB usable system RAM).
+The Android GPU service reports `Adreno (TM) 840`, Vulkan API version `4210983`.
+These observations describe the stock driver, not Mesa Turnip compatibility.
+
+APK installation was attempted and rejected by the phone with
+`INSTALL_FAILED_USER_RESTRICTED: Install canceled by user`. App-level surface
+tests remain pending until device installation is allowed. CI validation passed.
 
 ## Run
 
@@ -28,7 +40,7 @@ swapchain or render frames. It must not be reported as a rendering test.
 
 ## Acceptance gate before merging this phase
 
-- [ ] Record actual Snapdragon hardware identifiers, RAM and ARM64 ABI.
+- [x] Record actual Snapdragon hardware identifiers, RAM and ARM64 ABI.
 - [ ] Create Vulkan instance and Android surface on the device.
 - [ ] Implement and demonstrate swapchain frame presentation and lifecycle recovery.
 - [ ] Select and pin compatible runtime builds with their source/license records.
