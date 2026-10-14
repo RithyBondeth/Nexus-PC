@@ -21,7 +21,10 @@ Simply import your DRM-free game directory or archive, and the app automatically
 
 ## Implementation status
 
-Phase 0 is in progress. The standalone diagnostic app lives in
+Phase 0 device feasibility is verified on Xiaomi 17 Pro: stock Vulkan presentation
+and an original Windows GDI game via pinned Wine/Box64, including input and clean
+shutdown. The standalone diagnostic app lives in
 [`app/feasibility`](app/feasibility). See the [feasibility gate and phase sequence](docs/phase-0-feasibility.md)
 for build instructions and pending device checks. The runtime and product features above
-are planned; they are not implemented or validated yet.
+are planned; this proof does not establish general game compatibility. The runtime
+spike uses legacy Android targeting; production-runtime integration remains future work.

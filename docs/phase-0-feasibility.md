@@ -1,6 +1,6 @@
 # Phase 0: feasibility evidence
 
-Status: in progress. Xiaomi 17 Pro connected and ADB authorized on 2026-10-14.
+Status: device feasibility checks passed on Xiaomi 17 Pro; final CI/merge pending.
 The diagnostic app is a standalone spike, not the production app.
 
 Local validation: Flutter analysis passed, both widget tests passed, the ARM64
@@ -25,7 +25,7 @@ The swapchain acquired an image, cleared it blue, and presented successfully.
 A device screenshot confirmed visible blue output. Returning from the home screen
 and a cold app restart were also exercised; the latter presented successfully.
 This is a one-frame smoke test using the stock driver, not a sustained renderer or
-validation of Mesa Turnip, DXVK, Wine, Box64, audio, input or game execution.
+validation of Mesa Turnip or Direct3D. Windows execution is tested separately below.
 
 The activity re-creates and destroys all Vulkan resources on each size/surface
 callback. The debug build accepts `--ez surfaceProbe true` on MainActivity so
@@ -33,12 +33,41 @@ tests can launch app-owned diagnostics without enabling system input injection.
 
 ```sh
 adb install --no-streaming -r build/app/outputs/flutter-apk/app-debug.apk
-adb shell am force-stop com.nexuspc.nexus_probe
-adb shell am start -W -n com.nexuspc.nexus_probe/.MainActivity --ez surfaceProbe true
+adb shell am force-stop com.nexuspc
+adb shell am start -W -n com.nexuspc/com.nexuspc.nexus_probe.MainActivity --ez surfaceProbe true
 adb logcat -d -s NexusProbe:I
 ```
 
-Initial CI validation passed. Updated native rendering changes require another CI run.
+## Windows runtime proof
+
+Pinned Wine 10.10 and Box64 0.4.4, with upstream X server and the Vortek/Gladio
+profile, run the original MIT-licensed x86_64 Windows PE32+ game in
+`test/windows/smoke.c`. A screenshot shows the rendered window and targets hit: 1.
+The guest evidence records `WINDOW_CREATED`, `FRAME_PAINTED`,
+`POINTER_INPUT_RECEIVED`, `ESCAPE_RECEIVED`, `CLEAN_SHUTDOWN`, and `PROCESS_EXIT_0`.
+After Wine's normal daemon linger, no live Wine/Box64 processes remain for the
+test package, and Android returns to the Flutter activity. The final smoke adapter
+launches the fixed executable directly through Wine because the upstream Explorer/
+helper path hung on a repeat run. The bounded automated direct-launch check passes.
+
+The runtime is integrated as a pinned Android library; assets/native binaries
+come from a checksum-verified official Winlator APK. Source/license and component
+versions are recorded in `runtime/components.lock.json` and `runtime/README.md`.
+Fixed upstream package paths are adapted by equal-length byte replacements for
+`com.nexuspc`, preserving ELF offsets. This test uses the upstream glibc layout
+instead of PRoot. It deliberately retains target API 28 for this engineering
+experiment; the production runtime must address newer Android executable-placement
+restrictions. Minimum device API remains 31.
+
+This is a Windows GDI proof, not proof of Turnip, DXVK, Direct3D performance,
+commercial-game compatibility, controller support, or audible sound playback.
+The upstream ALSA transport is initialized but sound playback is not tested.
+
+Run the bounded repeatable device test from the repository root:
+
+```sh
+ADB=/path/to/adb bash tools/run-device-smoke.sh DEVICE_SERIAL
+```
 
 ## Run
 
@@ -46,6 +75,8 @@ Requires Flutter 3.44.8, Java 17, Android SDK, NDK 28.2.13676358,
 CMake 3.22.1 and an ARM64 Android 12+ device with USB debugging enabled.
 
 ```sh
+bash tools/prepare-runtime.sh
+bash tools/build-smoke.sh
 cd app/feasibility
 flutter pub get
 flutter analyze
@@ -64,11 +95,10 @@ frame. The report explicitly separates frame presentation from Windows execution
 - [x] Record actual Snapdragon hardware identifiers, RAM and ARM64 ABI.
 - [x] Create Vulkan instance and Android surface on the device.
 - [x] Implement and demonstrate one-frame swapchain presentation, home return and cold restart.
-- [ ] Select and pin compatible runtime builds with their source/license records.
-- [ ] Integrate guest display, audio and input transport. A Vulkan SurfaceView
-      alone does not route Wine's desktop display into Android.
-- [ ] Launch one owned DRM-free Windows test game, record architecture, runtime
-      versions, launch command, logs, visible output and clean shutdown.
+- [x] Select and pin runtime builds with source/license records for the minimal GDI proof.
+- [x] Integrate guest display and input transport; initialize upstream ALSA transport.
+- [x] Launch an original freely licensed Windows test game; record architecture,
+      versions, command, logs, visible output, input and clean shutdown.
 
 The later production runtime phase expands this initial single-game experiment.
 Cloud profiles cannot prove that a GPU or new chipset supports a runtime build.

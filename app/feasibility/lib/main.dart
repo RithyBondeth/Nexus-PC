@@ -68,6 +68,16 @@ class _ProbeScreenState extends State<ProbeScreen> {
             onPressed: () => Clipboard.setData(ClipboardData(text: report)),
             child: const Text('Copy report'),
           ),
+          OutlinedButton(
+            onPressed: () async {
+              try {
+                await channel.invokeMethod<void>('runtime');
+              } catch (error) {
+                if (mounted) setState(() => report = 'Runtime failed: $error');
+              }
+            },
+            child: const Text('Run Windows smoke game'),
+          ),
           const SizedBox(height: 16),
           SelectableText(report),
         ],

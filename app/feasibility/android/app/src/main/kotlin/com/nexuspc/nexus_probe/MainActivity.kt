@@ -17,6 +17,12 @@ class MainActivity : FlutterActivity() {
             intent.getBooleanExtra("surfaceProbe", false)) {
             startActivity(Intent(this, SurfaceProbeActivity::class.java))
         }
+        if (savedInstanceState == null &&
+            applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+            intent.getBooleanExtra("runtimeProbe", false)) {
+            startActivity(Intent(this, RuntimeProbeActivity::class.java)
+                .putExtra("autoInput", intent.getBooleanExtra("autoInput", false)))
+        }
     }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -45,6 +51,10 @@ class MainActivity : FlutterActivity() {
                     }
                     "surface" -> {
                         startActivity(Intent(this, SurfaceProbeActivity::class.java))
+                        result.success(null)
+                    }
+                    "runtime" -> {
+                        startActivity(Intent(this, RuntimeProbeActivity::class.java))
                         result.success(null)
                     }
                     else -> result.notImplemented()

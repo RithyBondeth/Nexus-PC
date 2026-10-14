@@ -1,1 +1,5 @@
 .DS_Store
+runtime/vendor/
+runtime/cache/
+runtime/build/
+app/feasibility/android/app/src/main/assets/nexus-smoke.exe

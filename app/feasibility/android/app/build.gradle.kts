@@ -16,13 +16,15 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.nexuspc.nexus_probe"
+        applicationId = "com.nexuspc"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 31
         ndk { abiFilters += listOf("arm64-v8a") }
         externalNativeBuild { cmake { cppFlags += "-std=c++17" } }
-        targetSdk = flutter.targetSdkVersion
+        // Phase 0's pinned legacy runtime executes its glibc binaries from app data.
+        // A production runtime must resolve modern Android execution restrictions.
+        targetSdk = 28
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -34,7 +36,15 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+            pickFirsts += setOf("**/libc++_shared.so", "**/libzstd-jni-1.5.2-3.so")
+        }
+    }
 }
+
+dependencies { implementation(project(":runtime")) }
 
 android.externalNativeBuild {
     cmake {
