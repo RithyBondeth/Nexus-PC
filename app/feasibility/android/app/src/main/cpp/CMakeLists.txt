@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(nexus_probe LANGUAGES CXX)
+add_library(nexus_probe SHARED probe.cpp)
+target_compile_features(nexus_probe PRIVATE cxx_std_17)
+target_compile_options(nexus_probe PRIVATE -Wall -Wextra -Werror)
+target_compile_definitions(nexus_probe PRIVATE VK_USE_PLATFORM_ANDROID_KHR)
+target_link_libraries(nexus_probe PRIVATE android vulkan)
