@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101210">
+    <title>Nexus-PC | Your worlds. No boundaries.</title>
+    <meta name="description" content="A simpler future for PC gaming on Android. Explore Nexus-PC, an open-source project building automatic setup for your DRM-free game library.">
+    <meta property="og:title" content="Nexus-PC | Your worlds. No boundaries.">
+    <meta property="og:description" content="PC worlds. Android freedom. Explore the vision for a simpler way to play your PC games on Android.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nexus-pc-play-anywhere.primebun32.chatgpt.site">
+    <meta property="og:image" content="https://nexus-pc-play-anywhere.primebun32.chatgpt.site/assets/world.webp">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preload" href="assets/space-grotesk-500.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/dm-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/world.webp" as="image" fetchpriority="high">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      try { document.documentElement.dataset.theme = localStorage.getItem('nexus-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); } catch {}
+    </script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="#" aria-label="Nexus-PC home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>NEXUS<span class="brand-suffix">-PC</span></span></a>
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <a href="#experience">The experience</a>
+          <a href="#technology">Under the hood</a>
+          <a href="#questions">FAQs</a>
+        </nav>
+        <div class="header-actions">
+          <button class="theme-toggle icon-button" aria-label="Switch to light theme"><span class="icon" data-icon="sun"></span></button>
+          <a class="header-cta" href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer">View on GitHub<span class="icon" data-icon="arrow-up-right"></span></a>
+          <button class="menu-toggle icon-button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav"><span class="icon" data-icon="list"></span></button>
+        </div>
+      </div>
+      <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile navigation" hidden>
+        <a href="#experience">The experience</a><a href="#technology">Under the hood</a><a href="#questions">FAQs</a>
+        <a href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer">View on GitHub<span class="icon" data-icon="arrow-up-right"></span></a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-environment" aria-hidden="true"></div>
+        <div class="shell hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow hero-enter">PC WORLDS. ANDROID FREEDOM.</p>
+            <h1 id="hero-title" class="hero-enter">Your worlds.<br><span>No boundaries.</span></h1>
+            <p class="hero-description hero-enter">Your PC library, reimagined for Android.<br>Less configuration. More getting lost in the game.</p>
+            <div class="hero-buttons hero-enter">
+              <a class="button button-primary" href="#experience">Explore the vision<span class="icon" data-icon="arrow-right"></span></a>
+              <a class="button button-text" href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer"><span class="icon" data-icon="github-logo"></span>View on GitHub</a>
+            </div>
+          </div>
+          <div class="hero-stage hero-enter">
+            <div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+            <div class="phone-position">
+              <div class="phone" id="hero-phone">
+                <div class="phone-hardware"><span></span><span></span></div>
+                <div class="phone-screen" role="img" aria-label="Concept of an Android phone displaying an original fantasy game world">
+                  <img class="game-world" src="assets/world.webp" width="1983" height="793" alt="" fetchpriority="high">
+                  <span class="camera" aria-hidden="true"></span>
+                  <div class="touch-overlay" aria-hidden="true"><span class="joystick"><i></i></span><span class="touch-buttons"><i>X</i><i>Y</i><i>A</i><i>B</i></span></div>
+                  <div class="controller-overlay" aria-hidden="true"><span class="icon" data-icon="game-controller"></span><span>Controller mode</span></div>
+                </div>
+              </div>
+              <div class="phone-shadow" aria-hidden="true"></div>
+            </div>
+            <div class="preview-caption"><span class="caption-label">Interactive concept</span><div class="control-switch" role="group" aria-label="Preview control mode"><button class="active" data-control="immersive" aria-pressed="true" aria-label="Immersive preview"><span class="icon" data-icon="arrows-out-simple"></span></button><button data-control="touch" aria-pressed="false" aria-label="Preview touch controls"><span class="icon" data-icon="hand-tap"></span></button><button data-control="controller" aria-pressed="false" aria-label="Preview controller mode"><span class="icon" data-icon="game-controller"></span></button></div></div>
+            <p id="control-status" class="sr-only" aria-live="polite">Immersive preview selected.</p>
+          </div>
+        </div>
+      </section>
+      <div class="platform-bar">
+        <div class="shell platform-inner">
+          <p>A bigger world.<br><strong>A smaller footprint.</strong></p>
+          <div><span class="icon" data-icon="cube"></span><span>Built for<br><strong>Android 12+</strong></span></div>
+          <div><span class="icon" data-icon="folder-simple"></span><span>Your own<br><strong>DRM-free library</strong></span></div>
+          <div><span class="icon" data-icon="github-logo"></span><span>Made in the open<br><strong>Follow development</strong></span></div>
+        </div>
+      </div>
+      <section id="experience" class="experience section shell" aria-labelledby="experience-title">
+        <div class="section-intro reveal"><h2 id="experience-title">The game should be the hard part.</h2><p>We’re building a path from your PC library to Android that takes the setup out of the way.</p></div>
+        <div class="experience-grid reveal">
+          <div class="journey" role="tablist" aria-label="Explore the planned game setup workflow" aria-orientation="vertical">
+            <button id="tab-import" class="journey-step active" role="tab" aria-selected="true" aria-controls="panel-import" tabindex="0"><span class="step-icon"><span class="icon" data-icon="folder-simple"></span></span><span class="step-copy"><strong>Bring your worlds.</strong><span>Start with a game directory or archive you own.</span></span><span class="icon step-arrow" data-icon="arrow-right"></span></button>
+            <button id="tab-configure" class="journey-step" role="tab" aria-selected="false" aria-controls="panel-configure" tabindex="-1"><span class="step-icon"><span class="icon" data-icon="cpu"></span></span><span class="step-copy"><strong>Let Nexus handle the details.</strong><span>The right runtime and device profile, automatically.</span></span><span class="icon step-arrow" data-icon="arrow-right"></span></button>
+            <button id="tab-play" class="journey-step" role="tab" aria-selected="false" aria-controls="panel-play" tabindex="-1"><span class="step-icon"><span class="icon" data-icon="game-controller"></span></span><span class="step-copy"><strong>Make yourself at home.</strong><span>Aim for familiar controls, wherever you play.</span></span><span class="icon step-arrow" data-icon="arrow-right"></span></button>
+          </div>
+          <div class="journey-preview">
+            <div class="preview-toolbar"><span class="brand-mark small" aria-hidden="true"><i></i><i></i><i></i></span><span>THE NEXUS VISION</span><span class="preview-note">Concept demo</span></div>
+            <div id="panel-import" class="journey-panel" role="tabpanel" aria-labelledby="tab-import" tabindex="0">
+              <div class="import-demo"><div class="folder-art"><span class="icon" data-icon="folder-simple"></span><span class="file-chip">.exe</span><span class="file-chip second">.zip</span></div><h3>Your library starts here.</h3><p>Bring a DRM-free game folder.<br>Keep the games you already own.</p><button class="button button-primary button-small" id="demo-import">Try the setup preview<span class="icon" data-icon="arrow-right"></span></button></div>
+            </div>
+            <div id="panel-configure" class="journey-panel" role="tabpanel" aria-labelledby="tab-configure" tabindex="0" hidden>
+              <div class="configure-demo"><div class="cpu-art"><span class="icon" data-icon="cpu"></span></div><h3>A little intelligence.<br>A lot less tinkering.</h3><ul class="setup-list"><li><span class="icon" data-icon="check"></span>Identify the device chipset</li><li><span class="icon" data-icon="check"></span>Match a community profile</li><li><span class="icon" data-icon="check"></span>Prepare runtime and graphics</li></ul><span class="demo-disclaimer">Illustrative workflow. Engine development is in progress.</span></div>
+            </div>
+            <div id="panel-play" class="journey-panel play-panel" role="tabpanel" aria-labelledby="tab-play" tabindex="0" hidden><img src="assets/world.webp" width="1983" height="793" loading="lazy" alt="Original fantasy landscape used to illustrate a game on Android"><div class="play-panel-content"><span class="icon" data-icon="game-controller"></span><h3>Back to the adventure.</h3><p>Touch and controller support are part of the vision.</p><span class="demo-disclaimer">Concept artwork, not recorded gameplay.</span></div></div>
+          </div>
+        </div>
+      </section>
+      <section id="technology" class="technology section shell" aria-labelledby="technology-title">
+        <div class="section-intro reveal"><h2 id="technology-title">Small screen.<br><span class="muted">Full ambition.</span></h2><p>Thoughtful engineering behind a simpler experience. Here’s what we’re working toward.</p></div>
+        <div class="feature-grid">
+          <article class="feature-world reveal"><img src="assets/world.webp" width="1983" height="793" loading="lazy" alt="A lone explorer overlooking a lake and towering ruins beneath an eclipse"><div class="feature-world-shade"></div><div class="feature-world-content"><span class="icon" data-icon="lightning"></span><h3>The right setup.<br>For your hardware.</h3><p>Device-aware profiles and optimized graphics drivers, with less manual configuration.</p></div></article>
+          <article class="feature-chip reveal"><div class="chip-illustration" aria-hidden="true"><div class="chip-traces"></div><div class="chip-body"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>STRATUM</span></div></div><div class="feature-copy"><h3>Built to adapt.</h3><p>A cloud profile engine designed to recognize evolving Snapdragon chipsets.</p></div></article>
+          <article class="feature-controls reveal"><div class="feature-copy"><span class="icon" data-icon="game-controller"></span><h3>Your way to play.</h3><p>Smart touch overlays and familiar controller input, designed around the game.</p></div><div class="controller-art" aria-hidden="true"><span class="icon" data-icon="game-controller"></span><span class="controller-halo"></span></div></article>
+        </div>
+      </section>
+      <section id="compatibility" class="compatibility section shell" aria-labelledby="compatibility-title">
+        <div class="compatibility-heading reveal"><p class="eyebrow">WHERE WE’RE STARTING</p><h2 id="compatibility-title">Great games.<br>Honest expectations.</h2><p>Nexus-PC is in early development. Compatibility will depend on the game, chipset, and translation runtime.</p><a class="inline-link" href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer">View on GitHub<span class="icon" data-icon="arrow-up-right"></span></a></div>
+        <div class="compatibility-list reveal"><div><span class="compatibility-symbol">12<span>+</span></span><div><h3>Android is home.</h3><p>Android 12 and newer is the project’s target platform.</p></div></div><div><span class="icon compatibility-symbol" data-icon="cpu"></span><div><h3>Snapdragon comes first.</h3><p>The initial focus is Qualcomm hardware and Mesa Turnip graphics.</p></div></div><div><span class="icon compatibility-symbol" data-icon="shield-check"></span><div><h3>Bring games you own.</h3><p>The import workflow is designed around DRM-free game directories and archives.</p></div></div></div>
+      </section>
+      <section id="questions" class="questions section shell" aria-labelledby="questions-title">
+        <h2 id="questions-title" class="reveal">A few things<br>you might be wondering.</h2>
+        <div class="faq-list reveal">
+          <details><summary>Can I download Nexus-PC yet?<span class="faq-indicator"><span class="icon" data-icon="plus"></span></span></summary><p>The project is in its feasibility and development stage. There isn’t a public game-running release yet. Follow the GitHub repository for progress and future releases.</p></details>
+          <details><summary>Will every PC game work?<span class="faq-indicator"><span class="icon" data-icon="plus"></span></span></summary><p>Compatibility is still being evaluated. PC games have different requirements, and results will depend on your hardware and the translation stack. A verified games list can be published once there is real testing to report.</p></details>
+          <details><summary>Are games streamed from the cloud?<span class="faq-indicator"><span class="icon" data-icon="plus"></span></span></summary><p>The project’s goal is to run imported games on your Android device using translation runtimes. The planned cloud service matches device and game profiles; it doesn’t stream gameplay.</p></details>
+          <details><summary>How can I help build it?<span class="faq-indicator"><span class="icon" data-icon="plus"></span></span></summary><p>Explore the repository, share ideas through GitHub issues, or contribute to the code. Device testing and game compatibility reports will be useful as the engine becomes available.</p></details>
+        </div>
+      </section>
+      <section class="closing section shell" aria-labelledby="closing-title"><div class="closing-content reveal"><div class="closing-mark" aria-hidden="true"><span class="brand-mark"><i></i><i></i><i></i></span></div><h2 id="closing-title">The next chapter<br>fits in your pocket.</h2><p>Help shape a simpler future for PC gaming on Android.</p><a class="button button-primary" href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer">View on GitHub<span class="icon" data-icon="arrow-up-right"></span></a><span class="closing-status">Open source. In development. Built with ambition.</span></div></section>
+    </main>
+    <footer class="site-footer shell"><a class="brand" href="#" aria-label="Nexus-PC home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>NEXUS<span class="brand-suffix">-PC</span></span></a><p>PC worlds. Android freedom.</p><div><a href="https://github.com/RithyBondeth/Nexus-PC" target="_blank" rel="noopener noreferrer">GitHub<span class="icon" data-icon="arrow-up-right"></span></a><span>© 2026 Nexus-PC</span></div></footer>
+  </body>
+</html>
