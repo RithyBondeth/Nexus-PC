@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'foundation/foundation_screen.dart';
+import 'shell/nexus_shell.dart';
 import 'platform/nexus_platform.dart';
 
 void main() => runApp(const NexusApp());
@@ -13,6 +13,7 @@ class NexusApp extends StatefulWidget {
 
 class _NexusAppState extends State<NexusApp> {
   late final NexusPlatform platform = widget.platform ?? PigeonNexusPlatform();
+  ThemeMode appearance = ThemeMode.system;
   @override
   void dispose() {
     if (widget.platform == null) platform.close();
@@ -22,7 +23,19 @@ class _NexusAppState extends State<NexusApp> {
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Nexus-PC',
-    theme: ThemeData(colorSchemeSeed: Colors.blue, brightness: Brightness.dark),
-    home: FoundationScreen(platform: platform),
+    theme: ThemeData(
+      colorSchemeSeed: Colors.blue,
+      brightness: Brightness.light,
+    ),
+    darkTheme: ThemeData(
+      colorSchemeSeed: Colors.blue,
+      brightness: Brightness.dark,
+    ),
+    themeMode: appearance,
+    home: NexusShell(
+      platform: platform,
+      appearance: appearance,
+      onAppearanceChanged: (value) => setState(() => appearance = value),
+    ),
   );
 }
