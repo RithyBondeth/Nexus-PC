@@ -27,9 +27,10 @@ remain later work. The Phase 0 spike and native bridge schema are unchanged.
 
 ## Verification
 
-All 20 automated tests pass locally. The suite covers the existing bridge/diagnostics contracts plus tab
+All 21 automated tests pass locally. The suite covers the existing bridge/diagnostics contracts plus tab
 navigation, Back, profile call counts, theme changes, independent error recovery,
-keyboard activation, late native events and lifecycle disposal. Layout tests use
+keyboard activation, independent scroll-position preservation across tab changes,
+late native events and lifecycle disposal. Layout tests use
 320, 768, 1024 and 1440 logical-pixel widths at 200% text, plus an 844×390 short
 landscape viewport. Flutter accessibility checks cover labeled controls and
 Android touch-target sizes, plus visible-content contrast in Light and Dark
@@ -45,13 +46,28 @@ registration. Formatting includes the integration test and driver directories.
 Release signing and the previously documented toolchain/target advisories remain
 unchanged.
 
-The physical-device UI gate is pending until the integration driver completes on
-the Xiaomi. No successful Phase 2 hardware result has been recorded yet.
+The physical-device functional gate passed on 2026-10-14 over authenticated
+wireless ADB on the Xiaomi 17 Pro (model 25098PN5AC, Android API 36 / HyperOS 3).
+The real bridge reported SM8850, Adreno 840 and an unavailable runtime, as expected
+before engine integration. All four destinations, disabled import, Dark appearance
+and Back to Home passed. The [hardware report](evidence/phase-2-xiaomi17pro.json)
+records the successful SDK integration run at 14:43 UTC.
+
+Automated raster snapshots intermittently omitted heading glyphs or misplaced
+labels, and a later SDK image-surface capture stalled. App-layer capture and a
+diagnostic Skia run did not consistently resolve this. No renderer override or
+experimental navigation rewrite is included, and these snapshots are not claimed
+as visual acceptance evidence. After restoring and cold-starting the normal
+`lib/main.dart` APK, the user manually confirmed that Library and Device headings
+are complete and Stock graphics is correctly separated from RAM. Functional
+automation plus that on-device visual confirmation satisfy this phase's phone
+gate; deterministic automated screenshot capture remains a tooling limitation.
 
 ## Repeat the physical-device test
 
 Requires the Phase 1 toolchain, Python-free Flutter integration driver, an unlocked
-USB-debugging-authorized ARM64 Android device, and installation approval if shown.
+debugging-authorized ARM64 Android device (USB or paired wireless ADB), and
+installation approval if shown. Keep the phone unlocked and Nexus-PC foreground.
 From the repository root:
 
 ```sh
@@ -63,9 +79,13 @@ The script builds the SDK integration-test entry point, installs using
 authenticated VM service and creates/removes its own temporary port forward.
 It runs the real native profile/status APIs and exercises all four destinations,
 the disabled import control, Dark appearance and Back to Home. The driver has a
-120-second timeout. Evidence is saved in a new `app/production/build/shell-device.*`
+120-second attach timeout; native screenshot capture can still stall on this
+device. Interrupt a stalled run and restore the normal APK before manual checks.
+Evidence is saved in a new `app/production/build/shell-device.*`
 directory, with an aggregate report and four screenshots of the app's Flutter
-surface only (not screenshots of unrelated foreground apps).
+surface only (not screenshots of unrelated foreground apps). Inspect snapshots
+before treating them as visual evidence; a functional pass does not validate
+their pixels.
 
 The installed APK is the integration-test runner. Restore the normal app after
 the test, from `app/production`:

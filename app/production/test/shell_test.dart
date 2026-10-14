@@ -93,6 +93,56 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('tab changes preserve independent scroll positions', (
+    tester,
+  ) async {
+    await mountShell(tester, CountingHost(), size: const Size(390, 500));
+    Finder scrollable(String title) => find
+        .descendant(
+          of: find.byKey(PageStorageKey(title)),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    await tester.drag(
+      scrollable('Your gaming workspace'),
+      const Offset(0, -200),
+    );
+    await tester.pumpAndSettle();
+    final homeOffset = tester
+        .state<ScrollableState>(scrollable('Your gaming workspace'))
+        .position
+        .pixels;
+    expect(homeOffset, greaterThan(0));
+    await tester.tap(find.text('Device').last);
+    await tester.pumpAndSettle();
+    expect(
+      tester.state<ScrollableState>(scrollable('Your device')).position.pixels,
+      0,
+    );
+    await tester.drag(scrollable('Your device'), const Offset(0, -150));
+    await tester.pumpAndSettle();
+    final deviceOffset = tester
+        .state<ScrollableState>(scrollable('Your device'))
+        .position
+        .pixels;
+    expect(deviceOffset, greaterThan(0));
+    await tester.tap(find.text('Home').last);
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .state<ScrollableState>(scrollable('Your gaming workspace'))
+          .position
+          .pixels,
+      closeTo(homeOffset, 0.1),
+    );
+    await tester.tap(find.text('Device').last);
+    await tester.pumpAndSettle();
+    expect(
+      tester.state<ScrollableState>(scrollable('Your device')).position.pixels,
+      closeTo(deviceOffset, 0.1),
+    );
+  });
+
   testWidgets('appearance changes immediately and survives tab changes', (
     tester,
   ) async {
