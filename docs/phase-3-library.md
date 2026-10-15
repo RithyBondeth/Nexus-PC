@@ -49,13 +49,17 @@ owner cancels that selection; a running copy stays with the process. Keep the ap
 open: there is no foreground service or resumable background-import claim.
 Cancellation during copying is cooperative; publication itself is non-cancellable.
 Library reads/edits are rejected as busy while an import is active.
+If import cleanup fails, new imports are blocked until a cold restart can recover
+the workspace; repeated retries cannot accumulate more unfinished copies.
 
-On 2026-10-15, all 13 Android integration checks passed on an isolated ARM64
+On 2026-10-15, all 14 Android integration checks passed on an isolated ARM64
 API 37 emulator: single-candidate metadata/hash, reopen persistence, parameterized
 literal search, duplicate/source preservation, validated executable/title edits,
 changed-executable rejection, no-follow removal, unfinished-stage cleanup,
 orphan-rename recovery, transactional rollback, deletion-journal recovery,
-tampered-ownership refusal, and incomplete unused-marker cleanup. The debug-only
+tampered-ownership refusal, incomplete unused-marker cleanup, and isolated import
+job ownership/cleanup-failure latch checks. The latter fault-injects state through
+debug-only reflection, without touching the real singleton or library. The debug-only
 harness uses a fresh private sandbox, never the real library, and does not ship
 in release builds. Fixtures are synthetic headers, not playable games.
 

@@ -31,6 +31,7 @@ class LibraryManager private constructor(private val context: Context) {
     @Synchronized private fun active() = state in listOf(ImportState.CHOOSING, ImportState.COPYING, ImportState.COMMITTING)
     @Synchronized fun begin(): ImportProgress {
         if (active()) throw FlutterError("import_busy", "Wait for the current import or cancel it.")
+        if (code == "cleanup_pending") throw FlutterError("cleanup_pending", "Restart Nexus-PC to recover the unfinished copy before another import.")
         state = ImportState.CHOOSING; code = "choosing"; message = "Choose a source in the system picker."
         jobId = LibraryStore.newId(); gameId = null; control = CopyControl(); signal = CancellationSignal(); cancellationRequested = false
         return progress()

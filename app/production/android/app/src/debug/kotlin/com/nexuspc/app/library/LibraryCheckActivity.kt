@@ -152,7 +152,31 @@ class LibraryCheckActivity : Activity() {
                     reopen()
                     check(!marker.exists())
                 }
-                report.put("passed", checks.length() == 13)
+                verify("jobOwnershipAndCleanupFailureLatch") {
+                    // An isolated owner, with no IO tasks submitted and no real-library access.
+                    val constructor = LibraryManager::class.java.getDeclaredConstructor(android.content.Context::class.java)
+                    constructor.isAccessible = true
+                    val owner = constructor.newInstance(context)
+                    fun hostRejects(code: String, operation: () -> Unit) {
+                        try { operation() } catch (error: com.nexuspc.app.FlutterError) { check(error.code == code); return }
+                        error("Expected $code")
+                    }
+                    check(owner.progress().state == com.nexuspc.app.ImportState.IDLE)
+                    val firstJob = owner.begin().jobId!!
+                    hostRejects("import_busy") { owner.begin() }
+                    hostRejects("invalid_job") { owner.cancel("stale") }
+                    owner.cancel(firstJob)
+                    check(owner.progress().state == com.nexuspc.app.ImportState.CANCELLED)
+                    val secondJob = owner.begin().jobId!!
+                    owner.pickerCancelled(firstJob)
+                    check(owner.progress().state == com.nexuspc.app.ImportState.CHOOSING)
+                    owner.cancel(secondJob)
+                    // Fault-inject the cleanup failure without damaging a user's filesystem.
+                    LibraryManager::class.java.getDeclaredField("code").apply { isAccessible = true }.set(owner, "cleanup_pending")
+                    hostRejects("cleanup_pending") { owner.begin() }
+                    check(owner.progress().code == "cleanup_pending")
+                }
+                report.put("passed", checks.length() == 14)
             } catch (error: Throwable) {
                 report.put("passed", false).put("error", "${error.javaClass.simpleName}: ${error.message}")
                 android.util.Log.e("NexusLibraryChecks", "Native checks failed", error)
