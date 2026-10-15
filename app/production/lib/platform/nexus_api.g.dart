@@ -115,6 +115,345 @@ enum RuntimeState { unavailable, idle, preparing, running, stopping, failed }
 
 enum LogLevel { debug, info, warning, error }
 
+enum ImportKind { folder, zip }
+
+enum ImportState {
+  idle,
+  choosing,
+  copying,
+  committing,
+  completed,
+  cancelled,
+  failed,
+}
+
+class GameRecord {
+  GameRecord({
+    required this.id,
+    required this.title,
+    required this.contentHash,
+    required this.sizeBytes,
+    required this.fileCount,
+    required this.importedAtMillis,
+    required this.executableCount,
+    this.executableRelativePath,
+    this.architecture,
+    this.sha256,
+  });
+
+  String id;
+
+  String title;
+
+  String contentHash;
+
+  int sizeBytes;
+
+  int fileCount;
+
+  int importedAtMillis;
+
+  int executableCount;
+
+  String? executableRelativePath;
+
+  String? architecture;
+
+  String? sha256;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      id,
+      title,
+      contentHash,
+      sizeBytes,
+      fileCount,
+      importedAtMillis,
+      executableCount,
+      executableRelativePath,
+      architecture,
+      sha256,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static GameRecord decode(Object result) {
+    result as List<Object?>;
+    return GameRecord(
+      id: result[0]! as String,
+      title: result[1]! as String,
+      contentHash: result[2]! as String,
+      sizeBytes: result[3]! as int,
+      fileCount: result[4]! as int,
+      importedAtMillis: result[5]! as int,
+      executableCount: result[6]! as int,
+      executableRelativePath: result[7] as String?,
+      architecture: result[8] as String?,
+      sha256: result[9] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GameRecord || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(id, other.id) &&
+        _deepEquals(title, other.title) &&
+        _deepEquals(contentHash, other.contentHash) &&
+        _deepEquals(sizeBytes, other.sizeBytes) &&
+        _deepEquals(fileCount, other.fileCount) &&
+        _deepEquals(importedAtMillis, other.importedAtMillis) &&
+        _deepEquals(executableCount, other.executableCount) &&
+        _deepEquals(executableRelativePath, other.executableRelativePath) &&
+        _deepEquals(architecture, other.architecture) &&
+        _deepEquals(sha256, other.sha256);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'GameRecord(id: $id, title: $title, contentHash: $contentHash, sizeBytes: $sizeBytes, fileCount: $fileCount, importedAtMillis: $importedAtMillis, executableCount: $executableCount, executableRelativePath: $executableRelativePath, architecture: $architecture, sha256: $sha256)';
+  }
+}
+
+class ExecutableRecord {
+  ExecutableRecord({
+    required this.relativePath,
+    required this.architecture,
+    required this.sha256,
+  });
+
+  String relativePath;
+
+  String architecture;
+
+  String sha256;
+
+  List<Object?> _toList() {
+    return <Object?>[relativePath, architecture, sha256];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static ExecutableRecord decode(Object result) {
+    result as List<Object?>;
+    return ExecutableRecord(
+      relativePath: result[0]! as String,
+      architecture: result[1]! as String,
+      sha256: result[2]! as String,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! ExecutableRecord || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(relativePath, other.relativePath) &&
+        _deepEquals(architecture, other.architecture) &&
+        _deepEquals(sha256, other.sha256);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'ExecutableRecord(relativePath: $relativePath, architecture: $architecture, sha256: $sha256)';
+  }
+}
+
+class GameDetails {
+  GameDetails({required this.game, required this.executables});
+
+  GameRecord game;
+
+  List<ExecutableRecord> executables;
+
+  List<Object?> _toList() {
+    return <Object?>[game, executables];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static GameDetails decode(Object result) {
+    result as List<Object?>;
+    return GameDetails(
+      game: result[0]! as GameRecord,
+      executables: (result[1]! as List<Object?>).cast<ExecutableRecord>(),
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! GameDetails || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(game, other.game) &&
+        _deepEquals(executables, other.executables);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'GameDetails(game: $game, executables: $executables)';
+  }
+}
+
+class LibraryResult {
+  LibraryResult({required this.games, required this.total});
+
+  List<GameRecord> games;
+
+  int total;
+
+  List<Object?> _toList() {
+    return <Object?>[games, total];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static LibraryResult decode(Object result) {
+    result as List<Object?>;
+    return LibraryResult(
+      games: (result[0]! as List<Object?>).cast<GameRecord>(),
+      total: result[1]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! LibraryResult || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(games, other.games) && _deepEquals(total, other.total);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'LibraryResult(games: $games, total: $total)';
+  }
+}
+
+class ImportProgress {
+  ImportProgress({
+    required this.state,
+    required this.code,
+    required this.message,
+    required this.bytesCopied,
+    required this.filesCopied,
+    this.jobId,
+    this.gameId,
+  });
+
+  ImportState state;
+
+  String code;
+
+  String message;
+
+  int bytesCopied;
+
+  int filesCopied;
+
+  String? jobId;
+
+  String? gameId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      state,
+      code,
+      message,
+      bytesCopied,
+      filesCopied,
+      jobId,
+      gameId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static ImportProgress decode(Object result) {
+    result as List<Object?>;
+    return ImportProgress(
+      state: result[0]! as ImportState,
+      code: result[1]! as String,
+      message: result[2]! as String,
+      bytesCopied: result[3]! as int,
+      filesCopied: result[4]! as int,
+      jobId: result[5] as String?,
+      gameId: result[6] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! ImportProgress || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(state, other.state) &&
+        _deepEquals(code, other.code) &&
+        _deepEquals(message, other.message) &&
+        _deepEquals(bytesCopied, other.bytesCopied) &&
+        _deepEquals(filesCopied, other.filesCopied) &&
+        _deepEquals(jobId, other.jobId) &&
+        _deepEquals(gameId, other.gameId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'ImportProgress(state: $state, code: $code, message: $message, bytesCopied: $bytesCopied, filesCopied: $filesCopied, jobId: $jobId, gameId: $gameId)';
+  }
+}
+
 class DeviceProfile {
   DeviceProfile({
     required this.androidApi,
@@ -456,20 +795,41 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is LogLevel) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    } else if (value is DeviceProfile) {
+    } else if (value is ImportKind) {
       buffer.putUint8(131);
-      writeValue(buffer, value.encode());
-    } else if (value is RuntimeStatus) {
+      writeValue(buffer, value.index);
+    } else if (value is ImportState) {
       buffer.putUint8(132);
-      writeValue(buffer, value.encode());
-    } else if (value is LaunchRequest) {
+      writeValue(buffer, value.index);
+    } else if (value is GameRecord) {
       buffer.putUint8(133);
       writeValue(buffer, value.encode());
-    } else if (value is RuntimeLog) {
+    } else if (value is ExecutableRecord) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is ExecutionProbeResult) {
+    } else if (value is GameDetails) {
       buffer.putUint8(135);
+      writeValue(buffer, value.encode());
+    } else if (value is LibraryResult) {
+      buffer.putUint8(136);
+      writeValue(buffer, value.encode());
+    } else if (value is ImportProgress) {
+      buffer.putUint8(137);
+      writeValue(buffer, value.encode());
+    } else if (value is DeviceProfile) {
+      buffer.putUint8(138);
+      writeValue(buffer, value.encode());
+    } else if (value is RuntimeStatus) {
+      buffer.putUint8(139);
+      writeValue(buffer, value.encode());
+    } else if (value is LaunchRequest) {
+      buffer.putUint8(140);
+      writeValue(buffer, value.encode());
+    } else if (value is RuntimeLog) {
+      buffer.putUint8(141);
+      writeValue(buffer, value.encode());
+    } else if (value is ExecutionProbeResult) {
+      buffer.putUint8(142);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -486,18 +846,199 @@ class _PigeonCodec extends StandardMessageCodec {
         final value = readValue(buffer) as int?;
         return value == null ? null : LogLevel.values[value];
       case 131:
-        return DeviceProfile.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : ImportKind.values[value];
       case 132:
-        return RuntimeStatus.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : ImportState.values[value];
       case 133:
-        return LaunchRequest.decode(readValue(buffer)!);
+        return GameRecord.decode(readValue(buffer)!);
       case 134:
-        return RuntimeLog.decode(readValue(buffer)!);
+        return ExecutableRecord.decode(readValue(buffer)!);
       case 135:
+        return GameDetails.decode(readValue(buffer)!);
+      case 136:
+        return LibraryResult.decode(readValue(buffer)!);
+      case 137:
+        return ImportProgress.decode(readValue(buffer)!);
+      case 138:
+        return DeviceProfile.decode(readValue(buffer)!);
+      case 139:
+        return RuntimeStatus.decode(readValue(buffer)!);
+      case 140:
+        return LaunchRequest.decode(readValue(buffer)!);
+      case 141:
+        return RuntimeLog.decode(readValue(buffer)!);
+      case 142:
         return ExecutionProbeResult.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
+  }
+}
+
+class NexusLibraryApi {
+  /// Constructor for [NexusLibraryApi]. The [binaryMessenger] named argument is
+  /// available for dependency injection. If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  NexusLibraryApi({
+    BinaryMessenger? binaryMessenger,
+    String messageChannelSuffix = '',
+  }) : pigeonVar_binaryMessenger = binaryMessenger,
+       pigeonVar_messageChannelSuffix = messageChannelSuffix.isNotEmpty
+           ? '.$messageChannelSuffix'
+           : '';
+
+  final BinaryMessenger? pigeonVar_binaryMessenger;
+  static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
+
+  final String pigeonVar_messageChannelSuffix;
+
+  Future<LibraryResult> listGames(int offset, int limit, String query) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.listGames$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[offset, limit, query],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as LibraryResult;
+  }
+
+  Future<GameDetails> getGame(String gameId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.getGame$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[gameId],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as GameDetails;
+  }
+
+  Future<GameRecord> updateGame(
+    String gameId,
+    String title,
+    String executableRelativePath,
+  ) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.updateGame$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[gameId, title, executableRelativePath],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as GameRecord;
+  }
+
+  Future<void> removeGame(String gameId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.removeGame$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[gameId],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  Future<ImportProgress> beginImport(ImportKind kind) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.beginImport$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[kind],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as ImportProgress;
+  }
+
+  Future<ImportProgress> getImportProgress() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.getImportProgress$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as ImportProgress;
+  }
+
+  Future<void> cancelImport(String jobId) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusLibraryApi.cancelImport$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[jobId],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
   }
 }
 

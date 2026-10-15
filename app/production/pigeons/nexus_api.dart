@@ -12,6 +12,104 @@ enum RuntimeState { unavailable, idle, preparing, running, stopping, failed }
 
 enum LogLevel { debug, info, warning, error }
 
+enum ImportKind { folder, zip }
+
+enum ImportState {
+  idle,
+  choosing,
+  copying,
+  committing,
+  completed,
+  cancelled,
+  failed,
+}
+
+class GameRecord {
+  GameRecord({
+    required this.id,
+    required this.title,
+    required this.contentHash,
+    required this.sizeBytes,
+    required this.fileCount,
+    required this.importedAtMillis,
+    required this.executableCount,
+    this.executableRelativePath,
+    this.architecture,
+    this.sha256,
+  });
+  String id;
+  String title;
+  String contentHash;
+  int sizeBytes;
+  int fileCount;
+  int importedAtMillis;
+  int executableCount;
+  String? executableRelativePath;
+  String? architecture;
+  String? sha256;
+}
+
+class ExecutableRecord {
+  ExecutableRecord({
+    required this.relativePath,
+    required this.architecture,
+    required this.sha256,
+  });
+  String relativePath;
+  String architecture;
+  String sha256;
+}
+
+class GameDetails {
+  GameDetails({required this.game, required this.executables});
+  GameRecord game;
+  List<ExecutableRecord> executables;
+}
+
+class LibraryResult {
+  LibraryResult({required this.games, required this.total});
+  List<GameRecord> games;
+  int total;
+}
+
+class ImportProgress {
+  ImportProgress({
+    required this.state,
+    required this.code,
+    required this.message,
+    required this.bytesCopied,
+    required this.filesCopied,
+    this.jobId,
+    this.gameId,
+  });
+  ImportState state;
+  String code;
+  String message;
+  int bytesCopied;
+  int filesCopied;
+  String? jobId;
+  String? gameId;
+}
+
+@HostApi()
+abstract class NexusLibraryApi {
+  @asyncCallback
+  LibraryResult listGames(int offset, int limit, String query);
+  @asyncCallback
+  GameDetails getGame(String gameId);
+  @asyncCallback
+  GameRecord updateGame(
+    String gameId,
+    String title,
+    String executableRelativePath,
+  );
+  @asyncCallback
+  void removeGame(String gameId);
+  ImportProgress beginImport(ImportKind kind);
+  ImportProgress getImportProgress();
+  void cancelImport(String jobId);
+}
+
 class DeviceProfile {
   DeviceProfile({
     required this.androidApi,

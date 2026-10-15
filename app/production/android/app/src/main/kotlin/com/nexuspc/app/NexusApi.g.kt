@@ -223,6 +223,294 @@ enum class LogLevel(val raw: Int) {
   }
 }
 
+enum class ImportKind(val raw: Int) {
+  FOLDER(0),
+  ZIP(1);
+
+  companion object {
+    fun ofRaw(raw: Int): ImportKind? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class ImportState(val raw: Int) {
+  IDLE(0),
+  CHOOSING(1),
+  COPYING(2),
+  COMMITTING(3),
+  COMPLETED(4),
+  CANCELLED(5),
+  FAILED(6);
+
+  companion object {
+    fun ofRaw(raw: Int): ImportState? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GameRecord (
+  val id: String,
+  val title: String,
+  val contentHash: String,
+  val sizeBytes: Long,
+  val fileCount: Long,
+  val importedAtMillis: Long,
+  val executableCount: Long,
+  val executableRelativePath: String? = null,
+  val architecture: String? = null,
+  val sha256: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GameRecord {
+      val id = pigeonVar_list[0] as String
+      val title = pigeonVar_list[1] as String
+      val contentHash = pigeonVar_list[2] as String
+      val sizeBytes = pigeonVar_list[3] as Long
+      val fileCount = pigeonVar_list[4] as Long
+      val importedAtMillis = pigeonVar_list[5] as Long
+      val executableCount = pigeonVar_list[6] as Long
+      val executableRelativePath = pigeonVar_list[7] as String?
+      val architecture = pigeonVar_list[8] as String?
+      val sha256 = pigeonVar_list[9] as String?
+      return GameRecord(id, title, contentHash, sizeBytes, fileCount, importedAtMillis, executableCount, executableRelativePath, architecture, sha256)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      id,
+      title,
+      contentHash,
+      sizeBytes,
+      fileCount,
+      importedAtMillis,
+      executableCount,
+      executableRelativePath,
+      architecture,
+      sha256,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as GameRecord
+    return NexusApiPigeonUtils.deepEquals(this.id, other.id) && NexusApiPigeonUtils.deepEquals(this.title, other.title) && NexusApiPigeonUtils.deepEquals(this.contentHash, other.contentHash) && NexusApiPigeonUtils.deepEquals(this.sizeBytes, other.sizeBytes) && NexusApiPigeonUtils.deepEquals(this.fileCount, other.fileCount) && NexusApiPigeonUtils.deepEquals(this.importedAtMillis, other.importedAtMillis) && NexusApiPigeonUtils.deepEquals(this.executableCount, other.executableCount) && NexusApiPigeonUtils.deepEquals(this.executableRelativePath, other.executableRelativePath) && NexusApiPigeonUtils.deepEquals(this.architecture, other.architecture) && NexusApiPigeonUtils.deepEquals(this.sha256, other.sha256)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.id)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.title)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.contentHash)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.sizeBytes)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.fileCount)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.importedAtMillis)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.executableCount)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.executableRelativePath)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.architecture)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.sha256)
+    return result
+  }
+  override fun toString(): String {
+    return "GameRecord(id=$id, title=$title, contentHash=$contentHash, sizeBytes=$sizeBytes, fileCount=$fileCount, importedAtMillis=$importedAtMillis, executableCount=$executableCount, executableRelativePath=$executableRelativePath, architecture=$architecture, sha256=$sha256)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class ExecutableRecord (
+  val relativePath: String,
+  val architecture: String,
+  val sha256: String
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): ExecutableRecord {
+      val relativePath = pigeonVar_list[0] as String
+      val architecture = pigeonVar_list[1] as String
+      val sha256 = pigeonVar_list[2] as String
+      return ExecutableRecord(relativePath, architecture, sha256)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      relativePath,
+      architecture,
+      sha256,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as ExecutableRecord
+    return NexusApiPigeonUtils.deepEquals(this.relativePath, other.relativePath) && NexusApiPigeonUtils.deepEquals(this.architecture, other.architecture) && NexusApiPigeonUtils.deepEquals(this.sha256, other.sha256)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.relativePath)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.architecture)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.sha256)
+    return result
+  }
+  override fun toString(): String {
+    return "ExecutableRecord(relativePath=$relativePath, architecture=$architecture, sha256=$sha256)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class GameDetails (
+  val game: GameRecord,
+  val executables: List<ExecutableRecord>
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): GameDetails {
+      val game = pigeonVar_list[0] as GameRecord
+      val executables = pigeonVar_list[1] as List<ExecutableRecord>
+      return GameDetails(game, executables)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      game,
+      executables,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as GameDetails
+    return NexusApiPigeonUtils.deepEquals(this.game, other.game) && NexusApiPigeonUtils.deepEquals(this.executables, other.executables)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.game)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.executables)
+    return result
+  }
+  override fun toString(): String {
+    return "GameDetails(game=$game, executables=$executables)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class LibraryResult (
+  val games: List<GameRecord>,
+  val total: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): LibraryResult {
+      val games = pigeonVar_list[0] as List<GameRecord>
+      val total = pigeonVar_list[1] as Long
+      return LibraryResult(games, total)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      games,
+      total,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as LibraryResult
+    return NexusApiPigeonUtils.deepEquals(this.games, other.games) && NexusApiPigeonUtils.deepEquals(this.total, other.total)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.games)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.total)
+    return result
+  }
+  override fun toString(): String {
+    return "LibraryResult(games=$games, total=$total)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class ImportProgress (
+  val state: ImportState,
+  val code: String,
+  val message: String,
+  val bytesCopied: Long,
+  val filesCopied: Long,
+  val jobId: String? = null,
+  val gameId: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): ImportProgress {
+      val state = pigeonVar_list[0] as ImportState
+      val code = pigeonVar_list[1] as String
+      val message = pigeonVar_list[2] as String
+      val bytesCopied = pigeonVar_list[3] as Long
+      val filesCopied = pigeonVar_list[4] as Long
+      val jobId = pigeonVar_list[5] as String?
+      val gameId = pigeonVar_list[6] as String?
+      return ImportProgress(state, code, message, bytesCopied, filesCopied, jobId, gameId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      state,
+      code,
+      message,
+      bytesCopied,
+      filesCopied,
+      jobId,
+      gameId,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as ImportProgress
+    return NexusApiPigeonUtils.deepEquals(this.state, other.state) && NexusApiPigeonUtils.deepEquals(this.code, other.code) && NexusApiPigeonUtils.deepEquals(this.message, other.message) && NexusApiPigeonUtils.deepEquals(this.bytesCopied, other.bytesCopied) && NexusApiPigeonUtils.deepEquals(this.filesCopied, other.filesCopied) && NexusApiPigeonUtils.deepEquals(this.jobId, other.jobId) && NexusApiPigeonUtils.deepEquals(this.gameId, other.gameId)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.state)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.code)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.message)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.bytesCopied)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.filesCopied)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.jobId)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.gameId)
+    return result
+  }
+  override fun toString(): String {
+    return "ImportProgress(state=$state, code=$code, message=$message, bytesCopied=$bytesCopied, filesCopied=$filesCopied, jobId=$jobId, gameId=$gameId)"
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class DeviceProfile (
   val androidApi: Long,
@@ -501,26 +789,61 @@ private open class NexusApiPigeonCodec : StandardMessageCodec() {
         }
       }
       131.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          DeviceProfile.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          ImportKind.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          RuntimeStatus.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          ImportState.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          LaunchRequest.fromList(it)
+          GameRecord.fromList(it)
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RuntimeLog.fromList(it)
+          ExecutableRecord.fromList(it)
         }
       }
       135.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          GameDetails.fromList(it)
+        }
+      }
+      136.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          LibraryResult.fromList(it)
+        }
+      }
+      137.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          ImportProgress.fromList(it)
+        }
+      }
+      138.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          DeviceProfile.fromList(it)
+        }
+      }
+      139.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          RuntimeStatus.fromList(it)
+        }
+      }
+      140.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          LaunchRequest.fromList(it)
+        }
+      }
+      141.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          RuntimeLog.fromList(it)
+        }
+      }
+      142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           ExecutionProbeResult.fromList(it)
         }
@@ -538,24 +861,52 @@ private open class NexusApiPigeonCodec : StandardMessageCodec() {
         stream.write(130)
         writeValue(stream, value.raw.toLong())
       }
-      is DeviceProfile -> {
+      is ImportKind -> {
         stream.write(131)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is RuntimeStatus -> {
+      is ImportState -> {
         stream.write(132)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is LaunchRequest -> {
+      is GameRecord -> {
         stream.write(133)
         writeValue(stream, value.toList())
       }
-      is RuntimeLog -> {
+      is ExecutableRecord -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is ExecutionProbeResult -> {
+      is GameDetails -> {
         stream.write(135)
+        writeValue(stream, value.toList())
+      }
+      is LibraryResult -> {
+        stream.write(136)
+        writeValue(stream, value.toList())
+      }
+      is ImportProgress -> {
+        stream.write(137)
+        writeValue(stream, value.toList())
+      }
+      is DeviceProfile -> {
+        stream.write(138)
+        writeValue(stream, value.toList())
+      }
+      is RuntimeStatus -> {
+        stream.write(139)
+        writeValue(stream, value.toList())
+      }
+      is LaunchRequest -> {
+        stream.write(140)
+        writeValue(stream, value.toList())
+      }
+      is RuntimeLog -> {
+        stream.write(141)
+        writeValue(stream, value.toList())
+      }
+      is ExecutionProbeResult -> {
+        stream.write(142)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -564,6 +915,161 @@ private open class NexusApiPigeonCodec : StandardMessageCodec() {
 }
 
 
+/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+interface NexusLibraryApi {
+  fun listGames(offset: Long, limit: Long, query: String, callback: (Result<LibraryResult>) -> Unit)
+  fun getGame(gameId: String, callback: (Result<GameDetails>) -> Unit)
+  fun updateGame(gameId: String, title: String, executableRelativePath: String, callback: (Result<GameRecord>) -> Unit)
+  fun removeGame(gameId: String, callback: (Result<Unit>) -> Unit)
+  fun beginImport(kind: ImportKind): ImportProgress
+  fun getImportProgress(): ImportProgress
+  fun cancelImport(jobId: String)
+
+  companion object {
+    /** The codec used by NexusLibraryApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      NexusApiPigeonCodec()
+    }
+    /** Sets up an instance of `NexusLibraryApi` to handle messages through the `binaryMessenger`. */
+    @JvmOverloads
+    fun setUp(binaryMessenger: BinaryMessenger, api: NexusLibraryApi?, messageChannelSuffix: String = "") {
+      val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.listGames$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val offsetArg = args[0] as Long
+            val limitArg = args[1] as Long
+            val queryArg = args[2] as String
+            api.listGames(offsetArg, limitArg, queryArg) { result: Result<LibraryResult> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NexusApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NexusApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.getGame$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val gameIdArg = args[0] as String
+            api.getGame(gameIdArg) { result: Result<GameDetails> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NexusApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NexusApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.updateGame$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val gameIdArg = args[0] as String
+            val titleArg = args[1] as String
+            val executableRelativePathArg = args[2] as String
+            api.updateGame(gameIdArg, titleArg, executableRelativePathArg) { result: Result<GameRecord> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NexusApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NexusApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.removeGame$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val gameIdArg = args[0] as String
+            api.removeGame(gameIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NexusApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NexusApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.beginImport$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val kindArg = args[0] as ImportKind
+            val wrapped: List<Any?> = try {
+              listOf(api.beginImport(kindArg))
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.getImportProgress$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getImportProgress())
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusLibraryApi.cancelImport$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val jobIdArg = args[0] as String
+            val wrapped: List<Any?> = try {
+              api.cancelImport(jobIdArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface NexusHostApi {
   fun getDeviceProfile(callback: (Result<DeviceProfile>) -> Unit)

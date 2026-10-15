@@ -37,6 +37,46 @@ All existing Flutter/bridge/build/lint/release gates
 remain; CI now additionally runs the native unit tests. The unchanged toolchain
 advisories documented in earlier phases remain separate from this feature.
 
+## Native persistence and picker ownership
+
+The second slice adds the SQLite schema, paged literal-title search, validated
+metadata edits, duplicate rejection, staged publication and deletion recovery.
+A process-lifetime IO worker serializes operations and exposes typed progress
+through a separate Pigeon API. It owns picker-returned read grants, never persists
+source URIs, and keeps copying/SQLite off the UI thread. Replacing the Flutter
+engine does not create another recovery worker. Closing an outstanding picker
+owner cancels that selection; a running copy stays with the process. Keep the app
+open: there is no foreground service or resumable background-import claim.
+Cancellation during copying is cooperative; publication itself is non-cancellable.
+Library reads/edits are rejected as busy while an import is active.
+If import cleanup fails, new imports are blocked until a cold restart can recover
+the workspace; repeated retries cannot accumulate more unfinished copies.
+
+On 2026-10-15, all 14 Android integration checks passed on an isolated ARM64
+API 37 emulator: single-candidate metadata/hash, reopen persistence, parameterized
+literal search, duplicate/source preservation, validated executable/title edits,
+changed-executable rejection, no-follow removal, unfinished-stage cleanup,
+orphan-rename recovery, transactional rollback, deletion-journal recovery,
+tampered-ownership refusal, incomplete unused-marker cleanup, and isolated import
+job ownership/cleanup-failure latch checks. The latter fault-injects state through
+debug-only reflection, without touching the real singleton or library. The debug-only
+harness uses a fresh private sandbox, never the real library, and does not ship
+in release builds. Fixtures are synthetic headers, not playable games.
+
+Reproduce after building the production debug ARM64 APK:
+
+```sh
+ADB=/path/to/adb bash tools/run-library-storage-check.sh EXPLICIT_DEVICE_SERIAL
+```
+
+The script installs the debug APK and launches only the isolated harness on the
+explicit device. It requires a fresh matching report nonce; stale success cannot
+satisfy the check. Three additional Flutter tests cover library DTO/channel sizes,
+nullable candidate selection, import states and native errors. The real picker
+flow, provider behavior, library UI and physical Xiaomi/HyperOS checks are still
+pending. The owner's phone was busy; it was not connected or interrupted for these
+checks. User imports remain disabled until the next UI slice.
+
 ## Remaining full-phase acceptance
 
 - [ ] Persistent, paged/searchable SQLite records survive cold restart.
