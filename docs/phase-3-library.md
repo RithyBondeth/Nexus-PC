@@ -6,7 +6,8 @@ The owner approved Android SQLite in place of the planned Isar database. See
 [ADR 0002](architecture/0002-local-library.md) for the safety contract, alternatives,
 limits and trust model. The review skill keeps implementation in small sequential
 PRs: import policy/copier tests, native persistence/picker ownership, Flutter
-library state/tests, then screens and end-to-end acceptance. All belong to Phase 3; Phase 4 does not start
+library state/tests, the details editor, then library wiring and end-to-end
+acceptance. All belong to Phase 3; Phase 4 does not start
 until they are merged and the full gate passes.
 
 ## Safety primitives
@@ -93,8 +94,25 @@ overlapping imports, obsolete responses, completion, cancellation, title searche
 deleted last pages, retry, cleanup-pending restrictions, picker failure, debouncing,
 and disposal. Regression cases cover an obsolete failed progress read stopping a
 new job's polling and inconsistent empty-page metadata causing recursive reads.
-The full Flutter suite now contains 42 tests. This controller is not yet wired
+That slice brought the Flutter suite to 42 tests. This controller is not yet wired
 into production screens; physical acceptance remains pending.
+
+## Copy details editor
+
+The standalone details screen reads native metadata, displays candidate paths,
+architectures and full executable/tree hashes, and permits validated title and
+executable edits. Multi-executable copies require an explicit choice. Save failures
+remain errors, never successful-save notices. Removal requires confirmation that
+only the app-private copy is deleted; the route closes only after native success.
+Pending mutations disable controls and system Back; pending reads can still be
+left safely. No runtime or compatibility result is fabricated.
+
+Eight widget tests cover choice/title validation, read/retry, save failures,
+confirmed removal, long content at 320/1440 pixels with 200% text, and touch-target,
+label and contrast guidance in both themes. The full Flutter suite has 50 tests.
+This screen is intentionally not yet reachable from the old shell: the next
+reviewable slice wires the library and real picker flow. Physical acceptance is
+still pending; the busy Xiaomi was not touched.
 
 ## Remaining full-phase acceptance
 
