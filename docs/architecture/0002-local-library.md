@@ -25,12 +25,15 @@ copies. Do not store source URIs or request broad storage permissions. Sources
 are never renamed, overwritten or deleted. Support folders and single-disk ZIP32
 archives; encryption, ZIP64, RAR, TAR and 7z are explicitly unsupported here.
 
-Copies are staged beneath a fresh UUID with an ownership marker outside imported
-content. Successful validation precedes rename and database publication. Recovery
+Copies are staged beneath a fresh UUID with an ownership marker in a separate
+`owners` directory, outside both imported content and removable UUID leaves.
+Successful validation precedes rename and database publication. Recovery
 removes owned unfinished workspaces and orphan copies; deletion is journaled in
 SQLite and touches only an owned UUID leaf. No-follow traversal deletes links
 themselves, not their targets. This relies on app-private storage being writable
 only by this app; it is not a sandbox for future code executing under the same UID.
+Recovery covers process interruption; this is not a power-loss durability promise
+for every filesystem rename. Database publication uses a SQLite transaction.
 
 Paths reject traversal, absolute/drive/UNC paths, control characters, Windows
 reserved names, trailing dots/spaces and case/Unicode aliases. ZIP metadata is
