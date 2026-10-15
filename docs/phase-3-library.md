@@ -5,8 +5,8 @@ Status: in progress. This phase is not complete and the Phase 2 UI still disable
 The owner approved Android SQLite in place of the planned Isar database. See
 [ADR 0002](architecture/0002-local-library.md) for the safety contract, alternatives,
 limits and trust model. The review skill keeps implementation in small sequential
-PRs: import policy/copier tests, native persistence/picker ownership, then library
-screens and end-to-end acceptance. All belong to Phase 3; Phase 4 does not start
+PRs: import policy/copier tests, native persistence/picker ownership, Flutter
+library state/tests, then screens and end-to-end acceptance. All belong to Phase 3; Phase 4 does not start
 until they are merged and the full gate passes.
 
 ## Safety primitives
@@ -76,6 +76,25 @@ nullable candidate selection, import states and native errors. The real picker
 flow, provider behavior, library UI and physical Xiaomi/HyperOS checks are still
 pending. The owner's phone was busy; it was not connected or interrupted for these
 checks. User imports remain disabled until the next UI slice.
+
+## Flutter library state
+
+The next reviewable slice adds the UI state controller without yet enabling
+imports or changing the shell. It uses the generated native library API directly;
+only tests inject fixtures. It reads pages of 50, debounces title searches,
+rejects stale list/progress responses, discovers process-owned imports, and polls
+only while an import is active. It refreshes on completion and keeps native
+failures visible rather than replacing them with an empty library. Cancellation
+uses the native job ID and outcome; committing is not cancellable. Disposing UI
+state stops its timers, not the Android-owned copy.
+
+Eighteen controller tests cover paging, missing channels, busy-library guards,
+overlapping imports, obsolete responses, completion, cancellation, title searches,
+deleted last pages, retry, cleanup-pending restrictions, picker failure, debouncing,
+and disposal. Regression cases cover an obsolete failed progress read stopping a
+new job's polling and inconsistent empty-page metadata causing recursive reads.
+The full Flutter suite now contains 42 tests. This controller is not yet wired
+into production screens; physical acceptance remains pending.
 
 ## Remaining full-phase acceptance
 
