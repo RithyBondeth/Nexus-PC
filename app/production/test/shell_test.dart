@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nexus_app/main.dart';
 import 'package:nexus_app/platform/nexus_platform.dart';
 import 'package:nexus_app/shell/shell_controller.dart';
+import 'library_fakes.dart';
 import 'foundation_test.dart' show FakeHost, device, unavailable;
 
 class CountingHost extends FakeHost {
@@ -38,7 +39,9 @@ Future<PigeonNexusPlatform> mountShell(
   addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
   final platform = PigeonNexusPlatform(host: host);
   addTearDown(platform.close);
-  await tester.pumpWidget(NexusApp(platform: platform));
+  await tester.pumpWidget(
+    NexusApp(platform: platform, libraryApi: FakeLibraryApi()),
+  );
   await tester.pumpAndSettle();
   return platform;
 }
@@ -72,14 +75,7 @@ void main() {
     await tester.tap(find.text('Library').last);
     await tester.pumpAndSettle();
     expect(find.text('No games yet'), findsOneWidget);
-    expect(
-      tester
-          .widget<FilledButton>(
-            find.widgetWithText(FilledButton, 'Import games · Phase 3'),
-          )
-          .onPressed,
-      isNull,
-    );
+    expect(find.text('Import folder'), findsOneWidget);
     await tester.tap(find.text('Device').last);
     await tester.pumpAndSettle();
     expect(find.text('Xiaomi test'), findsOneWidget);

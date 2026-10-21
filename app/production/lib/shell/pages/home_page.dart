@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Game importing arrives in Phase 3. For now, explore your library space and check your device.',
+              'Import a DRM-free game folder or ZIP, manage your local copies, and check runtime status below before launching.',
             ),
             const SizedBox(height: 16),
             FilledButton(
@@ -69,7 +69,7 @@ class HomePage extends StatelessWidget {
       RuntimeSummary(controller: controller),
       const SizedBox(height: 16),
       const Text(
-        'A detected device does not establish Windows-game compatibility. Runtime integration is a later phase.',
+        'A detected device does not establish Windows-game compatibility. Windows launching is experimental and requires the optional runtime build.',
       ),
     ],
   );

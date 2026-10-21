@@ -12,10 +12,12 @@ class NexusShell extends StatefulWidget {
   const NexusShell({
     super.key,
     required this.platform,
+    this.libraryApi,
     required this.appearance,
     required this.onAppearanceChanged,
   });
   final NexusPlatform platform;
+  final NexusLibraryApi? libraryApi;
   final ThemeMode appearance;
   final ValueChanged<ThemeMode> onAppearanceChanged;
   @override
@@ -76,7 +78,7 @@ class _NexusShellState extends State<NexusShell> {
                 onLibrary: () => select(1),
                 onDevice: () => select(2),
               ),
-              LibraryPage(onDevice: () => select(2)),
+              LibraryPage(api: widget.libraryApi, platform: widget.platform),
               DevicePage(
                 controller: controller,
                 onDiagnostics: openDiagnostics,

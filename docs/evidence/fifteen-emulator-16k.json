@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "testedAtUtc": "2026-10-21T01:33:00.634114+00:00",
+  "method": "Manual Android input and screenshot inspection, plus file/process verification",
+  "installedApkSha256": "1e33e512a9b3625a459a96e946369305504d0cae1b801792615de5abce6d4fda",
+  "emulator": {
+    "serial": "emulator-5554",
+    "qemu": true,
+    "fingerprint": "google/sdk_gphone16k_arm64/emu64a16k:17/CP31.260623.009/15923651:user/dev-keys",
+    "linkerPageCompat": "fatal",
+    "packagePageCompatDisabled": "true"
+  },
+  "androidApi": 37,
+  "pageSize": 16384,
+  "physicalDeviceUsed": false,
+  "game": {
+    "name": "Fifteen",
+    "version": "20260923.616da16",
+    "platform": "Windows x86-64",
+    "source": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/fifteen.exe",
+    "license": "MIT",
+    "sha256": "4e576db74c72107ec3e4eea6d1d4f6ddc34c1ebe6e14281da88d9557d71a59c5",
+    "import": "Existing system-picker ZIP import, including licence.html, retained through APK updates"
+  },
+  "runtimeProfile": "host-pages-v2-16384",
+  "wineEsync": false,
+  "wineDispatcherAddress": "0x7ffe4000",
+  "checks": {
+    "renderedBoard": true,
+    "keyboardMove": true,
+    "pointerMenuInput": true,
+    "saveDialog": true,
+    "saveFileWritten": true,
+    "secondMove": true,
+    "undo": true,
+    "redo": true,
+    "loadReturnedToSavedBoard": true,
+    "normalQuitReturnedToStopped": true,
+    "relaunch": true,
+    "saveLoadedAfterRelaunch": true,
+    "androidBackOpenedRuntimeMenu": true,
+    "runtimeExitReturnedToStopped": true,
+    "noWineProcessesAfterExit": true
+  },
+  "observedMoveCounts": {
+    "initial": 0,
+    "saved": 1,
+    "afterSecondMove": 2,
+    "undo": 1,
+    "redo": 2,
+    "loaded": 1,
+    "newSession": 0,
+    "loadedAfterRelaunch": 1
+  },
+  "save": {
+    "path": "G:\\16k-final.sav",
+    "sizeBytes": 246,
+    "sha256": "d05aee24dd4d7902faf281cc5f8acdbbecc7854a8331e1cce89eeb0116bfcfb0"
+  },
+  "screenshots": {
+    "save": {
+      "path": "fifteen-emulator-16k-save.png",
+      "sha256": "f7c00767c65883a6b26627ce0ab7f3428b70766296f136c5c7ded900623f5705"
+    },
+    "loaded": {
+      "path": "fifteen-emulator-16k-loaded.png",
+      "sha256": "fe54abcc9bc1d8d2b3ce1c5e7fe10ac4a6f5e457b6f3b9b34725b4eb9f347dd2"
+    }
+  },
+  "limits": [
+    "GDI puzzle and original smoke game only",
+    "Interpreter only; no Direct3D, sound, controller or physical-device acceptance",
+    "Debug APK; distribution/license and release review remain pending"
+  ]
+}

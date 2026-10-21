@@ -1,0 +1,21 @@
+{
+  "checkId": "20261020T022104Z-57131",
+  "androidApi": 37,
+  "passed": true,
+  "checks": [
+    "publishAndSelectSingle",
+    "sqliteReopenPersistence",
+    "literalParameterizedSearch",
+    "duplicatePreservesExistingAndSource",
+    "validatedExecutableAndTitleUpdate",
+    "changedExecutableRejected",
+    "removeNeverFollowsPayloadLinks",
+    "incompleteStageRecovery",
+    "renameBeforePublicationRecovery",
+    "transactionFailureRollsBackCopy",
+    "deletionJournalRecovery",
+    "tamperedOwnershipFailsClosed",
+    "truncatedUnusedMarkerRecovery",
+    "jobOwnershipAndCleanupFailureLatch"
+  ]
+}

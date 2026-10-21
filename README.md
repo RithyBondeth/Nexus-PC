@@ -37,5 +37,19 @@ See [Phase 1 acceptance and limitations](docs/phase-1-foundation.md).
 
 Phase 2 adds Home, Library, Device and Settings navigation, shared live device
 status, accessible adaptive layouts and session-only appearance controls.
-Game import and Windows runtime integration are still unavailable. See
+Windows runtime integration is still unavailable. See
 [Phase 2 behavior and validation](docs/phase-2-shell.md) for acceptance status.
+
+Phase 3 now connects the native SQLite library to the app: folder/ZIP imports,
+progress/cancellation, paged title search, executable selection, title edits,
+file hashes and confirmed removal of imported copies. Automated checks and
+system-picker flows have been exercised on an ARM64 Android emulator. Physical
+Xiaomi/HyperOS acceptance remains pending; Phase 3 is not declared complete.
+See [Phase 3 status and validation](docs/phase-3-library.md).
+
+An opt-in experimental Windows runtime now connects the library to pinned
+Wine/Box64 at target API 36. The original x86-64 GDI game passed import, launch,
+rendering, input and clean exit on 4 KB and 16 KB ARM64 emulators. See
+[16 KB validation](docs/runtime-16k.md). The ordinary APK excludes
+this runtime; general game compatibility remains unverified in
+the experiment. See [runtime emulator validation](docs/runtime-emulator.md).

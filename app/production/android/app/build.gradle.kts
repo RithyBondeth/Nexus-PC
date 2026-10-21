@@ -45,3 +45,17 @@ flutter {
 }
 
 dependencies { testImplementation("junit:junit:4.13.2") }
+
+// Explicit experimental build; the ordinary app remains independently buildable.
+if (providers.gradleProperty("nexusRuntime").orNull == "true") {
+    require(rootProject.file("../../../runtime/vendor/production/assets/nexus-runtime-build.json").isFile) {
+        "Prepare the experimental runtime first: python3 tools/prepare-production-runtime.py"
+    }
+    android.sourceSets.getByName("main").apply {
+        java.srcDir("src/runtime/kotlin")
+        manifest.srcFile("src/runtime/AndroidManifest.xml")
+    }
+    android.packaging.jniLibs.pickFirsts += setOf("**/libc++_shared.so")
+    android.packaging.jniLibs.keepDebugSymbols += "**/libnexus_*.so"
+    dependencies { implementation(project(":runtime")) }
+}

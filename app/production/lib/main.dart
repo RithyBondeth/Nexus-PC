@@ -5,8 +5,9 @@ import 'platform/nexus_platform.dart';
 void main() => runApp(const NexusApp());
 
 class NexusApp extends StatefulWidget {
-  const NexusApp({super.key, this.platform});
+  const NexusApp({super.key, this.platform, this.libraryApi});
   final NexusPlatform? platform;
+  final NexusLibraryApi? libraryApi;
   @override
   State<NexusApp> createState() => _NexusAppState();
 }
@@ -34,6 +35,7 @@ class _NexusAppState extends State<NexusApp> {
     themeMode: appearance,
     home: NexusShell(
       platform: platform,
+      libraryApi: widget.libraryApi,
       appearance: appearance,
       onAppearanceChanged: (value) => setState(() => appearance = value),
     ),

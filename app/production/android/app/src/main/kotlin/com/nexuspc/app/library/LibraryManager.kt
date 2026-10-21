@@ -25,11 +25,13 @@ class LibraryManager private constructor(private val context: Context) {
     private var control: CopyControl? = null
     private var signal: CancellationSignal? = null
     private var cancellationRequested = false
+    private var runtimeLease: String? = null
 
     @Synchronized fun progress() = ImportProgress(state, code, message,
         control?.bytes ?: 0, control?.files ?: 0, jobId, gameId)
     @Synchronized private fun active() = state in listOf(ImportState.CHOOSING, ImportState.COPYING, ImportState.COMMITTING)
     @Synchronized fun begin(): ImportProgress {
+        if (runtimeLease != null) throw FlutterError("runtime_busy", "Stop the game before importing.")
         if (active()) throw FlutterError("import_busy", "Wait for the current import or cancel it.")
         if (code == "cleanup_pending") throw FlutterError("cleanup_pending", "Restart Nexus-PC to recover the unfinished copy before another import.")
         state = ImportState.CHOOSING; code = "choosing"; message = "Choose a source in the system picker."
@@ -95,6 +97,7 @@ class LibraryManager private constructor(private val context: Context) {
     }
     fun <T> access(callback: (Result<T>) -> Unit, operation: (LibraryStore) -> T) {
         synchronized(this) {
+            if (runtimeLease != null) { callback(Result.failure(FlutterError("runtime_busy", "Stop the game before accessing the library."))); return }
             if (active()) { callback(Result.failure(FlutterError("import_busy", "Wait for the current import to finish."))); return }
             worker.execute {
                 val result = try { Result.success(operation(store())) }
@@ -103,6 +106,30 @@ class LibraryManager private constructor(private val context: Context) {
                 main.post { callback(result) }
             }
         }
+    }
+    // Acquiring under the same monitor as access/begin reserves the next worker
+    // operation. Prior queued edits finish first; later edits/imports are rejected.
+    fun acquireRuntime(id: String, executable: String, callback: (Result<Pair<String, File>>) -> Unit) {
+        synchronized(this) {
+            if (active() || runtimeLease != null || code == "cleanup_pending") {
+                callback(Result.failure(FlutterError("runtime_busy", "Finish the import or running game before launching.")))
+                return
+            }
+            val lease = LibraryStore.newId()
+            runtimeLease = lease
+            worker.execute {
+                val result = try { Result.success(lease to store().runtimeExecutable(id, executable)) }
+                    catch (error: Exception) {
+                        releaseRuntime(lease)
+                        Result.failure<Pair<String, File>>(FlutterError((error as? ImportRejected)?.code ?: "library_error",
+                            (error as? ImportRejected)?.message ?: "Could not open this library copy."))
+                    }
+                main.post { callback(result) }
+            }
+        }
+    }
+    @Synchronized fun releaseRuntime(lease: String) {
+        if (runtimeLease == lease) runtimeLease = null
     }
     private fun store(): LibraryStore = storage ?: LibraryStore(context).also { storage = it }
     companion object {

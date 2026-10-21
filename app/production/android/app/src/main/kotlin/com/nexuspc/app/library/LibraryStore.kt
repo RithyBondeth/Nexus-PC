@@ -126,6 +126,17 @@ class LibraryStore(context: Context, rootOverride: File? = null) : AutoCloseable
         db.update("games", ContentValues().apply { put("title", validTitle); put("selected", executable) }, "id=? AND deleting=0", arrayOf(id))
         return details(id).game
     }
+    /** Must be called on the library worker while its runtime lease is held. */
+    fun runtimeExecutable(id: String, executable: String): File {
+        val game = details(id).game
+        if (game.executableRelativePath != executable || game.architecture != "x86_64")
+            throw ImportRejected("unsupported_executable", "Choose the saved x86-64 executable before launching.")
+        val root = File(owned(games, id), "content")
+        val candidate = PeInspector.inspect(root, executable)
+        if (candidate == null || candidate.sha256 != game.sha256)
+            throw ImportRejected("executable_changed", "The executable has changed. Reimport this game.")
+        return ImportPolicy.child(root, executable).canonicalFile
+    }
     fun remove(id: String) {
         details(id) // Database ownership is required before touching a game copy.
         if (File(games, id).exists()) owned(games, id)

@@ -18,8 +18,20 @@ class NexusHost(private val context: Context, messenger: BinaryMessenger) : Nexu
     private val events = NexusEventApi(messenger)
     private val logs = ArrayDeque<RuntimeLog>()
     @Volatile private var closed = false
+    private val runtime: RuntimeBackend? = try {
+        Class.forName("com.nexuspc.app.runtime.WindowsRuntime")
+            .getConstructor(android.app.Activity::class.java)
+            .newInstance(context as android.app.Activity) as RuntimeBackend
+    } catch (_: ClassNotFoundException) { null }
     private val unavailable = RuntimeStatus(RuntimeState.UNAVAILABLE, "runtime_unavailable",
-        "Game runtime is not integrated yet.", System.currentTimeMillis())
+        "Windows runtime is not packaged in this build.", System.currentTimeMillis())
+
+    init {
+        runtime?.onStatus = { status ->
+            record(LogLevel.INFO, status.code, status.message)
+            main.post { if (!closed) events.onRuntimeStatus(status) { } }
+        }
+    }
 
     private fun <T> background(callback: (Result<T>) -> Unit, operation: () -> T) {
         worker.execute {
@@ -79,7 +91,7 @@ class NexusHost(private val context: Context, messenger: BinaryMessenger) : Nexu
             val code = if (passed) "execution_probe_pass" else "execution_probe_failed"
             record(if (passed) LogLevel.INFO else LogLevel.ERROR, code, "Exit $exit; $output")
             ExecutionProbeResult(passed,
-                if (passed) "Bundled native helper executed on target API 36. Windows runtime remains unavailable."
+                if (passed) "Bundled native helper executed on target API 36. This helper does not test Windows execution."
                 else "Native helper failed (exit $exit).", exit.toLong(), executable.absolutePath)
         } finally {
             if (process.isAlive) process.destroyForcibly()
@@ -88,7 +100,7 @@ class NexusHost(private val context: Context, messenger: BinaryMessenger) : Nexu
             process.errorStream.close()
         }
     }
-    override fun getRuntimeStatus(): RuntimeStatus = unavailable
+    override fun getRuntimeStatus(): RuntimeStatus = runtime?.status() ?: unavailable
     private fun validate(request: LaunchRequest) {
         val path = request.executableRelativePath
         if (request.gameId.isBlank() || path.isBlank() || path.startsWith("/") ||
@@ -99,19 +111,20 @@ class NexusHost(private val context: Context, messenger: BinaryMessenger) : Nexu
     }
     private fun reject(request: LaunchRequest, callback: (Result<RuntimeStatus>) -> Unit) = background(callback) {
         validate(request)
-        record(LogLevel.WARNING, "runtime_unavailable", "Launch rejected: runtime is not integrated")
+        record(LogLevel.WARNING, "runtime_unavailable", "Launch rejected: runtime is not packaged")
         main.post { if (!closed) events.onRuntimeStatus(unavailable) { } }
         throw FlutterError("runtime_unavailable", unavailable.message)
     }
-    override fun prepareRuntime(request: LaunchRequest, callback: (Result<RuntimeStatus>) -> Unit) = reject(request, callback)
-    override fun launchGame(request: LaunchRequest, callback: (Result<RuntimeStatus>) -> Unit) = reject(request, callback)
-    override fun stopGame(callback: (Result<RuntimeStatus>) -> Unit) = background(callback) { unavailable }
+    override fun prepareRuntime(request: LaunchRequest, callback: (Result<RuntimeStatus>) -> Unit) = runtime?.prepare(request, callback) ?: reject(request, callback)
+    override fun launchGame(request: LaunchRequest, callback: (Result<RuntimeStatus>) -> Unit) = runtime?.launch(request, callback) ?: reject(request, callback)
+    override fun stopGame(callback: (Result<RuntimeStatus>) -> Unit) = runtime?.stop(callback) ?: background(callback) { unavailable }
     override fun getRecentLogs(limit: Long): List<RuntimeLog> {
         if (limit !in 1L..128L) throw FlutterError("invalid_argument", "Log limit must be 1 through 128.")
         return synchronized(logs) { logs.toList().takeLast(limit.toInt()) }
     }
     fun close() {
         closed = true
+        runtime?.close()
         worker.shutdownNow()
     }
 }
