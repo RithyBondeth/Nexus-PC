@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "box64": {
+    "commit": "ae3412c1bf9179b341996e18b656f11fd145f01e",
+    "url": "https://codeload.github.com/ptitSeb/box64/tar.gz/ae3412c1bf9179b341996e18b656f11fd145f01e",
+    "sha256": "d1cce91ee1863e3d0eca65faaa28a8c8d2e05783077e081d7857ee0df06fbee5",
+    "version": "0.4.5-dev",
+    "dynarec": false
+  },
+  "zig": {
+    "version": "0.14.1",
+    "hosts": {
+      "aarch64-macos": {
+        "tarball": "https://ziglang.org/download/0.14.1/zig-aarch64-macos-0.14.1.tar.xz",
+        "shasum": "39f3dc5e79c22088ce878edc821dedb4ca5a1cd9f5ef915e9b3cc3053e8faefa",
+        "size": "45903552"
+      },
+      "x86_64-macos": {
+        "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-macos-0.14.1.tar.xz",
+        "shasum": "b0f8bdfb9035783db58dd6c19d7dea89892acc3814421853e5752fe4573e5f43",
+        "size": "51044512"
+      },
+      "aarch64-linux": {
+        "tarball": "https://ziglang.org/download/0.14.1/zig-aarch64-linux-0.14.1.tar.xz",
+        "shasum": "f7a654acc967864f7a050ddacfaa778c7504a0eca8d2b678839c21eea47c992b",
+        "size": "44954692"
+      },
+      "x86_64-linux": {
+        "tarball": "https://ziglang.org/download/0.14.1/zig-x86_64-linux-0.14.1.tar.xz",
+        "shasum": "24aeeec8af16c381934a6cd7d95c807a8cb2cf7df9fa40d359aa884195c4716c",
+        "size": "49086504"
+      }
+    }
+  },
+  "androidNdk": "28.2.13676358",
+  "cmake": "3.22.1",
+  "unsupportedFeatures": [
+    "MIDI synthesis",
+    "PulseAudio"
+  ],
+  "zstdJni": {
+    "version": "1.5.7-6",
+    "aarUrl": "https://repo.maven.apache.org/maven2/com/github/luben/zstd-jni/1.5.7-6/zstd-jni-1.5.7-6.aar",
+    "aarSha256": "7ceecc8bfc2f49817afc34965962c50b1c47ba5f60584e8a96efd4f813e46393"
+  }
+}

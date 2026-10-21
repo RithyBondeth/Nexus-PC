@@ -176,7 +176,36 @@ class LibraryCheckActivity : Activity() {
                     hostRejects("cleanup_pending") { owner.begin() }
                     check(owner.progress().code == "cleanup_pending")
                 }
-                report.put("passed", checks.length() == 14)
+                verify("runtimeLeaseValidatesAndBlocksMutations") {
+                    val game = publish("Lease test")
+                    val constructor = LibraryManager::class.java.getDeclaredConstructor(android.content.Context::class.java)
+                    constructor.isAccessible = true
+                    val owner = constructor.newInstance(context)
+                    LibraryManager::class.java.getDeclaredField("storage").apply { isAccessible = true }.set(owner, store)
+                    val acquired = java.util.concurrent.CountDownLatch(1)
+                    var lease: String? = null
+                    var acquisition: Result<Pair<String, File>>? = null
+                    owner.acquireRuntime(game, "game.exe") { acquisition = it; lease = it.getOrNull()?.first; acquired.countDown() }
+                    check(acquired.await(10, java.util.concurrent.TimeUnit.SECONDS))
+                    check(acquisition!!.isSuccess && acquisition!!.getOrThrow().second.isFile)
+                    try { owner.begin(); error("Expected runtime_busy") }
+                    catch (error: com.nexuspc.app.FlutterError) { check(error.code == "runtime_busy") }
+                    var rejected = false
+                    owner.access<Unit>({ rejected = (it.exceptionOrNull() as? com.nexuspc.app.FlutterError)?.code == "runtime_busy" }) { error("Must not access leased storage") }
+                    check(rejected)
+                    owner.releaseRuntime("wrong-token")
+                    try { owner.begin(); error("Expected runtime_busy") }
+                    catch (error: com.nexuspc.app.FlutterError) { check(error.code == "runtime_busy") }
+                    owner.releaseRuntime(lease!!)
+                    val job = owner.begin().jobId!!
+                    owner.cancel(job)
+                    rejects("unsupported_executable") { store!!.runtimeExecutable(game, "different.exe") }
+                    check(store!!.runtimeExecutable(game, "game.exe").isFile)
+                    store!!.remove(game)
+                    (LibraryManager::class.java.getDeclaredField("worker").apply { isAccessible = true }.get(owner) as java.util.concurrent.ExecutorService).shutdownNow()
+                }
+                report.put("passed", checks.length() == 15)
+
             } catch (error: Throwable) {
                 report.put("passed", false).put("error", "${error.javaClass.simpleName}: ${error.message}")
                 android.util.Log.e("NexusLibraryChecks", "Native checks failed", error)

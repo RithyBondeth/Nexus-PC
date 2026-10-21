@@ -24,15 +24,22 @@ void main() {
     await binding.takeScreenshot('home');
     await tester.tap(find.text('Library').last);
     await tester.pumpAndSettle();
-    expect(find.text('No games yet'), findsOneWidget);
+    final library = await NexusLibraryApi().listGames(0, 50, '');
+    expect(
+      find.text(
+        library.games.isEmpty ? 'No games yet' : library.games.first.title,
+      ),
+      findsOneWidget,
+    );
     expect(
       tester
           .widget<FilledButton>(
-            find.widgetWithText(FilledButton, 'Import games · Phase 3'),
+            find.widgetWithText(FilledButton, 'Import folder'),
           )
           .onPressed,
-      isNull,
+      isNotNull,
     );
+    expect(find.text('Import ZIP'), findsOneWidget);
     await binding.takeScreenshot('library');
     await tester.tap(find.text('Device').last);
     await tester.pumpAndSettle();

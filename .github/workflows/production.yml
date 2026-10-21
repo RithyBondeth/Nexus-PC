@@ -32,7 +32,13 @@ jobs:
       - run: dart format --output=none --set-exit-if-changed lib pigeons test integration_test test_driver
       - run: flutter analyze
       - run: flutter test
+      - name: Guest memory adapter guard tests
+        run: bash ../../tools/run-guest-memory-tests.sh
+      - name: Native page auditor regression tests
+        run: python3 ../../tools/test_runtime_pages.py
       - run: flutter build apk --debug --target-platform android-arm64
+      - name: Native ELF and packaging alignment
+        run: python3 ../../tools/check_runtime_pages.py build/app/outputs/flutter-apk/app-debug.apk > build/runtime-page-audit.json
       - name: Android unit tests and lint
         working-directory: app/production/android
         run: ./gradlew testDebugUnitTest lintDebug

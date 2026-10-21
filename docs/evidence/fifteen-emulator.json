@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-20",
+  "timezone": "Asia/Phnom_Penh",
+  "passed": true,
+  "scope": "One real Windows GDI puzzle game; experimental compatibility, not release acceptance.",
+  "game": {
+    "name": "Simon Tatham's Fifteen",
+    "version": "20260923.616da16",
+    "source": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/fifteen.exe",
+    "licence": "MIT",
+    "licenceUrl": "https://www.chiark.greenend.org.uk/~sgtatham/puzzles/doc/licence.html",
+    "architecture": "x86-64",
+    "sha256": "4e576db74c72107ec3e4eea6d1d4f6ddc34c1ebe6e14281da88d9557d71a59c5"
+  },
+  "device": {
+    "serial": "emulator-5556",
+    "avd": "Nexus_Runtime_API36",
+    "qemu": true,
+    "androidApi": 36,
+    "targetApi": 36,
+    "pageSize": 4096,
+    "box64Dynarec": false,
+    "physicalDeviceUsed": false
+  },
+  "apk": {
+    "artifact": "app/production/build/runtime-apk/nexus-pc-runtime-debug.apk",
+    "sha256": "7d6b37c1dc6bf27faaa27cdb2dc458f793500f560359b02fd92fd4a82147297a",
+    "sizeBytes": 304795912,
+    "androidTargetApi": 36,
+    "experimental": true,
+    "signedFor": "debug"
+  },
+  "manualUiChecks": {
+    "systemZipPickerImport": "passed",
+    "libraryLaunchAndRendering": "passed",
+    "arrowKeyMoveAndCounter": "passed",
+    "relativeTouchpadMenuInput": "passed",
+    "saveInGameDriveG": "passed",
+    "newPuzzleThenLoadRestoresBoard": "passed",
+    "undoRedoAfterLoad": "passed",
+    "quitAndRelaunch": "passed",
+    "androidBackOpensDrawer": "passed",
+    "nativeExitReturnsIdle": "passed",
+    "forceStopDuringGameplayThenRelaunchAndLoad": "passed"
+  },
+  "nativeAssertions": {
+    "importedExecutableHashMatches": true,
+    "actualGuestCwd": "/data/data/com.nexuspc.app/no_backup/library-v1/games/7c4826f6-6e3b-4876-aff9-bf41147670dd/content",
+    "observedGuestRssKiB": 36944,
+    "saveFile": "final.sav",
+    "saveSizeBytes": 246,
+    "saveSha256": "16e0ce50c6c34b893cc4b9fca5bdb3a6772b0aae547243dc140b34598e6e4e97",
+    "saveUnchangedAfterInterruption": true,
+    "finalRuntimeMessage": "Windows session stopped.",
+    "guestProcessesRemaining": 0,
+    "installedApkHashMatchesArtifact": true
+  },
+  "automatedChecks": {
+    "flutterAnalyze": "passed",
+    "flutterTests": 53,
+    "jvmTests": 24,
+    "androidLint": "passed",
+    "guestMemoryGuardTests": "passed",
+    "originalWindowsBridgeRegression": "passed",
+    "bridgeChecks": [
+      "originalGameImported",
+      "typedPrepareReady",
+      "typedLaunchRequested",
+      "libraryLockedWhileRunning",
+      "gameDirectoryAndDriveMapped",
+      "renderInputAndCleanExit"
+    ]
+  },
+  "fixes": [
+    "Use the selected executable directory as child cwd and Wine drive G: for library games.",
+    "Handle modern Android Back with the runtime drawer and classify intentional Exit as a stop."
+  ],
+  "evidence": {
+    "restoredAfterInterruption": "fifteen-emulator-loaded.png",
+    "saveDialog": "fifteen-emulator-save.png",
+    "automatedBridge": "runtime-emulator-windows.json"
+  },
+  "limitations": [
+    "4 KB ARM64 and primary Android user only",
+    "One GDI puzzle game; graphics/audio/controllers and broader compatibility unverified",
+    "RSS is one process sample, not a benchmark",
+    "Force-stop tests restart and saved data persistence, not automatic unsaved-session restoration",
+    "API 31\u201332 Back path not tested",
+    "Same application UID and shared prefix; trusted games only"
+  ]
+}

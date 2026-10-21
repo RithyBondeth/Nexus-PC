@@ -1,0 +1,29 @@
+{
+  "checkId": "76e07f6b-be8c-4897-aefd-23dad0807822",
+  "androidApi": 36,
+  "targetApi": 36,
+  "pageSize": 4096,
+  "runtimeBuild": {
+    "schemaVersion": 1,
+    "bundleSha256": "ea5c81bf0e5b90a6b9ccb8007121ab6738c8646a5a60b341ce0ac2b33f1d100a",
+    "sourceCommit": "3981d86efa4f333b2a34a7da8b6521476cd8c8b9",
+    "nativeMapSha256": "5c810a66f3101e52090b6ae1b92d3c8444acec807900eb0d8f48944c91324c1c",
+    "memoryAdapterSha256": "794662e643adde3fd0cc537d48e8a6a742fbf21ea65e469e9c985bf5d267de25",
+    "supportedPageSizes": [
+      4096
+    ],
+    "box64Dynarec": false
+  },
+  "guestWorkingDirectory": "\/data\/data\/com.nexuspc.app\/no_backup\/library-v1\/games\/36b947cc-ea75-4972-8c1e-abb7ec6e0404\/content",
+  "guestEvidence": "WINDOW_CREATED\r\nFRAME_PAINTED\r\nPOINTER_INPUT_RECEIVED\r\nFRAME_PAINTED\r\nESCAPE_RECEIVED\r\nCLEAN_SHUTDOWN\r\nPROCESS_EXIT_0\r\n",
+  "passed": true,
+  "fixtureRemoved": true,
+  "checks": [
+    "originalGameImported",
+    "typedPrepareReady",
+    "typedLaunchRequested",
+    "libraryLockedWhileRunning",
+    "gameDirectoryAndDriveMapped",
+    "renderInputAndCleanExit"
+  ]
+}

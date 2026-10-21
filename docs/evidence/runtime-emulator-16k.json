@@ -1,0 +1,64 @@
+{
+  "checkId": "340ee0a4-6f64-4e3f-8796-6b518da49bcc",
+  "androidApi": 37,
+  "targetApi": 36,
+  "pageSize": 16384,
+  "runtimeBuild": {
+    "schemaVersion": 1,
+    "bundleSha256": "ea5c81bf0e5b90a6b9ccb8007121ab6738c8646a5a60b341ce0ac2b33f1d100a",
+    "sourceCommit": "3981d86efa4f333b2a34a7da8b6521476cd8c8b9",
+    "nativeMapSha256": "05c7f02892981988900eb0b4a4ddda34591f74bca7c72538fbbca7dcb091699e",
+    "memoryAdapterSha256": "794662e643adde3fd0cc537d48e8a6a742fbf21ea65e469e9c985bf5d267de25",
+    "guestMapSha256": "a19cb9a4438a5a2b56b8df4b93391f8e458cbc612f60e30f9eace89ad797d7c1",
+    "wineDispatcherAddress": "0x7ffe4000",
+    "supportedPageSizes": [
+      4096,
+      16384
+    ],
+    "box64Dynarec": false,
+    "box64SourceCommit": "ae3412c1bf9179b341996e18b656f11fd145f01e",
+    "box64SourceSha256": "d1cce91ee1863e3d0eca65faaa28a8c8d2e05783077e081d7857ee0df06fbee5",
+    "box64Version": "0.4.5-dev",
+    "box64BinarySha256": "52077ba4807c7912b5adfb63f5ff7174a234b1fe27dca5b602bfcd7ece95766d",
+    "androidNativeSourceCommit": "3981d86efa4f333b2a34a7da8b6521476cd8c8b9",
+    "androidNdk": "28.2.13676358",
+    "zigVersion": "0.14.1",
+    "zstdJniVersion": "1.5.7-6",
+    "rebuiltAndroidLibraries": [
+      "libgladiorenderer.so",
+      "libadrenotools.so",
+      "libfile_redirect_hook.so",
+      "libgsl_alloc_hook.so",
+      "libhook_impl.so",
+      "libmain_hook.so",
+      "libvirglrenderer.so",
+      "libvortekrenderer.so",
+      "libwinlator.so"
+    ],
+    "unsupportedFeatures": [
+      "MIDI synthesis",
+      "PulseAudio"
+    ]
+  },
+  "guestWorkingDirectory": "/data/data/com.nexuspc.app/no_backup/library-v1/games/c76ca32a-5943-47c3-9ed8-5d044e7f87e4/content",
+  "guestEvidence": "GUEST_SUBPAGE_PROTECTION_PASSED\r\nWINDOW_CREATED\r\nFONT_SELECTED\r\nFRAME_PAINTED\r\nPOINTER_INPUT_RECEIVED\r\nFONT_SELECTED\r\nFRAME_PAINTED\r\nESCAPE_RECEIVED\r\nCLEAN_SHUTDOWN\r\nPROCESS_EXIT_0\r\n",
+  "passed": true,
+  "fixtureRemoved": true,
+  "checks": [
+    "originalGameImported",
+    "typedPrepareReady",
+    "typedLaunchRequested",
+    "libraryLockedWhileRunning",
+    "gameDirectoryAndDriveMapped",
+    "renderInputAndCleanExit"
+  ],
+  "installedApkSha256": "1e33e512a9b3625a459a96e946369305504d0cae1b801792615de5abce6d4fda",
+  "testedAtUtc": "2026-10-21T01:28:28.457246+00:00",
+  "emulator": {
+    "serial": "emulator-5554",
+    "qemu": true,
+    "fingerprint": "google/sdk_gphone16k_arm64/emu64a16k:17/CP31.260623.009/15923651:user/dev-keys",
+    "linkerPageCompat": "fatal",
+    "packagePageCompatDisabled": "true"
+  }
+}

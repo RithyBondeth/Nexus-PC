@@ -1,4 +1,7 @@
 plugins { id 'com.android.library' }
+def productionRuntime = providers.gradleProperty('nexusRuntime').orNull == 'true'
+def runtimeSource = productionRuntime ? 'vendor/production/source' : 'vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9'
+def runtimeBinary = productionRuntime ? 'vendor/production' : 'vendor/binary'
 
 android {
     namespace 'com.winlator'
@@ -11,10 +14,10 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['compat', 'vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9/app/src/main/java']
-            res.srcDirs = ['vendor/winlator-app-3981d86efa4f333b2a34a7da8b6521476cd8c8b9/app/src/main/res']
-            assets.srcDirs = ['vendor/binary/assets']
-            jniLibs.srcDirs = ['vendor/binary/lib']
+            java.srcDirs = (productionRuntime ? ['compat', 'production-compat'] : ['compat']) + [ "$runtimeSource/app/src/main/java"]
+            res.srcDirs = ["$runtimeSource/app/src/main/res"]
+            assets.srcDirs = ["$runtimeBinary/assets"]
+            jniLibs.srcDirs = ["$runtimeBinary/lib"]
         }
     }
 }
@@ -22,7 +25,7 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.4.0'
     api 'androidx.preference:preference:1.2.1'
     api 'com.google.android.material:material:1.4.0'
-    api 'com.github.luben:zstd-jni:1.5.2-3@aar'
+    api(productionRuntime ? 'com.github.luben:zstd-jni:1.5.7-6@aar' : 'com.github.luben:zstd-jni:1.5.2-3@aar')
     implementation 'org.tukaani:xz:1.7'
     implementation 'org.apache.commons:commons-compress:1.20'
     implementation 'androidx.lifecycle:lifecycle-process:2.5.1'

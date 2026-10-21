@@ -13,6 +13,21 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+            intent.getBooleanExtra("runtimeBridgeChecks", false)) {
+            try {
+                Class.forName("com.nexuspc.app.runtime.RuntimeBridgeChecks")
+                    .getMethod("run", NexusHost::class.java, android.content.Context::class.java, String::class.java)
+                    .invoke(null, host, applicationContext, intent.getStringExtra("runtimeCheckId") ?: "manual")
+            } catch (_: ClassNotFoundException) { android.util.Log.w("NexusRuntime", "Optional runtime is not packaged") }
+        }
+        if (savedInstanceState == null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
+            intent.getBooleanExtra("runtimeProbe", false)) {
+            try {
+                startActivity(Intent(this, Class.forName("com.nexuspc.app.runtime.RuntimeProbeActivity"))
+                    .putExtra("autoInput", intent.getBooleanExtra("autoInput", false)))
+            } catch (_: ClassNotFoundException) { android.util.Log.w("NexusRuntime", "Optional runtime is not packaged") }
+        }
+        if (savedInstanceState == null && applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0 &&
             intent.getBooleanExtra("foundationChecks", false)) {
             host?.let { FoundationChecks.run(it, applicationContext,
                 intent.getStringExtra("foundationCheckId") ?: "manual") }
@@ -21,7 +36,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
-        host = NexusHost(applicationContext, messenger)
+        host = NexusHost(this, messenger)
         NexusHostApi.setUp(messenger, host)
         library = LibraryHost(this)
         NexusLibraryApi.setUp(messenger, library)

@@ -48,3 +48,14 @@ Redistribution/source records retained for the upstream components:
 This is provenance for a locally tested bundle, not an assertion that every
 bundled binary has been independently rebuilt or that distribution review is
 complete. The planned distribution review remains a separate phase.
+
+The production app can now opt into a separate adapted vendor tree with
+`tools/build-production-runtime.sh`. It retains target API 36 and has a passing
+4 KB / 16 KB ARM64-emulator Windows GDI proof. The default production APK remains
+runtime-free. See [the experimental runtime decision](../docs/architecture/0003-experimental-windows-runtime.md)
+and [test procedure](../docs/runtime-emulator.md); this does not complete distribution review.
+
+The production profile additionally uses `production-16k.lock.json`: source-built
+Box64 interpreter and Android display libraries, plus a newer Zstandard JNI AAR.
+MIDI synthesis/PulseAudio dependencies are not packaged in this profile.
+See [16 KB build and validation](../docs/runtime-16k.md).

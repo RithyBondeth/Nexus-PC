@@ -9,6 +9,33 @@ static void record(const char *message) {
     FILE *file = fopen("C:\\nexus-evidence.txt", "a");
     if (file) { fprintf(file, "%s\n", message); fclose(file); }
 }
+/* Windows uses 4 KB protection units even when the Android host uses 16 KB.
+ * Verify changing one guest subpage preserves writable neighbours, and that
+ * VirtualQuery still reports the Windows protection requested for that subpage.
+ */
+static int check_subpages(void) {
+    SYSTEM_INFO system;
+    GetSystemInfo(&system);
+    if (system.dwPageSize != 4096) return 0;
+    volatile unsigned char *memory = VirtualAlloc(NULL, 65536,
+        MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+    if (!memory) return 0;
+    DWORD old;
+    MEMORY_BASIC_INFORMATION info;
+    int passed = 0;
+    memory[0] = 11; memory[4096] = 22; memory[8192] = 33;
+    if (!VirtualProtect((void *)(memory + 4096), 4096, PAGE_READONLY, &old)) goto done;
+    if (!VirtualQuery((void *)(memory + 4096), &info, sizeof(info)) ||
+        info.Protect != PAGE_READONLY || memory[4096] != 22) goto done;
+    memory[0] = 44; memory[8192] = 55;
+    if (!VirtualProtect((void *)(memory + 4096), 4096, PAGE_READWRITE, &old)) goto done;
+    memory[4096] = 66;
+    passed = memory[0] == 44 && memory[4096] == 66 && memory[8192] == 55;
+done:
+    VirtualFree((void *)memory, 0, MEM_RELEASE);
+    record(passed ? "GUEST_SUBPAGE_PROTECTION_PASSED" : "GUEST_SUBPAGE_PROTECTION_FAILED");
+    return passed;
+}
 static LRESULT CALLBACK procedure(HWND window, UINT message, WPARAM w, LPARAM l) {
     switch (message) {
     case WM_CREATE:
@@ -37,10 +64,24 @@ static LRESULT CALLBACK procedure(HWND window, UINT message, WPARAM w, LPARAM l)
         DeleteObject(brush);
         SetBkMode(dc, TRANSPARENT);
         SetTextColor(dc, RGB(255, 255, 255));
+        HFONT font = CreateFontA(22 + score, 0, 0, 0, FW_NORMAL, FALSE, FALSE,
+            FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+            DEFAULT_QUALITY, DEFAULT_PITCH, "Arial");
+        HGDIOBJ previousFont = font ? SelectObject(dc, font) : NULL;
+        if (!previousFont || previousFont == HGDI_ERROR) {
+            record("FONT_SELECTION_FAILED");
+            if (font) DeleteObject(font);
+            EndPaint(window, &paint);
+            DestroyWindow(window);
+            return 0;
+        }
+        record("FONT_SELECTED");
         char label[128];
         snprintf(label, sizeof(label), "Nexus-PC Windows game | Targets hit: %d", score);
         TextOutA(dc, 30, 30, label, (int)strlen(label));
         TextOutA(dc, 30, 65, "Click the play area. ESC exits cleanly.", 38);
+        SelectObject(dc, previousFont);
+        DeleteObject(font);
         EndPaint(window, &paint);
         record("FRAME_PAINTED");
         return 0;
@@ -54,6 +95,7 @@ static LRESULT CALLBACK procedure(HWND window, UINT message, WPARAM w, LPARAM l)
 }
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE previous, LPSTR command, int show) {
     (void)previous; (void)command; (void)show;
+    if (!check_subpages()) return 4;
     WNDCLASSA klass = {0};
     klass.lpfnWndProc = procedure;
     klass.hInstance = instance;
