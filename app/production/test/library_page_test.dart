@@ -105,19 +105,27 @@ Future<void> mount(
   await tester.pumpAndSettle();
 }
 
+Finder pageScrollable() => find
+    .descendant(of: find.byType(ListView), matching: find.byType(Scrollable))
+    .first;
+
+/// Lazily built page sections may sit above the viewport.
+Future<void> scrollToTop(WidgetTester tester) async {
+  tester.state<ScrollableState>(pageScrollable()).position.jumpTo(0);
+  await tester.pumpAndSettle();
+}
+
 Future<void> tapVisible(WidgetTester tester, String text) async {
   final target = find.text(text);
   if (target.evaluate().isEmpty) {
-    await tester.scrollUntilVisible(
-      target,
-      200,
-      scrollable: find
-          .descendant(
-            of: find.byType(ListView),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-    );
+    await scrollToTop(tester);
+    if (target.evaluate().isEmpty) {
+      await tester.scrollUntilVisible(
+        target,
+        200,
+        scrollable: pageScrollable(),
+      );
+    }
   } else {
     await tester.ensureVisible(target.last);
   }
@@ -150,6 +158,8 @@ void main() {
       await mount(tester, api);
       await tester.tap(find.text('Import ZIP'));
       await tester.pump();
+      // Let the progress panel finish expanding before tapping inside it.
+      await tester.pump(const Duration(milliseconds: 400));
       expect(api.begins, 1);
       expect(
         tester
@@ -275,10 +285,17 @@ void main() {
       final api = EditingLibrary()..records = [libraryGame('one')];
       await mount(tester, api, platform: platform);
       await tapVisible(tester, 'Test game');
+      await tester.scrollUntilVisible(
+        find.byType(DropdownButtonFormField<String>),
+        200,
+        scrollable: pageScrollable(),
+      );
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('bin/other.exe').last);
       await tester.pumpAndSettle();
+      await scrollToTop(tester);
       expect(
         tester
             .widget<FilledButton>(
@@ -303,6 +320,7 @@ void main() {
       );
       await tapVisible(tester, 'Stop game');
       expect(host.stops, 1);
+      await scrollToTop(tester);
       expect(find.text('Stopped'), findsOneWidget);
     },
   );
