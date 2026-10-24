@@ -1,0 +1,9 @@
+{
+  "androidApi": 37,
+  "targetApi": 36,
+  "pageSize": 16384,
+  "runtimeState": "unavailable",
+  "message": "This experimental runtime requires 4 KB pages and the primary Android user.",
+  "verification": "Observed in native-backed Home runtime summary",
+  "passed": true
+}

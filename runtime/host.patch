@@ -1,0 +1,23 @@
+--- a/app/src/main/java/com/winlator/XServerDisplayActivity.java
++++ b/app/src/main/java/com/winlator/XServerDisplayActivity.java
+@@ -434,8 +434,9 @@
+         Intent intent = getIntent();
+         if (intent.hasExtra("exec_path")) {
+-            AppUtils.RestartApplicationOptions options = new AppUtils.RestartApplicationOptions();
+-            options.containerId = container.id;
+-            options.startPath = FileUtils.getDirname(intent.getStringExtra("exec_path"));
+-            AppUtils.restartApplication(this, options);
++            android.util.Log.i("NexusRuntime", "Guest session terminated; environment stopped");
++            runOnUiThread(() -> {
++                setResult(android.app.Activity.RESULT_OK);
++                finish();
++            });
+         }
+         else AppUtils.restartApplication(this);
+@@ -514,3 +515,6 @@
+             String desktopName = shortcut != null || getIntent().hasExtra("exec_path") ? "nogui" : "shell";
+             String guestExecutable = "wine explorer /desktop="+desktopName+","+xServer.screenInfo+" "+getWineStartCommand();
++            if (getIntent().getBooleanExtra("nexus_smoke", false)) {
++                guestExecutable = "wine " + getIntent().getStringExtra("exec_path");
++            }
+             guestProgramLauncherComponent.setGuestExecutable(guestExecutable);

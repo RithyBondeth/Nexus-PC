@@ -1,0 +1,12 @@
+{
+  "artifact": "app/production/build/runtime-apk/nexus-pc-runtime-debug.apk",
+  "sha256": "1e33e512a9b3625a459a96e946369305504d0cae1b801792615de5abce6d4fda",
+  "sizeBytes": 304504558,
+  "androidTargetApi": 36,
+  "experimental": true,
+  "signedFor": "debug",
+  "supportedHostPageSizes": [
+    4096,
+    16384
+  ]
+}

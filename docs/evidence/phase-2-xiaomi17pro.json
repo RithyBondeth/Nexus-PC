@@ -1,0 +1,18 @@
+{
+  "model": "25098PN5AC",
+  "socModel": "SM8850",
+  "renderer": "Adreno (TM) 840",
+  "androidApi": 36,
+  "targetApi": 36,
+  "runtimeState": "unavailable",
+  "verified": [
+    "Home",
+    "Library",
+    "Device",
+    "Settings",
+    "Dark theme",
+    "Back to Home"
+  ],
+  "passed": true,
+  "testedAtUtc": "2026-10-14T14:43:31.186956Z"
+}

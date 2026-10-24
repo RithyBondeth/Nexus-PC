@@ -1,0 +1,2228 @@
+{
+  "passed": true,
+  "pageSize": 16384,
+  "apkSha256": "1e33e512a9b3625a459a96e946369305504d0cae1b801792615de5abce6d4fda",
+  "nativeLibraries": 444,
+  "libraries": [
+    {
+      "library": "lib/arm64-v8a/libVkLayer_khronos_validation.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libadrenotools.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libc++_shared.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libfile_redirect_hook.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libflutter.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libgladiorenderer.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libgsl_alloc_hook.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libhook_impl.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libmain_hook.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_box64.so",
+      "loadSegments": 5,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_core.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_exec_probe.so",
+      "loadSegments": 3,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_guest_memory.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_002058cd6839959e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_00399441be81c06f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0064de5cc5b4e666.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0157a2154d42b6d4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0214d2d34125ccc7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0322fad679d237ff.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_03e278d9d6d728ad.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_040a9e618f33666e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_05afbc64b657b2f7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_05b6b0f6e8570f59.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_05bcf4ff64b7ec64.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_07081877babc4f00.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_083435ffd79d3b34.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_08f282576d1c79a3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_091e992c1bb7107e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_09566f2534e24d65.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_098d048f40383ddf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_09c5cf7e8f447d6e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0bf8ad6378f87a12.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0c011a8cd8739294.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0c33119df200062d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0d123050c26a5e88.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0d47670cbd2690de.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0d4d8eb5879bbb12.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0d7737d30b547b24.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0da3fa4c755b0877.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0ea4c7713ec57fab.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_0fe72156033841e9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1065fd6bcf42a4c4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_10690d36c474a954.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_130466e8e342e200.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_13b7a82751cfce7a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_141c8fe5c4c4f7d9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_14aa5f013a0cf41c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_14ff4e316e7781e7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1544ab6b50bf5983.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_16283e0f69c46cd6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_16a38bb149567a1d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_16d3c1ecbd90ae5b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_17d094654c325d2b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_17eebf9b4d0da561.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_18460a1f65a85053.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_184b97fa024e3f92.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_187fcd37942ae00e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1ab182c6656a839b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1b24f6878d367436.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1c126f7c5ae27a8d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1cdbdf80066dd5c0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1d222d07b945ee78.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1e558f2f7380a5ee.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1eeb616960c9bf70.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1f3131207bbfb61a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_1f912adaa9b82e4f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2000e82ea3fcd018.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_20524864391deb2d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_215d97c474d27786.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2298cb52b0165509.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_22def4bdfb1e75f1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_22f10e55682eaffc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_233c50000dcdaec2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_23d1027dd20c95f4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_26346845212fadcb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_266547f2fca14209.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_27d523a115b8cccb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2897fcb0985907c2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2936e90baabbcc11.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_29edce1216f9fa99.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2b0708c9d59ea724.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2b777db49afb311f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2b9ce96a8dd9d7ea.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2c2ac92de4877d29.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2dd67ec61e3b0c8e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2e4ce726a80f3f39.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2e6387aa62813d88.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2e705b4b87adc6ce.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_2e9fc316a669d232.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_307b202c7f7ec363.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_30ac544a0a81141f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_32250c5d743a1b4d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_32bc25d1f8b643bf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_32e9427cf078355f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3406ecb3f1c3e990.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_347011e4a5a7193a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_34ae14a3d7b0593e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_365e7ee4cc513ce8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_367fafa99847281b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_36efcbb35d1dc44a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_37144bee3e30c22d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3750cf2813a05286.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3846b8d30c10aa46.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3878fada39be5f7e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_38d3ecac70e946ac.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3912b637d3f34034.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_394c2040b372fb8c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_39cd2341a716c6cf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_39fa8d983905b373.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3a007688faf9bb9a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3b1cf4f1c34d0654.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3bf2dc45e6c19704.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3c26a05f52e68620.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3c552d9b60209fdf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3c554e9b326c4b0f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3d1db5f5f6892c20.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3d5be4ed447a268a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3d7233d25d096c3b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3d96c74c50a2d8fb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3e00a93bc5e8993d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3f14b15dae081888.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_3fad18501b328b78.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_40cea616a3995718.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_40f1c525c58f4496.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_429d06118563f835.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_42c8ef8991ce0927.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_434e2624ef857524.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_43914bdd2e45413a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4393f62d095bdb54.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_454188187c49fdeb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_459d233c65b6b951.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_466ac907a2ccae99.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4670e6f8e99e3dbc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_46d051b7c5a3538a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_46edeb0b78a9a869.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4747b6dd1c2669db.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_487fc1390a9e8097.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_497aa6f2a39dfaa1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4b003fcf8871e604.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4b486582d6ccc836.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4bc34377ca4286d1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4bfe3336694ef8c9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4cc4774ceb607da4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4cfae81e1d3bbc40.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4eeca74165bf3526.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4f092a5f022c8407.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4f218160010b7282.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4f7f65f028598874.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_4fa128db41ede733.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5022fb158e0da94f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_50e05c9a0a81834c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5133eb8bfe206f47.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_51a982333ad606b6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_51d03bd824855bc7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_52150a7bec1a65e1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_52e2b43835ad0b97.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5439f59db316f6ac.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_548a1d105b0ba06c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_54ad3084b2649650.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_55c5e20ec4b3df76.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_55ec42e1078917bf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_561a12018372d427.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_573d6b722d5b0192.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_57790db8096b3cd7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_578e8591786676f4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_578ed5fb6192861b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_579450bc05653b39.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_57c813720d2fba30.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_580b5fe50fdba472.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5844563e01c4bacc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_58675a15cf18b890.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_593813e012ef0d46.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5947287c4c12e031.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_59fc4cfc1f1808c0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5a7c79a0609dba3d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5aeb1271ee1f80a7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5b033d1857540051.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5b327b581cca7520.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5b72ad4df7d70506.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5bdfcf3a02603b01.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5ca0b28a412b5826.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5d29aa4961539766.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5e8bfe61e46731fd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_5fadeb60571fe043.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_60282a2e43e64b14.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_610cd102a330ef82.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6139ba7148fade39.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_61a2d702e11f1c37.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_61d178b4530065f0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_62c63eccabda024a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_63df93a256bfa69d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_645be587f65dc262.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_64aca15ef7d0d74e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_64b8ec4085dabf5a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_653618275ba6309d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_65ba72e7c0723a7e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_66a7ada31c8ee221.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_66e4b945cd75270d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_674744055affd491.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_67549c6f2a40af3d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_676bbce37c99506c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_67fb6d1ed59bd8af.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_687ec227c0a33c22.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_691b21a317c40ffd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_692670d8ebcd7fca.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_69d0ec3ac62ca423.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6a91ac3f536fc2d1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6b74a4fec088f0eb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6b8a5a568f4fb593.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6ba665da6b751d5e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6c5f3bb6a8d78c3d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6e09704e69b709a3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6efa3130eeda0f8a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6fa60dfa3a240c7f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_6fcbc71a1011e148.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_702de2b4ed1fd5fd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_708dac7c481625bc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_709a14b4cef896fc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_72ca7d910adae00c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7335b6fe0ae05dd9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7406fd2bd81c00eb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7412e2c00c6fb336.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_74b8acffc50cb266.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_74c4cf807219965e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7513882ca565515d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_755278cb748dd2cf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_757baf9e80ab43bf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_76afb8278ba82ab9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_77313f8458c5900e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7783a654b662a74a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_77eedd5a64dfccc0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_788e707210f58557.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_78a3ddc29ce9259d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7b7ede363a74858d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7d83521cfb22de03.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7da9c6240ccc48c2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7f0a456671046b7d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7fa54e5779065a03.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7fb0e7dcce86fd93.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7fccc806cfc493a6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_7fdada76a19335b9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_80262ad083b5ebd4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_80da9c24998358ac.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8209607d407e6ec0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_822876ed055adbcc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_826e5df655131d57.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8364814f036183d4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_838db07290ef1594.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_839312476c25a546.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_83fce3d396dafc89.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_85aa3122cff1cf3c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_861ed97deb1425e3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_86c0c1c39553d77d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_86c42468d45bca71.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_86da603c3d833560.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8741d1f696cf9c96.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_875c0433cfcafffe.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_876116e44bcd715e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_87fde92666410c6e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8837b4976704955b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_886e7cf172de1d49.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8a40861ec95b275a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8b74f5888497f719.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8cb88b964d52d850.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8e84ac7d969f9ba6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8eb1c35b22aa99cd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8f286f3cf09493ea.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_8fd009b9df91781c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_90a367a22ec40ae2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_910ed3252fb99802.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_91ce1c52d9f4443a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_92673e18660f00ee.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_92bce35432348c91.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_92d8c32a740ccca0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_95677cc735a6a372.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_95998132bddc54fc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_95a54b6f784b2467.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_98a65cd35e3e5a64.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_98a90435595af74b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9900c3eb724de996.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_99265932bf95575e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9960457e05b70030.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_99a070f0a08f1e0f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9a4830faa28d6cdd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9a59ecd7788be361.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9ae0eb27abd2f0b8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9b0d3ede764b658c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9babeb0336ae7bff.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9c0abf42c08cba4f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9c4aa20dde7aafc0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9d038be3265356c4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9d660d4d033e6b13.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9dd9c219553fedfe.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9e46b114014028bf.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9e4f23ab74412f93.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9e885998325fcb94.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9ed0f29263452cba.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9f86da1e8156a2aa.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_9f8bea702ec615d3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a0548068530d497d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a0bfef40a2b7982e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a17a082f5d8da304.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a3a0a36cc58295f7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a3adeff11d26faed.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a55b7e029dc73eb7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a5d0201e41f4690a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a5fbbd6185933c31.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a61a577f33225bca.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a65c340e60da3aba.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a683b9d77367b320.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a720baeb345de0fc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a7a4fbcc117f945c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a7e8fb34927a6e45.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a81e96f7a38b089a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a87e7db94711ac33.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a8c147db002db3b7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a8c5fb39a13c8712.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a932b244ab8a1346.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_a9be3fd416940d2a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_aa58744b32c37c9f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_abebc95b1a2d72f3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_acaeca1f295650d2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_acde2dbaf71aa41a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ad661ff6361bad49.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ad6e97c00a666f6b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_adf530ac3c6fb911.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_aef662489fa7faca.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b0a0e9c839e50af5.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b0fae3648ee9cb1a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b20ffd8058ef7a98.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b32de518654a9ed9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b458d21875f655fc.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b5bd6017f6221443.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b6410a9f13591e25.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b79ec356d80765b2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b7ae4ff90317c609.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b7c19aca3b71980e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b7d473a9b8019cdd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b8df23edb7262bd7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b939149fc7cb9c83.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_b943a1aa5777575d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ba349a50e0ca7d9b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_bbb04f98d6cab4dd.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_bd0fde2819f75955.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_bdd2fdac1aa29b7b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_be06b9b67076339a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c0338fd2a0c14190.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c043e124b0b6a1c2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c0a9acdadd60746c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c234250c527f1dd0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c25f2d2f8d2ac538.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c37b8c30cb92f23a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c3ebf2a20da4e8a8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c58a74e620b0cd8b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_c6c6ec8d115f1a30.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ca1a634a15e3f2d7.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ca535f37c1491ee5.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_caa0afa80929be36.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_cae7b8b53044cb80.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_cb09738d08f722be.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ce7b7af715a6ee24.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ce99e54346f640e8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_cfede10640fcbf10.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d0ba6c0dbfdfde96.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d0e39b5906a5b70b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d15a3b0d9cbe7c77.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d1af5d8d06704fdb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d32d9a834bb730b3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d38e0b42b77d380b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d3aec4f3581f83ad.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d4a48ba6c121156e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d86d67c1f5d5acff.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d969f6d87cb3aac8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_d9e1cc3506b6b745.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_da7ad144d61cdf35.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_dbd05a44daa24f7b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_dd16f19bf9fa4fe2.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_de15328f570e8208.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_deb514195cc2ab1f.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_def5d18a2f85b88c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_df282b14885a9f60.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_df41b00e16e0ff47.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_df7c9bbc0d98a5e5.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_df817c46a169e609.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e05ef7a1a6a10cd3.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e09b5cabf916b8f0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e1f2d947aac3bb40.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e2f478d7897adb8c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e30a0d12d7506e49.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e35ab95bb326e409.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e4558ec3f16c447d.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e4f2f88e831ccd45.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e58ca96aae5dbf80.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e6698efb3559d29a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e70f80aab6bb0998.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e7e1674ff21db105.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e8f6ca7b79fa5999.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e9326fb415ba9a8a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_e978f96237105907.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_eb4ef30cf21eb511.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ebb78edffab41246.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ebc4be4e07e25095.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ebf5fe55a13d8d06.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ed9f62c6cabdec74.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_eda2116eeb690284.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ee52940539e07d03.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ee8756a94ff1cbf1.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ef38ef541deb6df6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_efabdd99ffdd06e8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f06f3e972f5b1ee8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f0707ffdaf716cf8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f0a67e4e017ad15b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f1d462874e0baae8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f1f9428c4c395fad.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f2001bb13a8d8737.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f25248fd0d1317df.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f28bbd875f44f431.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f3235e806d840da9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f3347512aecb9043.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f3653ba8b370b3b0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f3906b5a892165c0.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f45b57d60d4719b8.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f568e490a7c958b4.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f6ef8ac9b854393a.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f908b776596c6706.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f947493475c8eaa6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f9929c9150307c2c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f9da1c914dd8a1fa.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_f9daf9076dac650e.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fae3cef649d2f694.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_faf4b59e894931e9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fbeb021631557beb.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fca8f738dc013b46.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fd10349b7467d935.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fd3678f56b0caad9.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fd478d7137889caa.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_fe3db90e948fe08c.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ff0b24039e81bd7b.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ff248b916ff49278.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libnexus_rt_ff41629176949a96.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 65536
+    },
+    {
+      "library": "lib/arm64-v8a/libvirglrenderer.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libvortekrenderer.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libwinlator.so",
+      "loadSegments": 4,
+      "minimumLoadAlignment": 16384
+    },
+    {
+      "library": "lib/arm64-v8a/libzstd-jni-1.5.7-6.so",
+      "loadSegments": 2,
+      "minimumLoadAlignment": 16384
+    }
+  ]
+}
