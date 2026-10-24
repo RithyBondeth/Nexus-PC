@@ -29,5 +29,9 @@ for (const name of ['snapdragon', 'arm', 'wine', 'mediatek', 'samsung']) {
   const icon = simpleIcons[`si${name[0].toUpperCase()}${name.slice(1)}`];
   await writeFile(new URL(`${name}.svg`, brands), `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>${icon.title}</title><path fill="#${icon.hex}" d="${icon.path}"/></svg>\n`);
 }
+// Real runtime captures from the project's evidence folder, shown on the hero phone.
+for (const [source, name] of [['phase-0-windows.png', 'capture-device.webp'], ['fifteen-emulator-16k-loaded.png', 'capture-fifteen.webp']]) {
+  await sharp(new URL(`../docs/evidence/${source}`, base).pathname).resize(1400).webp({ quality: 82 }).toFile(new URL(name, dest).pathname);
+}
 await sharp(new URL('artwork/world.jpg', base).pathname).resize(1600).webp({ quality: 80, effort: 6 }).toFile(new URL('world.webp', dest).pathname);
 console.log('Local fonts, icons, and optimized artwork ready.');
