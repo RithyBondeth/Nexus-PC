@@ -95,6 +95,7 @@ class _NexusShellState extends State<NexusShell> {
                 onDiagnostics: openDiagnostics,
               ),
               SettingsPage(
+                platform: widget.platform,
                 appearance: widget.appearance,
                 onAppearanceChanged: widget.onAppearanceChanged,
               ),

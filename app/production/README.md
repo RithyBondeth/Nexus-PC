@@ -43,14 +43,48 @@ The app displays actual device/GPU data and a packaged-executable diagnostic.
 The helper is a tiny libc-independent ARM64 ELF, not a Windows runtime.
 In the ordinary build, prepare/launch return `runtime_unavailable`; stop/status
 remain unavailable.
-Release signing is intentionally unconfigured. Debug APKs are development
-artifacts, not distributable releases.
+Release builds are unsigned unless a tester key is configured (below). Debug
+APKs are development artifacts, not distributable releases.
+
+## Tester builds
+
+Testers should get release APKs signed with one shared tester key, so each new
+build installs as an upgrade and keeps their library. Debug keys differ between
+machines and CI, which forces an uninstall when builds are mixed.
+
+1. Once, from the repository root, create the key (JDK 17 `keytool`):
+
+   ```sh
+   bash tools/create-tester-keystore.sh
+   ```
+
+   It stores the keystore at `~/.nexus-pc/tester-release.jks` (override with
+   `NEXUS_TESTER_KEYSTORE`) and writes the gitignored
+   `android/key.properties`. Back up both the keystore and its password.
+   CI can instead set `NEXUS_SIGNING_STORE_FILE`, `NEXUS_SIGNING_STORE_PASSWORD`,
+   `NEXUS_SIGNING_KEY_ALIAS` and `NEXUS_SIGNING_KEY_PASSWORD`; a partial
+   configuration fails the build.
+2. Raise `version:` in `pubspec.yaml` (the `+N` build number must increase).
+3. Build from a clean checkout, from this directory:
+
+   ```sh
+   flutter build apk --release --target-platform android-arm64 -t lib/main.dart
+   ```
+
+Settings → About this build shows the version, build type, source revision
+(`-dirty` marks uncommitted changes under `app/production`) and whether the
+experimental runtime is packaged. Settings → Help & feedback previews a
+diagnostic report (build, device, runtime status and recent native log; no game
+files or library list) and shares it through the Android share sheet or copies
+it. The theme choice is saved on the device.
+
+This tester key is not the distribution-phase Play signing setup.
 
 See [Phase 1 acceptance](../../docs/phase-1-foundation.md) and the
 [bridge decision](../../docs/architecture/0001-production-bridge.md).
 
 The Phase 2 shell adds Home, Library, Device and Settings. Appearance follows the
-system at launch and can be changed for the current session. The Library now
+system until changed in Settings; the choice is saved on the device. The Library now
 supports folder/ZIP imports and private-copy management. Native diagnostics remain
 accessible on Device.
 See [Phase 2 validation](../../docs/phase-2-shell.md), including the repeatable

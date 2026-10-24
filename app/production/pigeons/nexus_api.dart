@@ -12,6 +12,8 @@ enum RuntimeState { unavailable, idle, preparing, running, stopping, failed }
 
 enum LogLevel { debug, info, warning, error }
 
+enum AppearanceMode { system, light, dark }
+
 enum ImportKind { folder, zip }
 
 enum ImportState {
@@ -182,8 +184,36 @@ class ExecutionProbeResult {
   String? nativeLibraryPath;
 }
 
+class BuildInfo {
+  BuildInfo({
+    required this.versionName,
+    required this.versionCode,
+    required this.commit,
+    required this.buildType,
+    required this.runtimePackaged,
+  });
+  String versionName;
+  int versionCode;
+
+  /// Short git revision, with "-dirty" when built from local edits.
+  String commit;
+
+  /// Android build type: debug, profile or release.
+  String buildType;
+
+  /// Whether the experimental Windows runtime is packaged.
+  bool runtimePackaged;
+}
+
 @HostApi()
 abstract class NexusHostApi {
+  BuildInfo getBuildInfo();
+  AppearanceMode getAppearance();
+  void setAppearance(AppearanceMode mode);
+
+  /// Opens the Android share sheet; nothing leaves the device unless the
+  /// user picks a destination.
+  void shareText(String subject, String text);
   @asyncCallback
   DeviceProfile getDeviceProfile();
   @asyncCallback
