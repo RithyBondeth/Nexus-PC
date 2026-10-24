@@ -83,7 +83,7 @@ function countUp(element) {
   };
   requestAnimationFrame(step);
 }
-const revealTargets = document.querySelectorAll('.reveal, [data-split]');
+const revealTargets = document.querySelectorAll('.reveal, [data-split], .chip-rail');
 if ('IntersectionObserver' in window && motion) {
   document.querySelectorAll('.feature-grid, .stats, .timeline, .faq-list').forEach(group => {
     group.querySelectorAll('.reveal').forEach((item, i) => item.style.setProperty('--stagger', `${i * 90}ms`));
@@ -114,20 +114,22 @@ controlButtons.forEach((button, index) => button.addEventListener('click', () =>
   document.querySelector('#control-status').textContent = `${controlNames[button.dataset.control]} selected.`;
 }));
 
-// Chipset filters
-const chipButtons = [...document.querySelectorAll('.chip-filters button')];
-const chipCards = [...document.querySelectorAll('.chip-card')];
-chipButtons.forEach(button => button.addEventListener('click', () => {
-  const filter = button.dataset.filter;
-  chipButtons.forEach(other => { const active = other === button; other.classList.toggle('active', active); other.setAttribute('aria-pressed', String(active)); });
-  let shown = 0;
-  chipCards.forEach(card => {
-    const visible = filter === 'all' || card.dataset.status === filter;
-    card.classList.toggle('is-hidden', !visible);
-    card.classList.remove('is-entering');
-    if (visible && motion) { card.style.setProperty('--k', shown++); void card.offsetWidth; card.classList.add('is-entering'); }
-  });
+// Chipset rail: arrow buttons, staggered entry, tilting spotlight badge
+const rail = document.querySelector('.chip-rail');
+rail.querySelectorAll('.chip-tile').forEach((tile, k) => tile.style.setProperty('--k', k));
+document.querySelectorAll('[data-rail]').forEach(button => button.addEventListener('click', () => {
+  rail.scrollBy({ left: Number(button.dataset.rail) * rail.clientWidth * .8, behavior: motion ? 'smooth' : 'auto' });
 }));
+const spotlight = document.querySelector('[data-tilt]');
+if (motion && matchMedia('(hover: hover)').matches) {
+  spotlight.addEventListener('pointermove', event => {
+    const rect = spotlight.getBoundingClientRect();
+    spotlight.style.setProperty('--try', `${((event.clientX - rect.left) / rect.width - .5) * 22}deg`);
+    spotlight.style.setProperty('--trx', `${-((event.clientY - rect.top) / rect.height - .5) * 22}deg`);
+  });
+  spotlight.addEventListener('pointerleave', () => { spotlight.style.setProperty('--try', '0deg'); spotlight.style.setProperty('--trx', '0deg'); });
+}
+
 document.querySelectorAll('.term-list li').forEach((item, k) => item.style.setProperty('--k', k));
 
 // App screens stagger their rows in
@@ -402,4 +404,23 @@ const score = document.querySelector('[data-score]');
 if (motion && score) {
   let points = 0;
   setInterval(() => { points += 10 + Math.floor(Math.random() * 40); score.textContent = String(points).padStart(6, '0'); }, 400);
+}
+
+// Hero screen alternates between the concept scene and real runtime captures
+const heroScreen = document.querySelector('.device-screen[data-slide]');
+const screenLabel = document.querySelector('[data-screen-label]');
+const slides = [
+  ['Concept scene', 9000],
+  ['Real capture · Xiaomi 17 Pro · Phase 0', 5000],
+  ['Real capture · Fifteen · 16 KB ARM64', 5000]
+];
+if (motion && heroScreen) {
+  let slide = 0;
+  const advance = () => {
+    slide = (slide + 1) % slides.length;
+    heroScreen.dataset.slide = slide;
+    screenLabel.textContent = slides[slide][0];
+    setTimeout(advance, slides[slide][1]);
+  };
+  setTimeout(advance, 3000 + slides[0][1]);
 }
