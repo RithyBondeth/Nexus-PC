@@ -289,33 +289,37 @@ class _FilterTabs extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        for (final value in _Filter.values)
-          ChoiceChip(
-            selected: value == selected,
-            onSelected: (_) => onSelected(value),
-            showCheckmark: false,
-            label: Text('${_labels[value]} · ${counts[value] ?? 0}'),
-            labelStyle: theme.textTheme.labelLarge?.copyWith(
-              color: value == selected
-                  ? scheme.onSecondary
-                  : scheme.onSurfaceVariant,
+    // Full width, so the tabs start at the left edge like the rest of the page.
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final value in _Filter.values)
+            ChoiceChip(
+              selected: value == selected,
+              onSelected: (_) => onSelected(value),
+              showCheckmark: false,
+              label: Text('${_labels[value]} · ${counts[value] ?? 0}'),
+              labelStyle: theme.textTheme.labelLarge?.copyWith(
+                color: value == selected
+                    ? scheme.onSecondary
+                    : scheme.onSurfaceVariant,
+              ),
+              selectedColor: scheme.secondary,
+              backgroundColor: scheme.surfaceContainerLow,
+              side: BorderSide(
+                color: value == selected
+                    ? scheme.secondary
+                    : scheme.outlineVariant,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
-            selectedColor: scheme.secondary,
-            backgroundColor: scheme.surfaceContainerLow,
-            side: BorderSide(
-              color: value == selected
-                  ? scheme.secondary
-                  : scheme.outlineVariant,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -386,80 +390,81 @@ class _LibraryHero extends StatelessWidget {
   final ValueChanged<ImportKind>? onImport;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => DarkHero(
+    art: art == null
+        ? const GameArtwork(title: 'Library', radius: 0, showTitle: false)
+        : ArtBackdrop(title: art, fade: NexusPalette.dark.backdrop),
+    // Reads the hero's dark theme, so the title stays light in light mode.
+    child: Builder(builder: _content),
+  );
+
+  Widget _content(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final import = onImport;
-    return DarkHero(
-      art: art == null
-          ? const GameArtwork(title: 'Library', radius: 0, showTitle: false)
-          : ArtBackdrop(title: art, fade: NexusPalette.dark.backdrop),
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          MediaQuery.paddingOf(context).top + 16,
-          20,
-          20,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GAMES',
-              style: theme.textTheme.labelSmall?.copyWith(
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        MediaQuery.paddingOf(context).top + 16,
+        20,
+        20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'GAMES',
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: scheme.secondary,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text('Your library', style: theme.textTheme.displaySmall),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              StatusPill(
+                label: total == 1 ? '1 game' : '$total games',
                 color: scheme.secondary,
+                icon: Icons.grid_view_rounded,
               ),
-            ),
-            const SizedBox(height: 6),
-            Text('Your library', style: theme.textTheme.displaySmall),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
+              if (total > 0)
                 StatusPill(
-                  label: total == 1 ? '1 game' : '$total games',
-                  color: scheme.secondary,
-                  icon: Icons.grid_view_rounded,
+                  label: '$ready ready to play',
+                  color: scheme.primary,
+                  icon: Icons.play_arrow_rounded,
                 ),
-                if (total > 0)
-                  StatusPill(
-                    label: '$ready ready to play',
-                    color: scheme.primary,
-                    icon: Icons.play_arrow_rounded,
-                  ),
-              ],
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Private copies of your DRM-free games. Keep Nexus-PC open while importing.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: scheme.onSurfaceVariant,
             ),
-            const SizedBox(height: 10),
-            Text(
-              'Private copies of your DRM-free games. Keep Nexus-PC open while importing.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: scheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              FilledButton.icon(
+                onPressed: import == null
+                    ? null
+                    : () => import(ImportKind.folder),
+                icon: const Icon(Icons.create_new_folder_outlined),
+                label: const Text('Import folder'),
               ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: [
-                FilledButton.icon(
-                  onPressed: import == null
-                      ? null
-                      : () => import(ImportKind.folder),
-                  icon: const Icon(Icons.create_new_folder_outlined),
-                  label: const Text('Import folder'),
-                ),
-                OutlinedButton.icon(
-                  onPressed: import == null
-                      ? null
-                      : () => import(ImportKind.zip),
-                  icon: const Icon(Icons.folder_zip_outlined),
-                  label: const Text('Import ZIP'),
-                ),
-              ],
-            ),
-          ],
-        ),
+              OutlinedButton.icon(
+                onPressed: import == null ? null : () => import(ImportKind.zip),
+                icon: const Icon(Icons.folder_zip_outlined),
+                label: const Text('Import ZIP'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

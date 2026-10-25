@@ -225,32 +225,40 @@ class _TopBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       titleSpacing: 20,
-      title: Row(
-        children: [
-          ExcludeSemantics(
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [scheme.primary, scheme.secondary],
+      // The landing page logo: the lime bar mark and a "nexus-pc" wordmark.
+      title: Semantics(
+        label: 'Nexus-PC',
+        header: true,
+        child: ExcludeSemantics(
+          child: Row(
+            children: [
+              NexusMark(size: 22, color: scheme.primary),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    text: 'nexus',
+                    children: [
+                      TextSpan(
+                        text: '-pc',
+                        style: TextStyle(
+                          color: scheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.6,
+                  ),
                 ),
               ),
-              child: Icon(
-                Icons.sports_esports_rounded,
-                size: 18,
-                color: scheme.onPrimary,
-              ),
-            ),
+            ],
           ),
-          const SizedBox(width: 10),
-          const Flexible(
-            child: Text('Nexus-PC', overflow: TextOverflow.ellipsis),
-          ),
-        ],
+        ),
       ),
       actions: [
         Padding(
@@ -373,8 +381,8 @@ class _FadeThroughStackState extends State<_FadeThroughStack>
   );
 }
 
-/// A docked glass bar, as on the Steam Deck: the selected destination is lit
-/// lime with a short bar that slides along the top edge. Built on
+/// A floating glass bar: a rounded pill held above the bottom edge, with a
+/// lime highlight that slides behind the selected destination. Built on
 /// [NavigationBar] for semantics and keyboard behaviour.
 class _DockBar extends StatelessWidget {
   const _DockBar({
@@ -386,94 +394,125 @@ class _DockBar extends StatelessWidget {
   final ValueChanged<int> onSelected;
   final List<NavigationDestination> destinations;
 
+  static const _radius = 26.0;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final dark = theme.brightness == Brightness.dark;
     final count = destinations.length;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+    final radius = BorderRadius.circular(_radius);
+    return SafeArea(
+      top: false,
+      minimum: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: scheme.surfaceContainer.withValues(alpha: 0.82),
-            border: Border(top: BorderSide(color: scheme.outlineVariant)),
+            borderRadius: radius,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: dark ? 0.45 : 0.16),
+                blurRadius: 28,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
-          child: SafeArea(
-            top: false,
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: AnimatedAlign(
-                    alignment: Alignment(
-                      count == 1 ? 0 : -1 + 2 * selected / (count - 1),
-                      -1,
-                    ),
-                    duration: NexusMotion.reduced(context)
-                        ? Duration.zero
-                        : NexusMotion.medium,
-                    curve: NexusMotion.curve,
-                    child: FractionallySizedBox(
-                      widthFactor: 1 / count,
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: 36,
-                          height: 3,
-                          decoration: BoxDecoration(
-                            color: scheme.primary,
-                            borderRadius: const BorderRadius.vertical(
-                              bottom: Radius.circular(3),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: scheme.primary.withValues(alpha: 0.6),
-                                blurRadius: 10,
+          child: ClipRRect(
+            borderRadius: radius,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: scheme.surfaceContainer.withValues(alpha: 0.78),
+                  borderRadius: radius,
+                  border: Border.all(color: scheme.outlineVariant),
+                ),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: AnimatedAlign(
+                        alignment: Alignment(
+                          count == 1 ? 0 : -1 + 2 * selected / (count - 1),
+                          0,
+                        ),
+                        duration: NexusMotion.reduced(context)
+                            ? Duration.zero
+                            : NexusMotion.medium,
+                        curve: NexusMotion.curve,
+                        child: FractionallySizedBox(
+                          widthFactor: 1 / count,
+                          heightFactor: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: scheme.primary.withValues(alpha: 0.14),
+                                borderRadius: BorderRadius.circular(
+                                  _radius - 6,
+                                ),
+                                border: Border.all(
+                                  color: scheme.primary.withValues(alpha: 0.32),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: scheme.primary.withValues(
+                                      alpha: 0.18,
+                                    ),
+                                    blurRadius: 16,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                NavigationBarTheme(
-                  data: theme.navigationBarTheme.copyWith(
-                    backgroundColor: Colors.transparent,
-                    indicatorColor: Colors.transparent,
-                    height: 64,
-                    iconTheme: WidgetStateProperty.resolveWith(
-                      (states) => IconThemeData(
-                        color: states.contains(WidgetState.selected)
-                            ? scheme.primary
-                            : scheme.onSurfaceVariant,
+                    NavigationBarTheme(
+                      data: theme.navigationBarTheme.copyWith(
+                        backgroundColor: Colors.transparent,
+                        indicatorColor: Colors.transparent,
+                        height: 66,
+                        iconTheme: WidgetStateProperty.resolveWith(
+                          (states) => IconThemeData(
+                            color: states.contains(WidgetState.selected)
+                                ? scheme.primary
+                                : scheme.onSurfaceVariant,
+                          ),
+                        ),
+                        labelTextStyle: WidgetStateProperty.resolveWith(
+                          (states) => theme.textTheme.labelMedium?.copyWith(
+                            color: states.contains(WidgetState.selected)
+                                ? scheme.onSurface
+                                : scheme.onSurfaceVariant,
+                            fontWeight: states.contains(WidgetState.selected)
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      // Labels are short: cap their growth (as system bars
+                      // do) so large text cannot overflow the bar.
+                      child: MediaQuery.withClampedTextScaling(
+                        maxScaleFactor: 1.3,
+                        // The bar handles the bottom inset itself.
+                        child: MediaQuery.removePadding(
+                          context: context,
+                          removeBottom: true,
+                          child: NavigationBar(
+                            selectedIndex: selected,
+                            onDestinationSelected: onSelected,
+                            labelBehavior:
+                                NavigationDestinationLabelBehavior.alwaysShow,
+                            destinations: destinations,
+                          ),
+                        ),
                       ),
                     ),
-                    labelTextStyle: WidgetStateProperty.resolveWith(
-                      (states) => theme.textTheme.labelMedium?.copyWith(
-                        color: states.contains(WidgetState.selected)
-                            ? scheme.onSurface
-                            : scheme.onSurfaceVariant,
-                        fontWeight: states.contains(WidgetState.selected)
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                  // Labels are short: cap their growth (as system bars do)
-                  // so large text cannot overflow the bar.
-                  child: MediaQuery.withClampedTextScaling(
-                    maxScaleFactor: 1.3,
-                    child: NavigationBar(
-                      selectedIndex: selected,
-                      onDestinationSelected: onSelected,
-                      labelBehavior:
-                          NavigationDestinationLabelBehavior.alwaysShow,
-                      destinations: destinations,
-                    ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

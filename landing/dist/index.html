@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b0d0b">
+    <meta name="theme-color" content="#0a0e14">
     <title>Nexus-PC | Your worlds. No boundaries.</title>
     <meta name="description" content="A simpler future for PC gaming on Android. Explore Nexus-PC, an open-source project building automatic setup for your DRM-free game library on Snapdragon phones.">
     <meta property="og:title" content="Nexus-PC | Your worlds. No boundaries.">
@@ -158,38 +158,55 @@
               <div class="app-phone" data-screen="0">
                 <div class="app-screen">
                   <div class="status-bar"><span>9:41</span><span class="status-icons"><span class="icon" data-icon="cell-signal-full"></span><span class="icon" data-icon="wifi-high"></span><span class="icon" data-icon="battery-high"></span></span></div>
+                  <canvas class="ascii-canvas" data-ascii="app"></canvas>
+                  <div class="ui-top"><span class="brand-mark"><i></i><i></i><i></i></span><b>nexus<span>-pc</span></b><span class="ui-dot"></span></div>
 
                   <div class="app-view view-library active">
-                    <div class="app-head"><strong>Library</strong><span>3 games</span></div>
-                    <div class="app-search"><span class="icon" data-icon="magnifying-glass"></span>Search titles</div>
-                    <ul class="game-rows">
-                      <li><span class="row-icon lime"><span class="icon" data-icon="game-controller"></span></span><span class="row-text"><b>Fifteen</b><small>Ready · x86-64</small></span><span class="row-state ok"><span class="icon" data-icon="check"></span></span></li>
-                      <li><span class="row-icon"><span class="icon" data-icon="file-zip"></span></span><span class="row-text"><b>adventure.zip</b><small>Copying privately…</small><span class="row-bar"><i></i></span></span></li>
-                      <li><span class="row-icon"><span class="icon" data-icon="folder-simple"></span></span><span class="row-text"><b>My Game Folder</b><small class="shimmer">Verifying SHA-256…</small></span><span class="row-state"><span class="icon" data-icon="hash"></span></span></li>
-                    </ul>
-                    <span class="fab"><span class="icon" data-icon="plus"></span>Import</span>
-                    <nav class="app-nav"><span>Home</span><span class="on">Library</span><span>Device</span><span>Settings</span></nav>
+                    <div class="ui-hero ui-dark">
+                      <span class="ui-label stagger">Games</span>
+                      <strong class="ui-title stagger">Your library</strong>
+                      <div class="ui-pills stagger"><span class="ui-pill"><span class="icon" data-icon="squares-four-fill"></span>2 games</span><span class="ui-pill lime"><span class="icon" data-icon="play-fill"></span>1 ready to play</span></div>
+                      <p class="ui-muted stagger">Private copies of your DRM-free games. Keep Nexus-PC open while importing.</p>
+                      <div class="ui-buttons stagger"><span class="ui-button"><span class="icon" data-icon="folder-plus"></span>Import folder</span><span class="ui-button outline"><span class="icon" data-icon="file-zip"></span>Import ZIP</span></div>
+                    </div>
+                    <div class="ui-page">
+                      <div class="ui-progress stagger">
+                        <b>Copying adventure.zip</b>
+                        <span class="ui-bar"><i></i></span>
+                        <span>214 files · 1.2 GB copied</span>
+                        <span class="ui-note"><span class="icon" data-icon="shield"></span>Your original files stay at their source.</span>
+                      </div>
+                      <div class="ui-tabs stagger"><span class="on">All games · 2</span><span>Ready · 1</span><span>Needs setup · 1</span></div>
+                      <div class="ui-covers">
+                        <span class="ui-cover selected stagger" style="background-image:url('assets/cover-fifteen.webp')"><span class="icon ready" data-icon="play-fill"></span><b>Fifteen</b><small>fifteen.exe</small></span>
+                        <span class="ui-cover stagger" style="background-image:url('assets/cover-my-game-folder.webp')"><span class="icon" data-icon="wrench"></span><b>My Game Folder</b><small class="setup">Choose an executable</small></span>
+                      </div>
+                    </div>
                   </div>
 
                   <div class="app-view view-device">
-                    <div class="app-head"><strong>Device</strong><span>Live profile</span></div>
-                    <div class="soc-card">
-                      <span class="soc-logo"><span class="logo" data-brand-mask="snapdragon"></span></span>
-                      <div><b>Snapdragon 8 Elite Gen 5</b><small>SM8850 · Adreno 840</small></div>
-                      <span class="scan" aria-hidden="true"></span>
+                    <div class="ui-page">
+                      <span class="ui-label stagger">Hardware</span>
+                      <strong class="ui-title stagger">Your device</strong>
+                      <p class="ui-muted stagger">Measured by Android and the stock Vulkan driver. These are observations, not a compatibility rating.</p>
+                      <div class="ui-chip stagger">
+                        <div class="ui-chip-head">
+                          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="var(--focus)" stroke-width="2.56" stroke-linecap="round" opacity=".7"><path d="M19.2 0v9M27.5 0v9M35.8 0v9M44.2 0v9M19.2 55v9M27.5 55v9M35.8 55v9M44.2 55v9M0 19.2h9M0 27.5h9M0 35.8h9M0 44.2h9M55 19.2h9M55 27.5h9M55 35.8h9M55 44.2h9"/></g><rect x="9" y="9" width="46" height="46" rx="7.7" fill="color-mix(in srgb,var(--focus) 18%,transparent)" stroke="var(--focus)" stroke-width="1.9"/><rect class="ui-die" x="21.1" y="21.1" width="21.8" height="21.8" rx="3.8" fill="var(--primary)" style="filter:drop-shadow(0 0 4px var(--primary))"/></svg>
+                          <div><span class="ui-label">Chipset</span><strong>SM8850</strong></div>
+                        </div>
+                        <div class="ui-pills"><span class="ui-pill lime"><span class="icon" data-icon="game-controller"></span>Adreno 840</span><span class="ui-pill"><span class="icon" data-icon="stack"></span>Vulkan 1.4.295</span><span class="ui-pill amber"><span class="icon" data-icon="sim-card"></span>11 GiB RAM</span></div>
+                      </div>
+                      <div class="ui-card stagger">
+                        <div class="ui-card-head"><span class="ui-badge"><span class="icon" data-icon="device-mobile"></span></span>Specifications</div>
+                        <dl class="ui-specs">
+                          <div><dt>Model</dt><dd>Xiaomi 17 Pro</dd></div>
+                          <div><dt>Android</dt><dd>API 36</dd></div>
+                          <div><dt>Chipset</dt><dd>SM8850</dd></div>
+                          <div><dt>Architecture</dt><dd>arm64-v8a</dd></div>
+                        </dl>
+                      </div>
                     </div>
-                    <dl class="spec-grid">
-                      <div><dt>Android</dt><dd>16 · API 36</dd></div>
-                      <div><dt>Vulkan</dt><dd>1.4</dd></div>
-                      <div><dt>Memory</dt><dd>10.8 GB</dd></div>
-                      <div><dt>ABI</dt><dd>arm64-v8a</dd></div>
-                    </dl>
-                    <ul class="runtime-rows">
-                      <li><span class="mini-logo"><img src="assets/brands/wine.svg?v=3" alt=""></span><span>Wine 10.10 + Box64</span><em class="tag beta">Experimental</em></li>
-                      <li><span class="mini-logo"><span class="icon" data-icon="cloud"></span></span><span>Community profile</span><em class="tag">Planned</em></li>
-                    </ul>
-                    <p class="app-note">Example from our Phase 0 test device.</p>
-                    <nav class="app-nav"><span>Home</span><span>Library</span><span class="on">Device</span><span>Settings</span></nav>
+                    <span class="ui-example">Example from our Phase 0 test device</span>
                   </div>
 
                   <div class="app-view view-play">
@@ -199,6 +216,7 @@
                       <span class="play-tag">Concept scene</span>
                     </div>
                   </div>
+                  <nav class="ui-dock"><span data-tab="0"><span class="icon" data-icon="house"></span><span class="icon" data-icon="house-fill"></span>Home</span><span data-tab="1"><span class="icon" data-icon="squares-four"></span><span class="icon" data-icon="squares-four-fill"></span>Library</span><span data-tab="2"><span class="icon" data-icon="cpu"></span><span class="icon" data-icon="cpu-fill"></span>Device</span><span data-tab="3"><span class="icon" data-icon="gear-six"></span><span class="icon" data-icon="gear-six-fill"></span>Settings</span></nav>
                   <span class="punch-hole small"></span>
                 </div>
               </div>

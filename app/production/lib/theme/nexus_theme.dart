@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'ascii_field.dart';
 
 /// SteamOS-inspired palette: deep blue-slate surfaces, a cool blue for focus
 /// and selection, and the brand lime kept for primary "play" actions.
@@ -278,7 +279,8 @@ ThemeData nexusTheme(Brightness brightness) {
 }
 
 /// The layered background behind every page: a deep base with a cool glow
-/// from the top and a faint lime one from the bottom, as on SteamOS.
+/// from the top, a faint lime one from the bottom, and the landing page's
+/// flowing ASCII field.
 class NexusBackdrop extends StatelessWidget {
   const NexusBackdrop({super.key, required this.child, this.tint});
   final Widget child;
@@ -315,7 +317,7 @@ class NexusBackdrop extends StatelessWidget {
               ],
             ),
           ),
-          child: child,
+          child: AsciiField(child: child),
         ),
       ),
     );
