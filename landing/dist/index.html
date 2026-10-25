@@ -70,18 +70,22 @@
             <div class="device-scene" id="device-scene">
               <div class="device" id="hero-phone" data-mode="immersive">
                 <span class="device-key key-volume" aria-hidden="true"></span><span class="device-key key-power" aria-hidden="true"></span>
-                <div class="device-screen" role="img" aria-label="Phone mockup cycling between an original concept game scene and real captures of Windows test games running through the Nexus-PC Wine and Box64 runtime" data-slide="0">
-                  <canvas class="game-canvas" data-game="hero"></canvas>
-                  <img class="capture" src="assets/capture-device.webp" width="1400" height="643" alt="">
-                  <img class="capture" src="assets/capture-fifteen.webp" width="1400" height="624" alt="">
-                  <div class="screen-label" aria-hidden="true"><span class="label-dot"></span><span data-screen-label>Concept scene</span><span class="slide-dots"><i></i><i></i><i></i></span></div>
-                  <div class="hud" aria-hidden="true">
-                    <span class="hud-chip"><span class="brand-mark"><i></i><i></i><i></i></span>Concept</span>
-                    <span class="hud-score">SCORE <b data-score>000000</b></span>
-                    <span class="hud-status"><span class="icon" data-icon="wifi-high"></span><span class="icon" data-icon="battery-high"></span></span>
+                <div class="device-screen" role="img" aria-label="Phone mockup of the Nexus-PC launcher in landscape: controller focus moves across a shelf of sample game covers, the background art follows, then Play launches a game. The sample titles are concept art.">
+                  <div class="lx" data-launcher>
+                    <div class="lx-art"><span class="on" style="background-image:url('assets/launcher/wide-aurora-run.webp')"></span><span style="background-image:url('assets/launcher/wide-pale-summit.webp')"></span><span style="background-image:url('assets/launcher/wide-ember-ridge.webp')"></span><span style="background-image:url('assets/launcher/wide-deep-signal.webp')"></span><span style="background-image:url('assets/launcher/wide-glass-harbor.webp')"></span><span style="background-image:url('assets/launcher/wide-night-market.webp')"></span></div>
+                    <div class="lx-scrim"></div>
+                    <div class="lx-top"><span class="brand-mark"><i></i><i></i><i></i></span><b>nexus<span>-pc</span></b><span class="lx-chip lx-sample">Concept · sample titles</span><span class="lx-chip lx-pad"><span><em>Ⓐ</em> Play</span><span><em>Ⓑ</em> Back</span><span><em>◀ ▶</em> Browse</span></span><span class="lx-status"><i></i><span data-lx-status>Runtime ready</span></span></div>
+                    <nav class="lx-rail"><span class="on"><span class="icon" data-icon="house-fill"></span>Home</span><span><span class="icon" data-icon="squares-four"></span>Library</span><span><span class="icon" data-icon="cpu"></span>Device</span><span><span class="icon" data-icon="gear-six"></span>Settings</span></nav>
+                    <div class="lx-main">
+                      <small class="lx-eyebrow">Your gaming workspace</small>
+                      <strong class="lx-title" data-lx-title>Aurora Run</strong>
+                      <div class="lx-pills"><span class="lx-pill state"><span class="icon" data-icon="check-circle-fill"></span><span data-lx-state>Ready</span></span><span class="lx-pill"><span class="icon" data-icon="floppy-disk"></span><span data-lx-size>4.2 GB</span></span><span class="lx-pill"><span class="icon" data-icon="squares-four-fill"></span>6 games</span></div>
+                      <div class="lx-actions"><span class="lx-play"><span class="icon" data-icon="play-fill"></span><span data-lx-play>PLAY</span></span><span class="lx-grid"><span class="icon" data-icon="squares-four-fill"></span></span></div>
+                    </div>
+                    <div class="lx-shelf"><div class="lx-shelf-head"><small>YOUR GAMES</small><span>See all</span></div><div class="lx-covers"><span class="lx-cover selected" style="background-image:url('assets/launcher/cover-aurora-run.webp')"><b>Aurora Run</b></span><span class="lx-cover" style="background-image:url('assets/launcher/cover-pale-summit.webp')"><b>Pale Summit</b></span><span class="lx-cover" style="background-image:url('assets/launcher/cover-ember-ridge.webp')"><b>Ember Ridge</b></span><span class="lx-cover" style="background-image:url('assets/launcher/cover-deep-signal.webp')"><b>Deep Signal</b></span><span class="lx-cover" style="background-image:url('assets/launcher/cover-glass-harbor.webp')"><b>Glass Harbor</b></span><span class="lx-cover" style="background-image:url('assets/launcher/cover-night-market.webp')"><b>Night Market</b></span></div></div>
+                    <span class="lx-tap"></span>
+                    <div class="lx-launch"><span class="brand-mark"><i></i><i></i><i></i></span><b data-lx-launch>Launching Deep Signal</b><span data-lx-step>Matching Snapdragon profile…</span><span class="lx-progress"><i></i></span></div>
                   </div>
-                  <div class="touch-overlay" aria-hidden="true"><span class="joystick"><i></i></span><span class="touch-buttons"><i>Y</i><i>X</i><i>B</i><i>A</i></span></div>
-                  <div class="controller-overlay" aria-hidden="true"><span class="icon" data-icon="game-controller"></span><span>Controller connected</span></div>
                   <div class="boot" aria-hidden="true"><span class="brand-mark"><i></i><i></i><i></i></span><span class="boot-label" data-boot-log>Detecting chipset…</span><span class="boot-bar"><i></i></span></div>
                   <span class="punch-hole" aria-hidden="true"></span>
                   <span class="glare" aria-hidden="true"></span>
@@ -210,10 +214,7 @@
                   </div>
 
                   <div class="app-view view-play">
-                    <div class="play-inner">
-                      <canvas class="game-canvas" data-game="story"></canvas>
-                      <div class="touch-overlay on"><span class="joystick"><i></i></span><span class="touch-buttons"><i>Y</i><i>X</i><i>B</i><i>A</i></span></div>
-                      <span class="play-tag">Concept scene</span>
+                    <div class="play-inner" data-launcher-copy>
                     </div>
                   </div>
                   <nav class="ui-dock"><span data-tab="0"><span class="icon" data-icon="house"></span><span class="icon" data-icon="house-fill"></span>Home</span><span data-tab="1"><span class="icon" data-icon="squares-four"></span><span class="icon" data-icon="squares-four-fill"></span>Library</span><span data-tab="2"><span class="icon" data-icon="cpu"></span><span class="icon" data-icon="cpu-fill"></span>Device</span><span data-tab="3"><span class="icon" data-icon="gear-six"></span><span class="icon" data-icon="gear-six-fill"></span>Settings</span></nav>
