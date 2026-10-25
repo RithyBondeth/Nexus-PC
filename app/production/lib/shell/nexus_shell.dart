@@ -239,10 +239,8 @@ class _TopBar extends StatelessWidget implements PreferredSizeWidget {
                   colors: [scheme.primary, scheme.secondary],
                 ),
               ),
-              child: Icon(
-                Icons.sports_esports_rounded,
-                size: 18,
-                color: scheme.onPrimary,
+              child: Center(
+                child: NexusMark(size: 16, color: scheme.onPrimary),
               ),
             ),
           ),

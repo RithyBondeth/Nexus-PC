@@ -14,7 +14,7 @@ function updateThemeButton() {
   const isDark = root.dataset.theme === 'dark';
   themeButton.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} theme`);
   themeButton.querySelector('.icon').style.setProperty('--icon', `url("assets/${isDark ? 'sun' : 'moon'}.svg")`);
-  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0b0d0b' : '#f6f7f2';
+  document.querySelector('meta[name="theme-color"]').content = isDark ? '#0a0e14' : '#e6ebf1';
 }
 themeButton.addEventListener('click', () => {
   const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -134,8 +134,7 @@ document.querySelectorAll('.term-list li').forEach((item, k) => item.style.setPr
 
 // App screens stagger their rows in
 document.querySelectorAll('.app-view').forEach(view => {
-  view.querySelectorAll('.app-head, .app-search, .game-rows li, .soc-card, .spec-grid div, .runtime-rows li, .app-note').forEach((item, k) => {
-    item.classList.add('stagger');
+  view.querySelectorAll('.stagger').forEach((item, k) => {
     item.style.setProperty('--k', k);
   });
 });
@@ -338,11 +337,11 @@ function gameScene(canvas) {
     if (!width || !height) return;
     const t = time / 1000, horizon = height * .6;
     const sky = ctx.createLinearGradient(0, 0, 0, horizon);
-    sky.addColorStop(0, '#05070d'); sky.addColorStop(.7, '#121a12'); sky.addColorStop(1, '#2a3a14');
+    sky.addColorStop(0, '#05070d'); sky.addColorStop(.7, '#0c1726'); sky.addColorStop(1, '#163452');
     ctx.fillStyle = sky; ctx.fillRect(0, 0, width, horizon);
     STARS.forEach(([x, y, p]) => {
       ctx.globalAlpha = .35 + .35 * Math.sin(t * 2 + p * 9);
-      ctx.fillStyle = '#e8f5d0'; ctx.fillRect(x * width, y * height, 1.5, 1.5);
+      ctx.fillStyle = '#dbe9f8'; ctx.fillRect(x * width, y * height, 1.5, 1.5);
     });
     ctx.globalAlpha = 1;
     const sunX = width * .62, sunY = horizon * .78, sunR = height * .26;
@@ -351,13 +350,13 @@ function gameScene(canvas) {
     ctx.save();
     ctx.beginPath(); ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2); ctx.clip();
     ctx.fillStyle = sun; ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
-    ctx.fillStyle = '#121a12';
+    ctx.fillStyle = '#0c1726';
     for (let i = 0; i < 7; i++) {
       const band = (i + (t * .25) % 1) / 7;
       ctx.fillRect(sunX - sunR, sunY + band * sunR, sunR * 2, Math.max(1, band * sunR * .22));
     }
     ctx.restore();
-    const ridgeColors = ['#1d2a17', '#141e11', '#0b120a'];
+    const ridgeColors = ['#16283c', '#0f1c2b', '#08111b'];
     RIDGES.forEach((points, layer) => {
       const speed = (layer + 1) * 14, amp = height * (.2 - layer * .045), baseY = horizon + layer * 2;
       const step = width / (points.length - 3), offset = (t * speed) % step;
@@ -371,7 +370,7 @@ function gameScene(canvas) {
       ctx.fillStyle = ridgeColors[layer]; ctx.fill();
       if (layer === 2) { ctx.strokeStyle = 'rgba(195,237,114,.55)'; ctx.lineWidth = 1.2; ctx.stroke(); }
     });
-    ctx.fillStyle = '#070a06'; ctx.fillRect(0, horizon, width, height - horizon);
+    ctx.fillStyle = '#060a10'; ctx.fillRect(0, horizon, width, height - horizon);
     ctx.strokeStyle = 'rgba(195,237,114,.45)'; ctx.lineWidth = 1;
     const vx = width / 2;
     for (let i = -12; i <= 12; i++) { ctx.beginPath(); ctx.moveTo(vx + i * width * .02, horizon); ctx.lineTo(vx + i * width * .16, height); ctx.stroke(); }

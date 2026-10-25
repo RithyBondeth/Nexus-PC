@@ -595,6 +595,48 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
+/// The Nexus-PC mark: three slanted bars, the middle one short. Matches the
+/// landing page logo and favicon (landing/dist/assets/favicon.svg).
+class NexusMark extends StatelessWidget {
+  const NexusMark({super.key, required this.size, required this.color});
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) =>
+      CustomPaint(size: Size.square(size), painter: _NexusMarkPainter(color));
+}
+
+class _NexusMarkPainter extends CustomPainter {
+  _NexusMarkPainter(this.color);
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final s = size.shortestSide;
+    final bar = s * 0.23;
+    final gap = s * 0.16;
+    final paint = Paint()..color = color;
+    canvas
+      ..translate(s / 2, s / 2)
+      // skew(-22deg), as on the web mark.
+      ..transform(Matrix4.skewX(-0.384).storage);
+    for (final (i, height) in [(-1, 0.9), (0, 0.55), (1, 0.9)]) {
+      final center = Offset(i * (bar + gap), 0);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromCenter(center: center, width: bar, height: s * height),
+          Radius.circular(s * 0.08),
+        ),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_NexusMarkPainter old) => old.color != color;
+}
+
 /// A compact rounded status label with a coloured dot or icon.
 class StatusPill extends StatelessWidget {
   const StatusPill({
@@ -764,7 +806,6 @@ class GameCoverTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     return FocusGlow(
       onTap: onOpen,
       selected: selected,
@@ -793,7 +834,7 @@ class GameCoverTile extends StatelessWidget {
                   child: Icon(
                     ready ? Icons.play_arrow_rounded : Icons.build_outlined,
                     size: 14,
-                    color: ready ? scheme.primary : Colors.white70,
+                    color: ready ? NexusPalette.dark.accent : Colors.white70,
                   ),
                 ),
               ),
