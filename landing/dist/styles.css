@@ -132,7 +132,22 @@ em{font-style:normal;color:var(--accent)}
 /* AAA-style concept scene: one original artwork (artwork/world.jpg) framed three ways, each with its own game HUD.
    It is concept art, not a real or supported game, and the on-screen label always says so. */
 .scene{position:absolute;inset:0;background:#05070a var(--art) center/cover no-repeat;transform-origin:var(--ox,50%) var(--oy,50%);scale:var(--zoom,1.06);transform:translate(var(--tx,0),var(--ty,0));filter:var(--grade,none);transition:scale 1.8s var(--ease),transform 1.8s var(--ease),filter 1.4s var(--ease),transform-origin 0s}
-@keyframes drift{to{translate:-1.5% -.6%}}
+/* The camera: a walking bob and slow push forward while exploring, breathing sway in the scope, a slow pan on the
+   discovery shot. Individual translate/rotate/scale properties so each motion animates on its own. */
+.cam{position:absolute;inset:0}
+.motion .device-screen[data-slide="0"] .cam{animation:bob 1.15s var(--ease-in-out) infinite alternate,roll 2.3s var(--ease-in-out) infinite alternate,dolly 7s linear both}
+.motion .device-screen[data-slide="1"] .cam{animation:breathe 4.6s var(--ease-in-out) infinite}
+.motion .device-screen[data-slide="2"] .cam{animation:pan 5.5s linear both}
+.motion .play-inner .cam{animation:bob 1.15s var(--ease-in-out) infinite alternate,roll 2.3s var(--ease-in-out) infinite alternate}
+@keyframes bob{from{translate:0 0}to{translate:0 -.7%}}
+@keyframes roll{from{rotate:-.25deg}to{rotate:.25deg}}
+@keyframes dolly{from{scale:1}to{scale:1.09}}
+@keyframes breathe{0%,100%{translate:0 0}25%{translate:.9% -.5%}50%{translate:0 -1%}75%{translate:-.9% -.5%}}
+@keyframes pan{from{translate:1.5% 0;scale:1.04}to{translate:-1.5% 0;scale:1.04}}
+/* The eclipse breathes light; it sits in the artwork's own coordinates so it follows every framing. */
+.glow{position:absolute;left:76%;top:22%;width:22%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,rgba(214,255,140,.55),rgba(195,237,114,.18) 40%,transparent 70%);mix-blend-mode:screen;animation:flare 3.2s var(--ease-in-out) infinite alternate}
+@keyframes flare{from{opacity:.45;scale:.92}to{opacity:1;scale:1.08}}
+.fx{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 /* Pans the eclipse towers into the middle of the scope */
 .device-screen[data-slide="1"] .scene{--zoom:1.9;--tx:-23%;--ty:24%}
 .device-screen[data-slide="2"] .scene{--zoom:1.5;--ox:30%;--oy:42%;--grade:hue-rotate(115deg) saturate(1.25) brightness(.92)}
@@ -142,6 +157,9 @@ em{font-style:normal;color:var(--accent)}
 /* Open world: compass, quest and vitals */
 .compass{position:absolute;top:1.3em;left:50%;translate:-50% 0;width:34%;height:2.1em;display:flex;justify-content:space-between;align-items:center;padding:0 .8em;font:700 .8em Ubuntu Mono,monospace;letter-spacing:.1em;color:rgba(238,243,248,.8);mask:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);border-bottom:1px solid rgba(238,243,248,.35)}
 .compass b{color:#c3ed72}
+.compass-track{display:flex;justify-content:space-between;width:100%;animation:heading 6s var(--ease-in-out) infinite alternate}
+@keyframes heading{from{translate:-7% 0}to{translate:7% 0}}
+.compass{justify-content:center}
 .compass-pin{position:absolute;top:3.4em;left:57%;font:700 .75em Ubuntu Mono,monospace;color:#c3ed72}
 .compass-pin::before{content:'';display:block;width:.7em;height:.7em;margin:0 auto .2em;background:#c3ed72;rotate:45deg}
 .quest{position:absolute;top:4.6em;left:3.6em;max-width:16em}
@@ -152,6 +170,19 @@ em{font-style:normal;color:var(--accent)}
 .vitals i{display:block;height:.42em;margin-top:.35em;border-radius:1em;background:rgba(238,243,248,.18);overflow:hidden}
 .vitals i::before{content:'';display:block;height:100%;width:var(--v);background:var(--c,#c3ed72);box-shadow:0 0 .6em var(--c,#c3ed72)}
 .vitals i+i{--c:#eef3f8;height:.3em}
+.motion .vitals i+i::before{animation:stamina 4.2s var(--ease-in-out) infinite}
+@keyframes stamina{0%,100%{width:72%}55%{width:28%}}
+.hotbar i:nth-child(2){position:relative;overflow:hidden}
+.motion .hotbar i:nth-child(2)::after{content:'';position:absolute;inset:0;background:conic-gradient(rgba(8,12,18,.75) var(--cd),transparent 0);animation:cooldown 5s linear infinite}
+@property --cd{syntax:'<percentage>';inherits:false;initial-value:0%}
+@keyframes cooldown{from{--cd:100%}to{--cd:0%}}
+.toast{position:absolute;right:3.2em;top:27%;display:flex;align-items:center;gap:.6em;padding:.5em .9em .5em .6em;border-radius:.5em;background:linear-gradient(90deg,rgba(8,12,18,.2),rgba(8,12,18,.75));border-right:2px solid #c3ed72;opacity:0}
+.toast i{width:1.6em;height:1.6em;background:#c3ed72;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);box-shadow:0 0 1em #c3ed72}
+.toast small{display:block;font-size:.7em;font-weight:700;letter-spacing:.14em;color:#c3ed72}
+.toast b{font-size:.95em}
+.motion .device-screen[data-slide="0"] .toast,.motion .play-inner .toast{animation:toast 4s var(--ease) 1.6s both}
+@keyframes toast{0%{opacity:0;translate:2em 0}12%,80%{opacity:1;translate:0 0}100%{opacity:0;translate:0 0}}
+.motion .play-inner .toast{animation:toast 4s var(--ease) 1s infinite}
 .vitals span{font:700 .78em Ubuntu Mono,monospace;letter-spacing:.06em}
 .vitals span b{color:#c3ed72}
 .hotbar{position:absolute;right:3.2em;bottom:5.6em;display:flex;gap:.45em}
@@ -165,7 +196,7 @@ em{font-style:normal;color:var(--accent)}
 .scope-ring::after{top:0;bottom:0;left:50%;width:1px}
 .scope-dot{position:absolute;left:50%;top:50%;width:.5em;height:.5em;translate:-50% -50%;border-radius:50%;background:#c3ed72;box-shadow:0 0 .8em #c3ed72}
 .scope-read{position:absolute;left:calc(50% + 17.5cqw);top:50%;translate:0 -50%;font:700 .85em/1.6 Ubuntu Mono,monospace;color:#c3ed72}
-.scope-read span{display:block;color:rgba(238,243,248,.7);font-weight:400}
+.scope-read span:not([data-range]){display:block;color:rgba(238,243,248,.7);font-weight:400}
 .hud-scope .tag-left{position:absolute;right:calc(50% + 17.5cqw);top:50%;translate:0 -50%;font:700 .8em Ubuntu Mono,monospace;letter-spacing:.1em;color:rgba(238,243,248,.7)}
 /* New area: cinematic banner */
 .banner{position:absolute;left:0;right:0;top:34%;text-align:center}
@@ -199,7 +230,7 @@ em{font-style:normal;color:var(--accent)}
 .motion .boot{animation:boot-out .7s var(--ease) 2.5s forwards}
 html:not(.motion) .boot{display:none}
 @keyframes boot-out{to{opacity:0;visibility:hidden;scale:1.06}}
-.motion .device-screen .scene{animation:scene-in 1.4s var(--ease) 2.5s backwards,drift 14s var(--ease-in-out) 3.9s infinite alternate}
+.motion .device-screen .scene,.motion .device-screen .fx{animation:scene-in 1.4s var(--ease) 2.5s backwards}
 .motion .device-screen .game-hud{animation:scene-in 1s var(--ease) 3s backwards}
 @keyframes scene-in{from{opacity:0}}
 .motion .glare{animation:glare-sweep 1.6s var(--ease) 2.9s both}
@@ -432,7 +463,7 @@ html:not(.motion) .boot{display:none}
 .view-play{padding:0}
 .play-inner{position:absolute;top:50%;left:50%;width:100cqh;height:100cqw;translate:-50% -50%;rotate:90deg;overflow:hidden;background:#05070a}
 .play-inner{container-type:inline-size}
-.play-inner .scene{animation:none;--zoom:1.12;--ox:72%;--oy:58%}
+.play-inner .scene{--zoom:1.12;--ox:72%;--oy:58%}
 .play-inner .game-hud{font-size:2.1cqw}
 .play-inner .hud-explore{opacity:1}
 .play-inner .vitals{bottom:auto;top:1.4em;left:2.4em}

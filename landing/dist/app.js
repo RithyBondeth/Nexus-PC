@@ -317,6 +317,57 @@ function asciiField(canvas) {
 }
 document.querySelectorAll('[data-ascii]').forEach(asciiField);
 
+// Concept scene atmosphere: fog banks drifting across the valley and embers rising toward the eclipse
+function sceneFx(canvas) {
+  const ctx = canvas.getContext('2d');
+  let width = 0, height = 0, visible = true, last = 0;
+  const embers = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.6, v: .02 + Math.random() * .05, p: Math.random() * 6.3 }));
+  const fog = Array.from({ length: 7 }, (_, i) => ({ x: Math.random(), y: .45 + Math.random() * .5, r: .25 + Math.random() * .3, v: .006 + i * .002 }));
+  const resize = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    width = canvas.clientWidth; height = canvas.clientHeight;
+    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  const draw = (time, dt) => {
+    ctx.clearRect(0, 0, width, height);
+    fog.forEach(f => {
+      f.x -= f.v * dt; if (f.x < -f.r) f.x = 1 + f.r;
+      const g = ctx.createRadialGradient(f.x * width, f.y * height, 0, f.x * width, f.y * height, f.r * width);
+      g.addColorStop(0, 'rgba(205,222,210,.10)'); g.addColorStop(1, 'rgba(205,222,210,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, width, height);
+    });
+    embers.forEach(e => {
+      e.y -= e.v * dt; e.x += Math.sin(time / 900 + e.p) * .0006;
+      if (e.y < -.05) { e.y = 1.05; e.x = Math.random(); }
+      ctx.globalAlpha = .35 + .45 * Math.sin(time / 300 + e.p * 3) ** 2;
+      ctx.fillStyle = e.p > 4.5 ? '#ffe7a8' : '#d9ff9a';
+      ctx.shadowColor = '#c3ed72'; ctx.shadowBlur = 6;
+      ctx.beginPath(); ctx.arc(e.x * width, e.y * height, e.r, 0, Math.PI * 2); ctx.fill();
+    });
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+  };
+  const loop = time => {
+    if (visible && width && time - last > 33) { draw(time, Math.min(.1, (time - last) / 1000)); last = time; }
+    requestAnimationFrame(loop);
+  };
+  new ResizeObserver(resize).observe(canvas);
+  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(canvas);
+  if (motion) requestAnimationFrame(loop);
+}
+document.querySelectorAll('[data-fx]').forEach(sceneFx);
+
+// Live HUD readouts: the waypoint closes in, the scope's rangefinder jitters
+if (motion) {
+  let distance = 340;
+  setInterval(() => {
+    distance = distance <= 296 ? 340 : distance - 1;
+    document.querySelectorAll('[data-dist]').forEach(el => { el.textContent = distance; });
+  }, 320);
+  const range = document.querySelector('[data-range]');
+  if (range) setInterval(() => { range.textContent = 410 + Math.floor(Math.random() * 5); }, 650);
+}
+
 // Boot log on the hero phone
 const bootLog = document.querySelector('[data-boot-log]');
 if (motion && bootLog) {
