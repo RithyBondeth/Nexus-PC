@@ -2,6 +2,7 @@ package com.nexuspc.app
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -98,6 +99,25 @@ class NexusHost(private val context: Context, messenger: BinaryMessenger) : Nexu
             process.inputStream.close()
             process.outputStream.close()
             process.errorStream.close()
+        }
+    }
+    override fun getBuildInfo(): BuildInfo {
+        val info = context.packageManager.getPackageInfo(context.packageName, 0)
+        return BuildInfo(info.versionName ?: "unknown", info.longVersionCode,
+            BuildConfig.GIT_COMMIT, BuildConfig.BUILD_TYPE, runtime != null)
+    }
+    private val settings get() = context.getSharedPreferences("nexus_settings", Context.MODE_PRIVATE)
+    override fun getAppearance(): AppearanceMode =
+        AppearanceMode.entries.firstOrNull { it.name == settings.getString("appearance", null) } ?: AppearanceMode.SYSTEM
+    override fun setAppearance(mode: AppearanceMode) { settings.edit().putString("appearance", mode.name).apply() }
+    override fun shareText(subject: String, text: String) {
+        if (subject.isBlank() || subject.length > 200 || text.isEmpty() || text.length > 64 * 1024)
+            throw FlutterError("invalid_argument", "Share a subject of 1–200 characters and up to 64 KiB of text.")
+        val send = Intent(Intent.ACTION_SEND).setType("text/plain")
+            .putExtra(Intent.EXTRA_SUBJECT, subject).putExtra(Intent.EXTRA_TEXT, text)
+        try { context.startActivity(Intent.createChooser(send, subject)) }
+        catch (_: android.content.ActivityNotFoundException) {
+            throw FlutterError("share_unavailable", "No app can receive the report. Copy it instead.")
         }
     }
     override fun getRuntimeStatus(): RuntimeStatus = runtime?.status() ?: unavailable

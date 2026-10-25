@@ -223,6 +223,18 @@ enum class LogLevel(val raw: Int) {
   }
 }
 
+enum class AppearanceMode(val raw: Int) {
+  SYSTEM(0),
+  LIGHT(1),
+  DARK(2);
+
+  companion object {
+    fun ofRaw(raw: Int): AppearanceMode? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 enum class ImportKind(val raw: Int) {
   FOLDER(0),
   ZIP(1);
@@ -775,6 +787,62 @@ data class ExecutionProbeResult (
     return "ExecutionProbeResult(passed=$passed, details=$details, exitCode=$exitCode, nativeLibraryPath=$nativeLibraryPath)"
   }
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class BuildInfo (
+  val versionName: String,
+  val versionCode: Long,
+  /** Short git revision, with "-dirty" when built from local edits. */
+  val commit: String,
+  /** Android build type: debug, profile or release. */
+  val buildType: String,
+  /** Whether the experimental Windows runtime is packaged. */
+  val runtimePackaged: Boolean
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): BuildInfo {
+      val versionName = pigeonVar_list[0] as String
+      val versionCode = pigeonVar_list[1] as Long
+      val commit = pigeonVar_list[2] as String
+      val buildType = pigeonVar_list[3] as String
+      val runtimePackaged = pigeonVar_list[4] as Boolean
+      return BuildInfo(versionName, versionCode, commit, buildType, runtimePackaged)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      versionName,
+      versionCode,
+      commit,
+      buildType,
+      runtimePackaged,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as BuildInfo
+    return NexusApiPigeonUtils.deepEquals(this.versionName, other.versionName) && NexusApiPigeonUtils.deepEquals(this.versionCode, other.versionCode) && NexusApiPigeonUtils.deepEquals(this.commit, other.commit) && NexusApiPigeonUtils.deepEquals(this.buildType, other.buildType) && NexusApiPigeonUtils.deepEquals(this.runtimePackaged, other.runtimePackaged)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.versionName)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.versionCode)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.commit)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.buildType)
+    result = 31 * result + NexusApiPigeonUtils.deepHash(this.runtimePackaged)
+    return result
+  }
+  override fun toString(): String {
+    return "BuildInfo(versionName=$versionName, versionCode=$versionCode, commit=$commit, buildType=$buildType, runtimePackaged=$runtimePackaged)"
+  }
+}
 private open class NexusApiPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -790,62 +858,72 @@ private open class NexusApiPigeonCodec : StandardMessageCodec() {
       }
       131.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          ImportKind.ofRaw(it.toInt())
+          AppearanceMode.ofRaw(it.toInt())
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
-          ImportState.ofRaw(it.toInt())
+          ImportKind.ofRaw(it.toInt())
         }
       }
       133.toByte() -> {
-        return (readValue(buffer) as? List<Any?>)?.let {
-          GameRecord.fromList(it)
+        return (readValue(buffer) as Long?)?.let {
+          ImportState.ofRaw(it.toInt())
         }
       }
       134.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ExecutableRecord.fromList(it)
+          GameRecord.fromList(it)
         }
       }
       135.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          GameDetails.fromList(it)
+          ExecutableRecord.fromList(it)
         }
       }
       136.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          LibraryResult.fromList(it)
+          GameDetails.fromList(it)
         }
       }
       137.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          ImportProgress.fromList(it)
+          LibraryResult.fromList(it)
         }
       }
       138.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          DeviceProfile.fromList(it)
+          ImportProgress.fromList(it)
         }
       }
       139.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RuntimeStatus.fromList(it)
+          DeviceProfile.fromList(it)
         }
       }
       140.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          LaunchRequest.fromList(it)
+          RuntimeStatus.fromList(it)
         }
       }
       141.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          RuntimeLog.fromList(it)
+          LaunchRequest.fromList(it)
         }
       }
       142.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
+          RuntimeLog.fromList(it)
+        }
+      }
+      143.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
           ExecutionProbeResult.fromList(it)
+        }
+      }
+      144.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          BuildInfo.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -861,52 +939,60 @@ private open class NexusApiPigeonCodec : StandardMessageCodec() {
         stream.write(130)
         writeValue(stream, value.raw.toLong())
       }
-      is ImportKind -> {
+      is AppearanceMode -> {
         stream.write(131)
         writeValue(stream, value.raw.toLong())
       }
-      is ImportState -> {
+      is ImportKind -> {
         stream.write(132)
         writeValue(stream, value.raw.toLong())
       }
-      is GameRecord -> {
+      is ImportState -> {
         stream.write(133)
-        writeValue(stream, value.toList())
+        writeValue(stream, value.raw.toLong())
       }
-      is ExecutableRecord -> {
+      is GameRecord -> {
         stream.write(134)
         writeValue(stream, value.toList())
       }
-      is GameDetails -> {
+      is ExecutableRecord -> {
         stream.write(135)
         writeValue(stream, value.toList())
       }
-      is LibraryResult -> {
+      is GameDetails -> {
         stream.write(136)
         writeValue(stream, value.toList())
       }
-      is ImportProgress -> {
+      is LibraryResult -> {
         stream.write(137)
         writeValue(stream, value.toList())
       }
-      is DeviceProfile -> {
+      is ImportProgress -> {
         stream.write(138)
         writeValue(stream, value.toList())
       }
-      is RuntimeStatus -> {
+      is DeviceProfile -> {
         stream.write(139)
         writeValue(stream, value.toList())
       }
-      is LaunchRequest -> {
+      is RuntimeStatus -> {
         stream.write(140)
         writeValue(stream, value.toList())
       }
-      is RuntimeLog -> {
+      is LaunchRequest -> {
         stream.write(141)
         writeValue(stream, value.toList())
       }
-      is ExecutionProbeResult -> {
+      is RuntimeLog -> {
         stream.write(142)
+        writeValue(stream, value.toList())
+      }
+      is ExecutionProbeResult -> {
+        stream.write(143)
+        writeValue(stream, value.toList())
+      }
+      is BuildInfo -> {
+        stream.write(144)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -1072,6 +1158,14 @@ interface NexusLibraryApi {
 }
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface NexusHostApi {
+  fun getBuildInfo(): BuildInfo
+  fun getAppearance(): AppearanceMode
+  fun setAppearance(mode: AppearanceMode)
+  /**
+   * Opens the Android share sheet; nothing leaves the device unless the
+   * user picks a destination.
+   */
+  fun shareText(subject: String, text: String)
   fun getDeviceProfile(callback: (Result<DeviceProfile>) -> Unit)
   fun probePackagedExecution(callback: (Result<ExecutionProbeResult>) -> Unit)
   fun getRuntimeStatus(): RuntimeStatus
@@ -1089,6 +1183,73 @@ interface NexusHostApi {
     @JvmOverloads
     fun setUp(binaryMessenger: BinaryMessenger, api: NexusHostApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusHostApi.getBuildInfo$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getBuildInfo())
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusHostApi.getAppearance$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getAppearance())
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusHostApi.setAppearance$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val modeArg = args[0] as AppearanceMode
+            val wrapped: List<Any?> = try {
+              api.setAppearance(modeArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusHostApi.shareText$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val subjectArg = args[0] as String
+            val textArg = args[1] as String
+            val wrapped: List<Any?> = try {
+              api.shareText(subjectArg, textArg)
+              listOf(null)
+            } catch (exception: Throwable) {
+              NexusApiPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.nexus_app.NexusHostApi.getDeviceProfile$separatedMessageChannelSuffix", codec)
         if (api != null) {

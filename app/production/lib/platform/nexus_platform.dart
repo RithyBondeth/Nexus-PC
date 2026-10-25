@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart' show ThemeMode;
 import 'nexus_api.g.dart';
 export 'nexus_api.g.dart';
 
@@ -12,6 +13,10 @@ abstract interface class NexusPlatform {
   Future<RuntimeStatus> launchGame(LaunchRequest request);
   Future<RuntimeStatus> stopGame();
   Future<List<RuntimeLog>> getRecentLogs(int limit);
+  Future<BuildInfo> getBuildInfo();
+  Future<ThemeMode> getAppearance();
+  Future<void> setAppearance(ThemeMode mode);
+  Future<void> shareText(String subject, String text);
   Future<void> close();
 }
 
@@ -44,6 +49,25 @@ class PigeonNexusPlatform implements NexusPlatform, NexusEventApi {
   @override
   Future<List<RuntimeLog>> getRecentLogs(int limit) =>
       _host.getRecentLogs(limit);
+  @override
+  Future<BuildInfo> getBuildInfo() => _host.getBuildInfo();
+  @override
+  Future<ThemeMode> getAppearance() async =>
+      switch (await _host.getAppearance()) {
+        AppearanceMode.light => ThemeMode.light,
+        AppearanceMode.dark => ThemeMode.dark,
+        AppearanceMode.system => ThemeMode.system,
+      };
+  @override
+  Future<void> setAppearance(ThemeMode mode) =>
+      _host.setAppearance(switch (mode) {
+        ThemeMode.light => AppearanceMode.light,
+        ThemeMode.dark => AppearanceMode.dark,
+        ThemeMode.system => AppearanceMode.system,
+      });
+  @override
+  Future<void> shareText(String subject, String text) =>
+      _host.shareText(subject, text);
   @override
   Future<void> onRuntimeStatus(RuntimeStatus status) async {
     if (!_statuses.isClosed) _statuses.add(status);

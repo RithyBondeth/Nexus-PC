@@ -58,6 +58,25 @@ class FakeHost extends NexusHostApi {
   Future<RuntimeStatus> stopGame() async => unavailable();
   @override
   Future<List<RuntimeLog>> getRecentLogs(int limit) async => [];
+
+  AppearanceMode savedAppearance = AppearanceMode.system;
+  final shared = <(String, String)>[];
+  @override
+  Future<BuildInfo> getBuildInfo() async => BuildInfo(
+    versionName: '0.3.0',
+    versionCode: 2,
+    commit: 'abc123def456',
+    buildType: 'release',
+    runtimePackaged: false,
+  );
+  @override
+  Future<AppearanceMode> getAppearance() async => savedAppearance;
+  @override
+  Future<void> setAppearance(AppearanceMode mode) async =>
+      savedAppearance = mode;
+  @override
+  Future<void> shareText(String subject, String text) async =>
+      shared.add((subject, text));
 }
 
 void main() {

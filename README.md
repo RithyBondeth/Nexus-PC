@@ -5,19 +5,29 @@
 [![Android](https://img.shields.io/badge/Platform-Android_12%2B-green?logo=android)](https://developer.android.com)
 [![Status](https://img.shields.io/badge/Status-Active_Development-orange)]()
 
-**Nexus-PC** is a next-generation Android application that bridges the gap between desktop PC gaming and mobile hardware. Existing Windows translation layers on mobile require tedious container creation, manual driver installation, and complex keymapping. Nexus-PC eliminates this friction entirely via an automated **Cloud Fingerprinting & SoC Alias Normalization** engine.
-
-Simply import your DRM-free game directory or archive, and the app automatically provisions the right translation runtime, injects optimized Mesa Turnip graphics drivers, and launches your game seamlessly.
+**Nexus-PC** is an Android application, in active development, that aims to run DRM-free Windows PC games without manual Wine prefixes, driver installation or container configuration. Import a game folder or ZIP; the app keeps a validated private copy and, in the experimental runtime build, launches it through pinned Wine/Box64.
 
 ---
 
 ## ✨ Key Features
 
-* **🔌 True Plug-and-Play UX:** No manual Wine prefixes, DXVK toggles, or container configuration required. 
-* **⚡ Flutter-Powered Dashboard:** A gorgeous, high-performance UI built with Flutter and Isar DB for lightning-fast local library management.
-* **🧠 Automated Cloud Profile Matching:** Automatically detects your device chipset and fetches community-verified execution flags via a lightweight cloud backend.
-* **🌐 Universal SoC Abstraction:** Future-proof architecture featuring server-side alias normalization to instantly support evolving Qualcomm Snapdragon tiers (Gen 2, Gen 3, Elite, and beyond) without client app updates.
-* **🎮 Smart Touch & Controller Overlays:** Automatically maps contextual on-screen gamepads or translates inputs directly via zero-latency C++ XInput bridges.
+Available now:
+
+* **📚 Local game library:** Folder and ZIP imports through the Android system picker into app-private copies, backed by Android SQLite (not Isar; see [ADR 0002](docs/architecture/0002-local-library.md)). Paged title search, executable selection, title edits, SHA-256 details, duplicate rejection and confirmed removal. Original sources are never modified.
+* **🛡️ Bounded, safe imports:** Path traversal, alias, link, ZIP64/encryption and compression-bomb checks; size/entry limits; progress and cancellation; interruption recovery.
+* **📱 Flutter shell:** Adaptive Home, Library, Device and Settings screens with accessible layouts and System/Light/Dark appearance.
+* **🔍 Device profile:** Typed native bridge reporting Android API, SoC, ABIs, RAM and the stock Vulkan renderer/version.
+
+Experimental (opt-in build, emulator-tested only):
+
+* **🧪 Windows runtime:** Pinned Wine 10.10 and a source-built Box64 interpreter (no JIT) launch saved x86-64 executables from the library at target API 36 on 4 KB and 16 KB-page ARM64 hosts. Only Windows GDI titles have been tested; Direct3D, DXVK/Turnip, sound and controllers are unverified. Games run with the app's UID — run trusted games only. The ordinary APK excludes this runtime.
+
+Planned (not yet implemented):
+
+* **🧠 Cloud profile matching** of device chipsets to community-verified execution flags.
+* **🌐 Server-side SoC alias normalization** for new Snapdragon tiers.
+* **🎮 Touch and controller input overlays.**
+* **🖥️ Mesa Turnip / DXVK graphics** for Direct3D games.
 
 ## Implementation status
 
