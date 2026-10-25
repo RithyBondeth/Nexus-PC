@@ -165,6 +165,8 @@ void main() {
   ) async {
     final host = CountingHost()..failProfile = true;
     await mountShell(tester, host);
+    // The system section sits below the spotlight and shelf on Home.
+    await reveal(tester, 'Could not read this device. Please try again.');
     expect(
       find.text('Could not read this device. Please try again.'),
       findsOneWidget,
@@ -198,6 +200,38 @@ void main() {
       expect(find.text('Runtime: unavailable'), findsOneWidget);
     },
   );
+
+  testWidgets('home features the newest game and shelves the library', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final platform = PigeonNexusPlatform(host: CountingHost());
+    addTearDown(platform.close);
+    final api = FakeLibraryApi()
+      ..records = [
+        libraryGame('new', title: 'Newest')..executableRelativePath = null,
+        libraryGame('old', title: 'Older'),
+      ];
+    await tester.pumpWidget(NexusApp(platform: platform, libraryApi: api));
+    await tester.pumpAndSettle();
+    // The hero features the newest game; picking a cover features it.
+    expect(find.text('NEWEST'), findsOneWidget);
+    expect(find.text('SET UP'), findsOneWidget);
+    expect(find.text('2 games'), findsWidgets);
+    expect(find.text('YOUR GAMES'), findsOneWidget);
+    await tester.tap(find.text('Older'));
+    await tester.pumpAndSettle();
+    expect(find.text('OLDER'), findsOneWidget);
+    expect(find.text('PLAY'), findsOneWidget);
+    expect(find.text('NEWEST'), findsNothing);
+    await tester.tap(find.text('See all'));
+    await tester.pumpAndSettle();
+    expect(find.text('All games · 2'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('keyboard activation opens the library', (tester) async {
     await mountShell(tester, CountingHost());

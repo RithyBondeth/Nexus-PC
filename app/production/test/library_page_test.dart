@@ -130,9 +130,15 @@ Future<void> tapVisible(WidgetTester tester, String text) async {
     await tester.ensureVisible(target.last);
   }
   await tester.pumpAndSettle();
-  await tester.ensureVisible(target.last);
-  await tester.pumpAndSettle();
+  await centre(tester, target.last);
   await tester.tap(target.last);
+  await tester.pumpAndSettle();
+}
+
+/// Pages scroll beneath a transparent top bar and pinned bottom bars, so
+/// targets are brought to mid-screen rather than to an edge before tapping.
+Future<void> centre(WidgetTester tester, Finder target) async {
+  await Scrollable.ensureVisible(tester.element(target), alignment: 0.5);
   await tester.pumpAndSettle();
 }
 
@@ -207,10 +213,16 @@ void main() {
       await mount(tester, api);
       await tapVisible(tester, 'Test game');
       await tester.enterText(find.byType(TextField), 'Renamed');
+      await centre(tester, find.byType(DropdownButtonFormField<String>));
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('bin/other.exe').last);
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('hash-two'),
+        200,
+        scrollable: pageScrollable(),
+      );
       expect(find.text('hash-two'), findsOneWidget);
       await tapVisible(tester, 'Save details');
       expect(api.saves, 1);
@@ -246,6 +258,26 @@ void main() {
     await tapVisible(tester, 'Remove copy');
     expect(find.text('No games yet'), findsOneWidget);
     expect(api.removes, 2);
+  });
+
+  testWidgets('view tabs filter the page by setup state', (tester) async {
+    final api = FakeLibraryApi()
+      ..records = [
+        libraryGame('one', title: 'Ready one'),
+        libraryGame('two', title: 'Unset two')..executableRelativePath = null,
+        libraryGame('three', title: 'Ready three'),
+      ];
+    await mount(tester, api);
+    expect(find.text('All games · 3'), findsOneWidget);
+    await tapVisible(tester, 'Needs setup · 1');
+    await tester.pumpAndSettle();
+    expect(find.text('Unset two'), findsOneWidget);
+    expect(find.text('Ready one'), findsNothing);
+    await tapVisible(tester, 'Ready · 2');
+    await tester.pumpAndSettle();
+    expect(find.text('Unset two'), findsNothing);
+    expect(find.text('Ready three'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('paging renders the last page', (tester) async {
@@ -290,7 +322,7 @@ void main() {
         200,
         scrollable: pageScrollable(),
       );
-      await tester.pumpAndSettle();
+      await centre(tester, find.byType(DropdownButtonFormField<String>));
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('bin/other.exe').last);

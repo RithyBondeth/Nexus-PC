@@ -1,8 +1,10 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../platform/nexus_platform.dart';
 import '../theme/nexus_theme.dart';
+import 'game_artwork.dart';
 import 'shell_controller.dart';
+
+export 'game_artwork.dart';
 
 class ShellPage extends StatefulWidget {
   const ShellPage({
@@ -12,6 +14,7 @@ class ShellPage extends StatefulWidget {
     required this.children,
     this.eyebrow,
     this.banner,
+    this.hero,
     this.showTitle = true,
   });
   final String title;
@@ -19,11 +22,15 @@ class ShellPage extends StatefulWidget {
   final List<Widget> children;
   final String? eyebrow;
 
-  /// Shown above the heading, e.g. a game's cover.
+  /// Shown above the heading inside the page margins, e.g. a game's cover.
   final Widget? banner;
 
-  /// False when the banner already shows the title; it stays a semantic
-  /// heading for screen readers.
+  /// Edge-to-edge artwork at the very top, drawn beneath the transparent top
+  /// bar. It pads itself for the bar using [MediaQuery.paddingOf].
+  final Widget? hero;
+
+  /// False when the banner or hero already shows the title; it stays a
+  /// semantic heading for screen readers.
   final bool showTitle;
 
   @override
@@ -36,76 +43,81 @@ class _ShellPageState extends State<ShellPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final insets = MediaQuery.paddingOf(context);
     // Stagger sections in when the page first appears, not when they are
     // rebuilt later by scrolling or state changes.
     final entering = _opened.elapsedMilliseconds < 700;
     var index = 0;
     Widget reveal(Widget child) =>
         Reveal(index: index++, animate: entering, child: child);
-    return Align(
+    // Page content keeps a readable measure on tablets; the hero spans all.
+    Widget measure(Widget child) => Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 960),
-        child: ListView(
-          primary: false,
-          key: PageStorageKey(widget.title),
-          // Includes room for a floating bar when the page scrolls beneath it.
-          padding: EdgeInsets.fromLTRB(
-            16,
-            8,
-            16,
-            24 + MediaQuery.paddingOf(context).bottom,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: child,
+        ),
+      ),
+    );
+    return ListView(
+      primary: false,
+      key: PageStorageKey(widget.title),
+      // Includes room for the top bar and the docked bar it scrolls beneath.
+      padding: EdgeInsets.only(
+        top: widget.hero == null ? insets.top + 8 : 0,
+        bottom: 28 + insets.bottom,
+      ),
+      children: [
+        ?widget.hero,
+        if (widget.banner case final banner?)
+          measure(
+            Padding(padding: const EdgeInsets.only(bottom: 16), child: banner),
           ),
-          children: [
-            if (widget.banner case final banner?)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: banner,
-              ),
-            reveal(
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.eyebrow case final label?) ...[
-                    Text(
-                      label.toUpperCase(),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.4,
-                      ),
+        measure(
+          reveal(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.eyebrow case final label? when widget.showTitle) ...[
+                  Text(
+                    label.toUpperCase(),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.secondary,
                     ),
-                    const SizedBox(height: 6),
-                  ],
-                  if (widget.showTitle) ...[
-                    Semantics(
-                      header: true,
-                      child: Text(
-                        widget.title,
-                        style: theme.textTheme.headlineMedium,
-                      ),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+                if (widget.showTitle) ...[
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      widget.title,
+                      style: theme.textTheme.displaySmall,
                     ),
-                    const SizedBox(height: 6),
-                  ] else
-                    Semantics(
-                      header: true,
-                      label: widget.title,
-                      child: const SizedBox.shrink(),
-                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ] else
+                  Semantics(
+                    header: true,
+                    label: widget.title,
+                    child: const SizedBox.shrink(),
+                  ),
+                if (widget.description.isNotEmpty)
                   Text(
                     widget.description,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 18),
-                ],
-              ),
+                const SizedBox(height: 22),
+              ],
             ),
-            for (final child in widget.children) reveal(child),
-          ],
+          ),
         ),
-      ),
+        for (final child in widget.children) measure(reveal(child)),
+      ],
     );
   }
 }
@@ -262,7 +274,7 @@ class IconBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final tint = color ?? scheme.primary;
+    final tint = color ?? scheme.secondary;
     return Container(
       width: size,
       height: size,
@@ -543,203 +555,350 @@ class EmptyState extends StatelessWidget {
   }
 }
 
-/// Generated cover art until real artwork exists. A gradient and geometric
-/// pattern seeded from the title give each game a stable identity; large
-/// covers carry the title, small ones its initial. Everything is painted, so
-/// the cover adds no duplicate text to semantics or widget lookups.
-class GameArtwork extends StatelessWidget {
-  const GameArtwork({
-    super.key,
-    required this.title,
-    this.size,
-    this.heroTag,
-    this.radius = 14,
-    this.showTitle = true,
-  });
-  final String title;
-
-  /// Paint the title on large covers; off when the caller overlays text.
-  final bool showTitle;
-
-  /// Square edge length; null fills the parent.
-  final double? size;
-  final Object? heroTag;
-  final double radius;
-
-  static const _gradients = [
-    [Color(0xFF1E340A), Color(0xFF86B83A)],
-    [Color(0xFF0C2F2D), Color(0xFF2E8A7F)],
-    [Color(0xFF3F250D), Color(0xFFBC7B2E)],
-    [Color(0xFF211740), Color(0xFF7458BF)],
-    [Color(0xFF3D1021), Color(0xFFB9466A)],
-  ];
-
-  /// FNV-1a: stable across launches and well spread across styles.
-  static int seedOf(String title) => title.codeUnits.fold(
-    0x811c9dc5,
-    (hash, unit) => ((hash ^ unit) * 0x01000193) & 0xffffffff,
-  );
+/// An uppercase shelf heading, as above SteamOS rows, with an optional action.
+class SectionHeader extends StatelessWidget {
+  const SectionHeader(this.label, {super.key, this.action, this.onAction});
+  final String label;
+  final String? action;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
-    final seed = seedOf(title);
-    Widget art = ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: CustomPaint(
-        painter: _CoverPainter(
-          seed: seed,
-          colors: _gradients[seed % _gradients.length],
-          title: title.trim().isEmpty ? '?' : title.trim(),
-          showTitle: showTitle,
-          fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
-        ),
-        child: const SizedBox.expand(),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: Text(
+                label.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+          if (action case final text?)
+            TextButton(
+              onPressed: onAction,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(48, 36),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: Text(text),
+            ),
+        ],
       ),
     );
-    if (size case final edge?) {
-      art = SizedBox.square(dimension: edge, child: art);
-    }
-    if (heroTag case final tag?) art = Hero(tag: tag, child: art);
-    return ExcludeSemantics(child: art);
   }
 }
 
-class _CoverPainter extends CustomPainter {
-  _CoverPainter({
-    required this.seed,
-    required this.colors,
-    required this.title,
-    required this.showTitle,
-    required this.fontFamily,
+/// A compact rounded status label with a coloured dot or icon.
+class StatusPill extends StatelessWidget {
+  const StatusPill({
+    super.key,
+    required this.label,
+    required this.color,
+    this.icon,
   });
-  final int seed;
-  final List<Color> colors;
-  final String title;
-  final bool showTitle;
-  final String? fontFamily;
+  final String label;
+  final Color color;
+  final IconData? icon;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final random = math.Random(seed);
-    final edge = size.shortestSide;
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-          colors: colors,
-        ).createShader(rect),
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.32)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon case final symbol?)
+            Icon(symbol, size: 14, color: color)
+          else
+            Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+          if (label.isNotEmpty) ...[
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
-    final line = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white.withValues(alpha: 0.16)
-      ..strokeWidth = math.max(1, edge * 0.018);
-    final fill = Paint()..color = Colors.white.withValues(alpha: 0.09);
-    switch ((seed >> 4) % 3) {
-      case 0: // Concentric rings from a corner.
-        final center = Offset(
-          size.width * (0.7 + random.nextDouble() * 0.4),
-          size.height * (random.nextDouble() * 0.3),
-        );
-        for (var ring = 1; ring <= 6; ring++) {
-          canvas.drawCircle(center, edge * 0.16 * ring, line);
-        }
-        canvas.drawCircle(center, edge * 0.12, fill);
-      case 1: // Diagonal stripes.
-        final gap = edge * (0.09 + random.nextDouble() * 0.05);
-        canvas.save();
-        canvas.translate(size.width * 0.55, 0);
-        canvas.rotate(-math.pi / 4);
-        for (var x = -size.longestSide; x < size.longestSide * 2; x += gap) {
-          if (random.nextDouble() < 0.35) continue;
-          canvas.drawLine(
-            Offset(x, -size.longestSide),
-            Offset(x, size.longestSide * 2),
-            line,
-          );
-        }
-        canvas.restore();
-      default: // Scattered triangles and dots.
-        for (var i = 0; i < 9; i++) {
-          final c = Offset(
-            size.width * (0.35 + random.nextDouble() * 0.7),
-            size.height * random.nextDouble() * 0.75,
-          );
-          final r = edge * (0.04 + random.nextDouble() * 0.12);
-          if (i.isEven) {
-            final angle = random.nextDouble() * math.pi;
-            final path = Path();
-            for (var k = 0; k < 3; k++) {
-              final a = angle + k * 2 * math.pi / 3;
-              final point = c + Offset(math.cos(a), math.sin(a)) * r;
-              k == 0
-                  ? path.moveTo(point.dx, point.dy)
-                  : path.lineTo(point.dx, point.dy);
-            }
-            canvas.drawPath(path..close(), i % 4 == 0 ? fill : line);
-          } else {
-            canvas.drawCircle(c, r * 0.35, fill);
-          }
-        }
-    }
-    // A soft light source plus a bottom scrim keeps the title legible.
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = RadialGradient(
-          center: const Alignment(0.7, -0.8),
-          radius: 0.9,
-          colors: [Colors.white.withValues(alpha: 0.14), Colors.transparent],
-        ).createShader(rect),
-    );
-    canvas.drawRect(
-      rect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: const [0.45, 1],
-          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.62)],
-        ).createShader(rect),
-    );
-    final large = edge >= 96;
-    if (large && !showTitle) return;
-    final painter = TextPainter(
-      text: TextSpan(
-        text: large ? title : title.characters.first.toUpperCase(),
-        style: TextStyle(
-          fontFamily: fontFamily,
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          height: 1.1,
-          letterSpacing: large ? -0.3 : 0,
-          fontSize: large ? (edge * 0.15).clamp(14, 34) : edge * 0.44,
-          shadows: const [Shadow(color: Color(0x80000000), blurRadius: 10)],
+  }
+}
+
+/// Wraps a tappable surface with SteamOS-style focus: a blue ring, a soft
+/// glow and a slight lift when focused by keyboard/controller or hovered.
+class FocusGlow extends StatefulWidget {
+  const FocusGlow({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.radius = 12,
+    this.semanticLabel,
+    this.selected = false,
+    this.onFocused,
+  });
+  final Widget child;
+  final VoidCallback onTap;
+  final double radius;
+  final String? semanticLabel;
+
+  /// Keeps a lime ring while this is the chosen item, e.g. the hero's game.
+  final bool selected;
+
+  /// Called when keyboard or controller focus lands here.
+  final VoidCallback? onFocused;
+
+  @override
+  State<FocusGlow> createState() => _FocusGlowState();
+}
+
+class _FocusGlowState extends State<FocusGlow> {
+  bool _focused = false;
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final lit = _focused || _hovered;
+    final reduced = NexusMotion.reduced(context);
+    final radius = BorderRadius.circular(widget.radius);
+    return PressScale(
+      child: AnimatedScale(
+        scale: lit && !reduced ? 1.03 : 1,
+        duration: NexusMotion.quick,
+        curve: NexusMotion.curve,
+        child: AnimatedContainer(
+          duration: reduced ? Duration.zero : NexusMotion.quick,
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            boxShadow: lit
+                ? [
+                    BoxShadow(
+                      color: scheme.secondary.withValues(alpha: 0.45),
+                      blurRadius: 22,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : const [],
+          ),
+          foregroundDecoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(
+              color: _focused
+                  ? scheme.secondary
+                  : widget.selected
+                  ? scheme.primary
+                  : Colors.transparent,
+              width: 2.5,
+            ),
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              borderRadius: radius,
+              onTap: widget.onTap,
+              onFocusChange: (value) {
+                setState(() => _focused = value);
+                if (value) widget.onFocused?.call();
+              },
+              onHover: (value) => setState(() => _hovered = value),
+              child: Semantics(
+                button: true,
+                label: widget.semanticLabel,
+                child: ClipRRect(borderRadius: radius, child: widget.child),
+              ),
+            ),
+          ),
         ),
       ),
-      textDirection: TextDirection.ltr,
-      maxLines: 2,
-      ellipsis: '…',
-    )..layout(maxWidth: size.width * (large ? 0.84 : 1));
-    final inset = edge * 0.08;
-    painter.paint(
-      canvas,
-      large
-          ? Offset(inset, size.height - painter.height - inset)
-          : Offset(
-              (size.width - painter.width) / 2,
-              (size.height - painter.height) / 2,
-            ),
     );
-    painter.dispose();
   }
+}
+
+/// A portrait game cover in the SteamOS library style: generated artwork,
+/// the title as real text and a readiness marker.
+class GameCoverTile extends StatelessWidget {
+  const GameCoverTile({
+    super.key,
+    required this.title,
+    required this.heroTag,
+    required this.ready,
+    required this.subtitle,
+    required this.onOpen,
+    this.selected = false,
+    this.onFocused,
+  });
+  final String title;
+  final Object heroTag;
+  final bool selected;
+  final VoidCallback? onFocused;
+
+  /// True once an executable is chosen.
+  final bool ready;
+  final String subtitle;
+  final VoidCallback onOpen;
 
   @override
-  bool shouldRepaint(_CoverPainter old) =>
-      old.seed != seed ||
-      old.title != title ||
-      old.showTitle != showTitle ||
-      old.fontFamily != fontFamily;
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return FocusGlow(
+      onTap: onOpen,
+      selected: selected,
+      onFocused: onFocused,
+      child: AspectRatio(
+        aspectRatio: 2 / 3,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GameArtwork(
+              title: title,
+              heroTag: heroTag,
+              radius: 0,
+              showTitle: false,
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: ExcludeSemantics(
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.45),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    ready ? Icons.play_arrow_rounded : Icons.build_outlined,
+                    size: 14,
+                    color: ready ? scheme.primary : Colors.white70,
+                  ),
+                ),
+              ),
+            ),
+            // The title is real text on the cover, so it stays readable by
+            // screen readers and searchable.
+            Positioned(
+              left: 10,
+              right: 10,
+              bottom: 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      height: 1.15,
+                      shadows: const [
+                        Shadow(color: Color(0x99000000), blurRadius: 8),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: ready ? Colors.white70 : const Color(0xFFFFB4A8),
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A cinematic header: art behind a dark scrim, always in the dark theme so
+/// overlaid text stays legible, blending into the page below in either theme.
+class DarkHero extends StatelessWidget {
+  const DarkHero({super.key, required this.art, required this.child});
+
+  /// Fills the hero behind the scrim.
+  final Widget art;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    const dark = NexusPalette.dark;
+    final page = NexusPalette.of(context).backdrop;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Theme(
+          data: nexusTheme(Brightness.dark),
+          child: Stack(
+            children: [
+              Positioned.fill(child: art),
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [0, 0.28, 0.62, 1],
+                      colors: [
+                        dark.backdrop.withValues(alpha: 0.55),
+                        dark.backdrop.withValues(alpha: 0.05),
+                        dark.backdrop.withValues(alpha: 0.82),
+                        dark.backdrop,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              DefaultTextStyle.merge(
+                style: TextStyle(color: dark.text),
+                child: child,
+              ),
+            ],
+          ),
+        ),
+        // Blends the dark hero into a light page; invisible in dark mode.
+        Container(
+          height: 28,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [dark.backdrop, page.withValues(alpha: 0)],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
