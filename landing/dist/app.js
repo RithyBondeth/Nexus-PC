@@ -261,7 +261,8 @@ function asciiField(canvas) {
     width = canvas.clientWidth; height = canvas.clientHeight;
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const size = width < 640 ? 11 : 13;
+    // The app draws 11 dp characters; the phone mockup scales them to its 390 dp screen.
+    const size = kind === 'app' ? 11 * width / 390 : width < 640 ? 11 : 13;
     ctx.font = `${size}px "Ubuntu Mono", ui-monospace, monospace`;
     ctx.textBaseline = 'top';
     cellW = ctx.measureText('M').width; cellH = size * 1.18;
@@ -273,6 +274,7 @@ function asciiField(canvas) {
       const right = width < 1020 ? 1 : Math.min(1, Math.max(0, (x - .28) / .4));
       return (.25 + .75 * right) * Math.min(1, (1 - y) * 2.2);
     }
+    if (kind === 'app') return (Math.min(1, (1 - y) * 1.6) * .85 + .15) * (.55 + .45 * x);
     const dx = x - .5, dy = (y - .5) * 1.4;
     return Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) * 1.25);
   };
