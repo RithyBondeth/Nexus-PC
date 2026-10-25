@@ -317,56 +317,83 @@ function asciiField(canvas) {
 }
 document.querySelectorAll('[data-ascii]').forEach(asciiField);
 
-// Concept scene atmosphere: fog banks drifting across the valley and embers rising toward the eclipse
-function sceneFx(canvas) {
-  const ctx = canvas.getContext('2d');
-  let width = 0, height = 0, visible = true, last = 0;
-  const embers = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random(), r: .6 + Math.random() * 1.6, v: .02 + Math.random() * .05, p: Math.random() * 6.3 }));
-  const fog = Array.from({ length: 7 }, (_, i) => ({ x: Math.random(), y: .45 + Math.random() * .5, r: .25 + Math.random() * .3, v: .006 + i * .002 }));
-  const resize = () => {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    width = canvas.clientWidth; height = canvas.clientHeight;
-    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  const draw = (time, dt) => {
-    ctx.clearRect(0, 0, width, height);
-    fog.forEach(f => {
-      f.x -= f.v * dt; if (f.x < -f.r) f.x = 1 + f.r;
-      const g = ctx.createRadialGradient(f.x * width, f.y * height, 0, f.x * width, f.y * height, f.r * width);
-      g.addColorStop(0, 'rgba(205,222,210,.10)'); g.addColorStop(1, 'rgba(205,222,210,0)');
-      ctx.fillStyle = g; ctx.fillRect(0, 0, width, height);
-    });
-    embers.forEach(e => {
-      e.y -= e.v * dt; e.x += Math.sin(time / 900 + e.p) * .0006;
-      if (e.y < -.05) { e.y = 1.05; e.x = Math.random(); }
-      ctx.globalAlpha = .35 + .45 * Math.sin(time / 300 + e.p * 3) ** 2;
-      ctx.fillStyle = e.p > 4.5 ? '#ffe7a8' : '#d9ff9a';
-      ctx.shadowColor = '#c3ed72'; ctx.shadowBlur = 6;
-      ctx.beginPath(); ctx.arc(e.x * width, e.y * height, e.r, 0, Math.PI * 2); ctx.fill();
-    });
-    ctx.globalAlpha = 1; ctx.shadowBlur = 0;
-  };
-  const loop = time => {
-    if (visible && width && time - last > 33) { draw(time, Math.min(.1, (time - last) / 1000)); last = time; }
-    requestAnimationFrame(loop);
-  };
-  new ResizeObserver(resize).observe(canvas);
-  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(canvas);
-  if (motion) requestAnimationFrame(loop);
+// Console-style launcher demo: controller focus walks the cover shelf, the hero follows, then Play launches a game.
+// The story phone's sideways screen gets a copy of the same launcher, driven by touch.
+const LX_GAMES = [
+  ['Aurora Run', 'Ready', '4.2 GB'], ['Pale Summit', 'Ready', '11.8 GB'], ['Ember Ridge', 'Needs setup', '2.6 GB'],
+  ['Deep Signal', 'Ready', '7.1 GB'], ['Glass Harbor', 'Ready', '3.4 GB'], ['Night Market', 'Ready', '9.9 GB']
+];
+const LX_STEPS = ['Matching Snapdragon profile…', 'Preparing Wine + Box64…', 'Starting game'];
+const launcherSource = document.querySelector('[data-launcher]');
+const launcherCopy = document.querySelector('[data-launcher-copy]');
+if (launcherSource && launcherCopy) {
+  const copy = launcherSource.cloneNode(true);
+  copy.classList.add('touch');
+  launcherCopy.append(copy);
 }
-document.querySelectorAll('[data-fx]').forEach(sceneFx);
-
-// Live HUD readouts: the waypoint closes in, the scope's rangefinder jitters
-if (motion) {
-  let distance = 340;
-  setInterval(() => {
-    distance = distance <= 296 ? 340 : distance - 1;
-    document.querySelectorAll('[data-dist]').forEach(el => { el.textContent = distance; });
-  }, 320);
-  const range = document.querySelector('[data-range]');
-  if (range) setInterval(() => { range.textContent = 410 + Math.floor(Math.random() * 5); }, 650);
+function runLauncher(root, startDelay) {
+  const $ = selector => root.querySelector(selector);
+  const art = [...root.querySelectorAll('.lx-art span')];
+  const covers = [...root.querySelectorAll('.lx-cover')];
+  const play = $('.lx-play'), tap = $('.lx-tap'), title = $('[data-lx-title]');
+  let visible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
+  const sleep = ms => new Promise(done => setTimeout(done, ms));
+  const whenVisible = async () => { while (!visible) await sleep(400); };
+  // Layout offsets, not screen rects: the phones are rotated and tilted in 3D.
+  const centre = el => {
+    let x = el.offsetWidth / 2, y = el.offsetHeight / 2;
+    for (let node = el; node && node !== root; node = node.offsetParent) { x += node.offsetLeft; y += node.offsetTop; }
+    return [x, y];
+  };
+  const focus = el => {
+    root.querySelectorAll('.focus').forEach(node => node.classList.remove('focus'));
+    el.classList.add('focus');
+    const [x, y] = centre(el);
+    tap.style.left = `${x}px`; tap.style.top = `${y}px`;
+    tap.classList.remove('hit'); void tap.offsetWidth; tap.classList.add('hit');
+  };
+  const show = index => {
+    const [name, state, size] = LX_GAMES[index];
+    art.forEach((layer, i) => layer.classList.toggle('on', i === index));
+    covers.forEach((cover, i) => cover.classList.toggle('selected', i === index));
+    title.classList.add('swap');
+    // Text changes while the title is faded out, so the pills never disagree with it.
+    setTimeout(() => {
+      title.textContent = name;
+      title.classList.remove('swap');
+      $('[data-lx-state]').textContent = state;
+      $('.lx-pill.state').classList.toggle('setup', state !== 'Ready');
+      $('.lx-pill.state .icon').style.setProperty('--icon', `url("assets/${state === 'Ready' ? 'check-circle-fill' : 'wrench-fill'}.svg")`);
+      $('[data-lx-size]').textContent = size;
+      $('[data-lx-play]').textContent = state === 'Ready' ? 'PLAY' : 'SET UP';
+    }, 220);
+  };
+  const loop = async () => {
+    await sleep(startDelay);
+    for (;;) {
+      for (let i = 0; i <= 3; i++) {
+        await whenVisible();
+        focus(covers[i]); show(i);
+        await sleep(1500);
+      }
+      focus(play); await sleep(700);
+      play.classList.add('pressed'); await sleep(220); play.classList.remove('pressed');
+      $('[data-lx-launch]').textContent = `Launching ${LX_GAMES[3][0]}`;
+      root.classList.add('launching');
+      $('[data-lx-status]').textContent = 'Preparing';
+      for (const step of LX_STEPS) { $('[data-lx-step]').textContent = step; await sleep(950); }
+      $('[data-lx-status]').textContent = 'Game running';
+      await sleep(700);
+      root.classList.remove('launching');
+      root.querySelectorAll('.focus').forEach(node => node.classList.remove('focus'));
+      await sleep(1600);
+      $('[data-lx-status]').textContent = 'Runtime ready';
+    }
+  };
+  if (motion) loop();
 }
+document.querySelectorAll('[data-launcher]').forEach((root, i) => runLauncher(root, i === 0 ? 3400 : 600));
 
 // Boot log on the hero phone
 const bootLog = document.querySelector('[data-boot-log]');
@@ -374,21 +401,3 @@ if (motion && bootLog) {
   ['Detecting chipset…', 'Snapdragon · Adreno', 'Preparing Wine + Box64…', 'Launching game'].forEach((line, i) => setTimeout(() => { bootLog.textContent = line; }, i * 600));
 }
 
-// Hero screen walks through three framings of the concept scene; the label always says it is concept art
-const heroScreen = document.querySelector('.device-screen[data-slide]');
-const screenLabel = document.querySelector('[data-screen-label]');
-const slides = [
-  ['Concept art · open world', 7000],
-  ['Concept art · scope view', 5500],
-  ['Concept art · new area', 5500]
-];
-if (motion && heroScreen) {
-  let slide = 0;
-  const advance = () => {
-    slide = (slide + 1) % slides.length;
-    heroScreen.dataset.slide = slide;
-    screenLabel.textContent = slides[slide][0];
-    setTimeout(advance, slides[slide][1]);
-  };
-  setTimeout(advance, 3000 + slides[0][1]);
-}
