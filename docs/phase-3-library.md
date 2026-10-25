@@ -164,14 +164,14 @@ Release signing and Windows runtime integration are still absent.
 
 ## Physical Xiaomi acceptance
 
-Status: pending. Fill in each blank as the check is run; leave a result blank
+Status: run on 2026-10-25; S1 outstanding. Fill in each blank as the check is run; leave a result blank
 rather than guessing. Record failures with the observed behavior and logcat excerpt.
 
-- Date: ____
-- Device: Xiaomi 17 Pro, serial ____
-- HyperOS version: ____ (Android ____, security patch ____)
-- Build: commit ____, normal `lib/main.dart` debug ARM64 APK
-- Tester: ____
+- Date: 2026-10-25
+- Device: Xiaomi 17 Pro, serial c22f0635 (SoC SM8850, Adreno 840)
+- HyperOS version: OS4.0.4.0.XBLCNXM (Android 17, API 37, security patch 2026-10-01)
+- Build: commit 3268adf (develop de8cac6 plus this checklist), normal `lib/main.dart` debug ARM64 APK
+- Tester: RithyBondeth; scripts A and B run by Claude Code
 
 Enable USB debugging, "Install via USB" and "USB debugging (Security settings)"
 in Developer options before running the scripts.
@@ -186,8 +186,8 @@ flutter build apk --debug --target-platform android-arm64
 
 | Check | Command | Result | Evidence |
 |---|---|---|---|
-| A. Native storage/recovery (14 checks) | `ADB=/path/to/adb bash tools/run-library-storage-check.sh SERIAL` | ____ | `docs/evidence/phase-3-xiaomi17pro-storage.json` |
-| B. Shell integration (tabs, dark theme, Back) | `ADB=/path/to/adb bash tools/run-shell-device-check.sh SERIAL` | ____ | `docs/evidence/phase-3-xiaomi17pro-shell.json` |
+| A. Native storage/recovery (15 checks) | `ADB=/path/to/adb bash tools/run-library-storage-check.sh SERIAL` | Passed, 15/15 | `docs/evidence/phase-3-xiaomi17pro-storage.json` |
+| B. Shell integration (tabs, dark theme, Back) | `ADB=/path/to/adb bash tools/run-shell-device-check.sh SERIAL` | Passed, 2/2 tests | `docs/evidence/phase-3-xiaomi17pro-shell.json` |
 
 Check B installs the integration-test APK. Rebuild and reinstall the normal debug
 APK before the manual walkthrough.
@@ -200,28 +200,28 @@ with the same contents. Synthetic PE headers or two builds of
 
 | # | Step | Expected | Result |
 |---|---|---|---|
-| 1 | Import the ZIP through the system picker | Progress shown; two candidates listed | ____ |
-| 2 | Select an executable, save, swipe from Recents, reopen | Record and selection persist | ____ |
-| 3 | Import the identical folder | Duplicate rejected; existing record unchanged | ____ |
-| 4 | Add a distinct text file to the folder and import it | Import succeeds through its read grant | ____ |
-| 5 | Edit the title, select the second executable, save | List refreshes; architecture and copyable SHA-256 shown | ____ |
-| 6 | Open a picker and back out | No new record published | ____ |
-| 7 | Confirm removal of the folder's imported copy | Only the ZIP record remains; source folder/ZIP unchanged in Files | ____ |
-| 8 | Search by title with three or more records | Literal matches only; paging intact | ____ |
-| 9 | Start a large import and cancel it | No partial record published | ____ |
-| 10 | Maximum font size, dark and light theme, landscape | Layout readable; no clipped controls | ____ |
+| 1 | Import the ZIP through the system picker | Progress shown; two candidates listed | Passed: imported in under a second (progress observed in 9); `smoke.exe` and `smoke-debug.exe` offered, `readme.txt` excluded |
+| 2 | Select an executable, save, swipe from Recents, reopen | Record and selection persist | Passed after `am force-stop` cold start; shown SHA-256 matched the host build |
+| 3 | Import the identical folder | Duplicate rejected; existing record unchanged | Passed: "An identical copy is already in your library."; picker granted only that folder; no persisted URI grant |
+| 4 | Add a distinct text file to the folder and import it | Import succeeds through its read grant | Passed: second record, 4 files |
+| 5 | Edit the title, select the second executable, save | List refreshes; architecture and copyable SHA-256 shown | Passed: Save disabled until a choice; x86_64 and matching SHA-256 shown; copying not exercised |
+| 6 | Open a picker and back out | No new record published | Passed for folder and ZIP pickers: "Import cancelled. No game was added." |
+| 7 | Confirm removal of the folder's imported copy | Only the ZIP record remains; source folder/ZIP unchanged in Files | Passed: private copy deleted; source SHA-256s unchanged. Minor: the stale cancellation message stayed visible |
+| 8 | Search by title with three or more records | Literal matches only; paging intact | Passed: case-insensitive substring; `' OR 1=1` and `%` match nothing. Paging past 50 records not exercised on device |
+| 9 | Start a large import and cancel it | No partial record published | Passed: re-import of a 6.0 GiB folder showed progress ("1 files · 15.9 MiB copied") and Cancel import; "Import cancelled. No game was added."; staging empty, record count unchanged |
+| 10 | Maximum font size, dark and light theme, landscape | Layout readable; no clipped controls | Passed at 200% font, dark and light. Minor: in landscape at 200% the navigation rail hides Settings until the rail is scrolled; all four fit at normal size |
 
 ### Stress cases
 
 | # | Case | Expected | Result |
 |---|---|---|---|
-| S1 | Import from a third-party provider (Google Drive, Xiaomi File Manager) | Import succeeds or fails visibly; no persisted source URI | ____ |
-| S2 | Swipe the app away or reboot mid-import | No published partial copy; cold start recovers and imports work again | ____ |
-| S3 | Import a ZIP of 1 GB or more | Progress stays responsive; no crash, memory kill or thermal shutdown | ____ |
+| S1 | Import from a third-party provider (Google Drive, Xiaomi File Manager) | Import succeeds or fails visibly; no persisted source URI | Not run: no third-party DocumentsProvider (Google Drive) installed on the device |
+| S2 | Swipe the app away or reboot mid-import | No published partial copy; cold start recovers and imports work again | Passed: `am force-stop` during a 6.0 GiB copy left 862 MB in staging and no record; cold start emptied staging; the same folder then imported fully. Records also survived a device reboot |
+| S3 | Import a ZIP of 1 GB or more | Progress stays responsive; no crash, memory kill or thermal shutdown | Passed: 1.2 GB ZIP and 6.0 GiB folder imported in seconds; copied SHA-256 matched source; staging empty |
 
 ### Sign-off
 
-- [ ] Checks A and B pass with fresh reports committed under `docs/evidence`.
+- [x] Checks A and B pass with fresh reports committed under `docs/evidence`.
 - [ ] Manual steps 1–10 and stress cases S1–S3 pass, or failures are filed as issues.
-- [ ] Normal `lib/main.dart` APK reinstalled on the device after the run.
+- [x] Normal `lib/main.dart` APK reinstalled on the device after the run.
 - [ ] Final-head CI and review pass; the acceptance boxes above are updated.
