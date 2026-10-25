@@ -8,6 +8,7 @@ import 'pages/home_page.dart';
 import 'pages/library_page.dart';
 import 'pages/settings_page.dart';
 import 'shell_controller.dart';
+import 'shell_widgets.dart';
 import '../library/library_controller.dart';
 import '../theme/nexus_theme.dart';
 
@@ -29,10 +30,26 @@ class NexusShell extends StatefulWidget {
 
 class _NexusShellState extends State<NexusShell> {
   static const destinations = [
-    (label: 'Home', icon: Icons.home_outlined),
-    (label: 'Library', icon: Icons.folder_open_outlined),
-    (label: 'Device', icon: Icons.memory_outlined),
-    (label: 'Settings', icon: Icons.settings_outlined),
+    (
+      label: 'Home',
+      icon: Icons.home_outlined,
+      selectedIcon: Icons.home_rounded,
+    ),
+    (
+      label: 'Library',
+      icon: Icons.grid_view_outlined,
+      selectedIcon: Icons.grid_view_rounded,
+    ),
+    (
+      label: 'Device',
+      icon: Icons.memory_outlined,
+      selectedIcon: Icons.memory_rounded,
+    ),
+    (
+      label: 'Settings',
+      icon: Icons.settings_outlined,
+      selectedIcon: Icons.settings_rounded,
+    ),
   ];
   late final ShellController controller;
   late final LibraryController library;
@@ -82,6 +99,7 @@ class _NexusShellState extends State<NexusShell> {
               HomePage(
                 controller: controller,
                 library: library,
+                platform: widget.platform,
                 onImport: (kind) {
                   select(1);
                   unawaited(library.begin(kind));
@@ -101,53 +119,164 @@ class _NexusShellState extends State<NexusShell> {
               ),
             ],
           );
-          return Scaffold(
-            // Pages scroll beneath the floating bar; they pad for it.
-            extendBody: !wide,
-            appBar: AppBar(title: const Text('Nexus-PC')),
-            body: SafeArea(
-              top: false,
-              bottom: false,
-              child: wide
-                  ? Row(
-                      children: [
-                        NavigationRail(
-                          scrollable: true,
-                          selectedIndex: selected,
-                          onDestinationSelected: select,
-                          labelType: NavigationRailLabelType.all,
-                          destinations: [
-                            for (final destination in destinations)
-                              NavigationRailDestination(
-                                icon: Icon(destination.icon),
-                                label: Text(destination.label),
-                              ),
-                          ],
-                        ),
-                        const VerticalDivider(width: 1),
-                        Expanded(child: pages),
+          return NexusBackdrop(
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              // Pages scroll beneath the docked bar; they pad for it.
+              extendBody: !wide,
+              appBar: _TopBar(controller: controller, wide: wide),
+              body: SafeArea(
+                top: false,
+                bottom: false,
+                child: wide
+                    ? Row(
+                        children: [
+                          _SideMenu(selected: selected, onSelected: select),
+                          Expanded(child: pages),
+                        ],
+                      )
+                    : pages,
+              ),
+              bottomNavigationBar: wide
+                  ? null
+                  : _DockBar(
+                      selected: selected,
+                      onSelected: select,
+                      destinations: [
+                        for (final destination in destinations)
+                          NavigationDestination(
+                            icon: Icon(destination.icon),
+                            selectedIcon: Icon(destination.selectedIcon),
+                            label: destination.label,
+                          ),
                       ],
-                    )
-                  : pages,
+                    ),
             ),
-            bottomNavigationBar: wide
-                ? null
-                : _FloatingNavBar(
-                    selected: selected,
-                    onSelected: select,
-                    destinations: [
-                      for (final destination in destinations)
-                        NavigationDestination(
-                          icon: Icon(destination.icon),
-                          label: destination.label,
-                        ),
-                    ],
-                  ),
           );
         },
       ),
     ),
   );
+}
+
+/// SteamOS-style header: a wordmark on the left and live status on the right.
+class _TopBar extends StatelessWidget implements PreferredSizeWidget {
+  const _TopBar({required this.controller, required this.wide});
+  final ShellController controller;
+  final bool wide;
+
+  @override
+  // Shorter beside the side menu, where landscape height is scarce.
+  Size get preferredSize => Size.fromHeight(wide ? 52 : 60);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final state = controller.statusError == null
+        ? controller.status?.state
+        : null;
+    final visual = runtimeVisual(scheme, state);
+    final runtimeLabel = switch (state) {
+      RuntimeState.running => 'Game running',
+      RuntimeState.preparing => 'Preparing',
+      RuntimeState.stopping => 'Stopping',
+      RuntimeState.idle => 'Runtime ready',
+      RuntimeState.failed => 'Runtime error',
+      RuntimeState.unavailable => 'Runtime off',
+      null when controller.statusError != null => 'Status unknown',
+      null => 'Checking…',
+    };
+    return AppBar(
+      toolbarHeight: wide ? 52 : 60,
+      titleSpacing: 20,
+      title: Row(
+        children: [
+          ExcludeSemantics(
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [scheme.primary, scheme.secondary],
+                ),
+              ),
+              child: Icon(
+                Icons.sports_esports_rounded,
+                size: 18,
+                color: scheme.onPrimary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Flexible(
+            child: Text('Nexus-PC', overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: Tooltip(
+            message: controller.status?.message ?? 'Windows runtime status',
+            child: MediaQuery.withClampedTextScaling(
+              maxScaleFactor: 1.3,
+              // On narrow screens the dot alone carries the state; the
+              // tooltip and Device page give the details.
+              child: MediaQuery.sizeOf(context).width < 400
+                  ? Semantics(
+                      label: runtimeLabel,
+                      child: StatusPill(label: '', color: visual.color),
+                    )
+                  : StatusPill(label: runtimeLabel, color: visual.color),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// The landscape and tablet menu: a column of large destinations on a glass
+/// panel, like the SteamOS main menu. Scrolls when enlarged text overflows.
+class _SideMenu extends StatelessWidget {
+  const _SideMenu({required this.selected, required this.onSelected});
+  final int selected;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 0, 0, 12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainer.withValues(alpha: 0.72),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: scheme.outlineVariant),
+        ),
+        child: NavigationRail(
+          scrollable: true,
+          minWidth: 84,
+          groupAlignment: -1,
+          selectedIndex: selected,
+          onDestinationSelected: onSelected,
+          labelType: NavigationRailLabelType.all,
+          destinations: [
+            for (final destination in _NexusShellState.destinations)
+              NavigationRailDestination(
+                icon: Icon(destination.icon),
+                selectedIcon: Icon(destination.selectedIcon),
+                label: Text(destination.label),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 /// Keeps every tab alive like [IndexedStack] (scroll and state survive), and
@@ -204,11 +333,11 @@ class _FadeThroughStackState extends State<_FadeThroughStack>
   );
 }
 
-/// A blurred pill floating above the page, with a lime highlight that slides
-/// to the selected destination. Built on [NavigationBar] for semantics and
-/// keyboard behaviour.
-class _FloatingNavBar extends StatelessWidget {
-  const _FloatingNavBar({
+/// A docked glass bar, as on the Steam Deck: the selected destination is lit
+/// lime with a short bar that slides along the top edge. Built on
+/// [NavigationBar] for semantics and keyboard behaviour.
+class _DockBar extends StatelessWidget {
+  const _DockBar({
     required this.selected,
     required this.onSelected,
     required this.destinations,
@@ -222,99 +351,89 @@ class _FloatingNavBar extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final count = destinations.length;
-    final selectedColor = scheme.onPrimary;
-    return SafeArea(
-      top: false,
-      minimum: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(
-                alpha: theme.brightness == Brightness.dark ? 0.28 : 0.08,
-              ),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: scheme.surfaceContainer.withValues(alpha: 0.86),
-                borderRadius: BorderRadius.circular(32),
-                border: Border.all(color: scheme.outlineVariant),
-              ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: AnimatedAlign(
-                      alignment: Alignment(
-                        count == 1 ? 0 : -1 + 2 * selected / (count - 1),
-                        0,
-                      ),
-                      duration: NexusMotion.reduced(context)
-                          ? Duration.zero
-                          : NexusMotion.medium,
-                      curve: Curves.easeOutBack,
-                      child: FractionallySizedBox(
-                        widthFactor: 1 / count,
-                        heightFactor: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: scheme.primary,
-                              borderRadius: BorderRadius.circular(26),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: scheme.surfaceContainer.withValues(alpha: 0.82),
+            border: Border(top: BorderSide(color: scheme.outlineVariant)),
+          ),
+          child: SafeArea(
+            top: false,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: AnimatedAlign(
+                    alignment: Alignment(
+                      count == 1 ? 0 : -1 + 2 * selected / (count - 1),
+                      -1,
+                    ),
+                    duration: NexusMotion.reduced(context)
+                        ? Duration.zero
+                        : NexusMotion.medium,
+                    curve: NexusMotion.curve,
+                    child: FractionallySizedBox(
+                      widthFactor: 1 / count,
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          width: 36,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: scheme.primary,
+                            borderRadius: const BorderRadius.vertical(
+                              bottom: Radius.circular(3),
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: scheme.primary.withValues(alpha: 0.6),
+                                blurRadius: 10,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  NavigationBarTheme(
-                    data: theme.navigationBarTheme.copyWith(
-                      backgroundColor: Colors.transparent,
-                      indicatorColor: Colors.transparent,
-                      height: 68,
-                      iconTheme: WidgetStateProperty.resolveWith(
-                        (states) => IconThemeData(
-                          color: states.contains(WidgetState.selected)
-                              ? selectedColor
-                              : scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      labelTextStyle: WidgetStateProperty.resolveWith(
-                        (states) => theme.textTheme.labelMedium?.copyWith(
-                          color: states.contains(WidgetState.selected)
-                              ? selectedColor
-                              : scheme.onSurfaceVariant,
-                          fontWeight: states.contains(WidgetState.selected)
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                        ),
+                ),
+                NavigationBarTheme(
+                  data: theme.navigationBarTheme.copyWith(
+                    backgroundColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    height: 64,
+                    iconTheme: WidgetStateProperty.resolveWith(
+                      (states) => IconThemeData(
+                        color: states.contains(WidgetState.selected)
+                            ? scheme.primary
+                            : scheme.onSurfaceVariant,
                       ),
                     ),
-                    // Labels are short and the pill is narrow: cap their
-                    // growth (as system bars do) so large text cannot
-                    // overflow the floating bar.
-                    child: MediaQuery.withClampedTextScaling(
-                      maxScaleFactor: 1.3,
-                      child: NavigationBar(
-                        selectedIndex: selected,
-                        onDestinationSelected: onSelected,
-                        labelBehavior:
-                            NavigationDestinationLabelBehavior.alwaysShow,
-                        destinations: destinations,
+                    labelTextStyle: WidgetStateProperty.resolveWith(
+                      (states) => theme.textTheme.labelMedium?.copyWith(
+                        color: states.contains(WidgetState.selected)
+                            ? scheme.onSurface
+                            : scheme.onSurfaceVariant,
+                        fontWeight: states.contains(WidgetState.selected)
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                       ),
                     ),
                   ),
-                ],
-              ),
+                  // Labels are short: cap their growth (as system bars do)
+                  // so large text cannot overflow the bar.
+                  child: MediaQuery.withClampedTextScaling(
+                    maxScaleFactor: 1.3,
+                    child: NavigationBar(
+                      selectedIndex: selected,
+                      onDestinationSelected: onSelected,
+                      labelBehavior:
+                          NavigationDestinationLabelBehavior.alwaysShow,
+                      destinations: destinations,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

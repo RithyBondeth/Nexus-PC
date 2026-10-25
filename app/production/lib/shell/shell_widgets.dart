@@ -51,10 +51,10 @@ class _ShellPageState extends State<ShellPage> {
           key: PageStorageKey(widget.title),
           // Includes room for a floating bar when the page scrolls beneath it.
           padding: EdgeInsets.fromLTRB(
-            16,
-            8,
-            16,
-            24 + MediaQuery.paddingOf(context).bottom,
+            20,
+            12,
+            20,
+            28 + MediaQuery.paddingOf(context).bottom,
           ),
           children: [
             if (widget.banner case final banner?)
@@ -70,9 +70,7 @@ class _ShellPageState extends State<ShellPage> {
                     Text(
                       label.toUpperCase(),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1.4,
+                        color: theme.colorScheme.secondary,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -98,7 +96,7 @@ class _ShellPageState extends State<ShellPage> {
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 22),
                 ],
               ),
             ),
@@ -262,7 +260,7 @@ class IconBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final tint = color ?? scheme.primary;
+    final tint = color ?? scheme.secondary;
     return Container(
       width: size,
       height: size,
@@ -566,13 +564,18 @@ class GameArtwork extends StatelessWidget {
   final Object? heroTag;
   final double radius;
 
-  static const _gradients = [
+  static const gradients = [
+    [Color(0xFF0B2342), Color(0xFF1A9FFF)],
     [Color(0xFF1E340A), Color(0xFF86B83A)],
-    [Color(0xFF0C2F2D), Color(0xFF2E8A7F)],
-    [Color(0xFF3F250D), Color(0xFFBC7B2E)],
-    [Color(0xFF211740), Color(0xFF7458BF)],
-    [Color(0xFF3D1021), Color(0xFFB9466A)],
+    [Color(0xFF0C2F2D), Color(0xFF2E9C8F)],
+    [Color(0xFF3F250D), Color(0xFFD08A34)],
+    [Color(0xFF211740), Color(0xFF8063D6)],
+    [Color(0xFF3D1021), Color(0xFFC94E74)],
   ];
+
+  /// The bright end of this title's cover, for tinting a backdrop.
+  static Color accentOf(String title) =>
+      gradients[seedOf(title) % gradients.length].last;
 
   /// FNV-1a: stable across launches and well spread across styles.
   static int seedOf(String title) => title.codeUnits.fold(
@@ -588,7 +591,7 @@ class GameArtwork extends StatelessWidget {
       child: CustomPaint(
         painter: _CoverPainter(
           seed: seed,
-          colors: _gradients[seed % _gradients.length],
+          colors: gradients[seed % gradients.length],
           title: title.trim().isEmpty ? '?' : title.trim(),
           showTitle: showTitle,
           fontFamily: Theme.of(context).textTheme.bodyMedium?.fontFamily,
@@ -742,4 +745,270 @@ class _CoverPainter extends CustomPainter {
       old.title != title ||
       old.showTitle != showTitle ||
       old.fontFamily != fontFamily;
+}
+
+/// An uppercase shelf heading, as above SteamOS rows, with an optional action.
+class SectionHeader extends StatelessWidget {
+  const SectionHeader(this.label, {super.key, this.action, this.onAction});
+  final String label;
+  final String? action;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 10),
+      child: Row(
+        children: [
+          Expanded(
+            child: Semantics(
+              header: true,
+              child: Text(
+                label.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+          if (action case final text?)
+            TextButton(
+              onPressed: onAction,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(48, 36),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: Text(text),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A compact rounded status label with a coloured dot or icon.
+class StatusPill extends StatelessWidget {
+  const StatusPill({
+    super.key,
+    required this.label,
+    required this.color,
+    this.icon,
+  });
+  final String label;
+  final Color color;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.32)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon case final symbol?)
+            Icon(symbol, size: 14, color: color)
+          else
+            Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+          if (label.isNotEmpty) ...[
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Wraps a tappable surface with SteamOS-style focus: a blue ring, a soft
+/// glow and a slight lift when focused by keyboard/controller or hovered.
+class FocusGlow extends StatefulWidget {
+  const FocusGlow({
+    super.key,
+    required this.child,
+    required this.onTap,
+    this.radius = 12,
+    this.semanticLabel,
+  });
+  final Widget child;
+  final VoidCallback onTap;
+  final double radius;
+  final String? semanticLabel;
+
+  @override
+  State<FocusGlow> createState() => _FocusGlowState();
+}
+
+class _FocusGlowState extends State<FocusGlow> {
+  bool _focused = false;
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final lit = _focused || _hovered;
+    final reduced = NexusMotion.reduced(context);
+    final radius = BorderRadius.circular(widget.radius);
+    return PressScale(
+      child: AnimatedScale(
+        scale: lit && !reduced ? 1.03 : 1,
+        duration: NexusMotion.quick,
+        curve: NexusMotion.curve,
+        child: AnimatedContainer(
+          duration: reduced ? Duration.zero : NexusMotion.quick,
+          decoration: BoxDecoration(
+            borderRadius: radius,
+            boxShadow: lit
+                ? [
+                    BoxShadow(
+                      color: scheme.secondary.withValues(alpha: 0.45),
+                      blurRadius: 22,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : const [],
+          ),
+          foregroundDecoration: BoxDecoration(
+            borderRadius: radius,
+            border: Border.all(
+              color: _focused ? scheme.secondary : Colors.transparent,
+              width: 2.5,
+            ),
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              borderRadius: radius,
+              onTap: widget.onTap,
+              onFocusChange: (value) => setState(() => _focused = value),
+              onHover: (value) => setState(() => _hovered = value),
+              child: Semantics(
+                button: true,
+                label: widget.semanticLabel,
+                child: ClipRRect(borderRadius: radius, child: widget.child),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A portrait game cover in the SteamOS library style: generated artwork,
+/// the title as real text and a readiness marker.
+class GameCoverTile extends StatelessWidget {
+  const GameCoverTile({
+    super.key,
+    required this.title,
+    required this.heroTag,
+    required this.ready,
+    required this.subtitle,
+    required this.onOpen,
+  });
+  final String title;
+  final Object heroTag;
+
+  /// True once an executable is chosen.
+  final bool ready;
+  final String subtitle;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return FocusGlow(
+      onTap: onOpen,
+      child: AspectRatio(
+        aspectRatio: 2 / 3,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GameArtwork(
+              title: title,
+              heroTag: heroTag,
+              radius: 0,
+              showTitle: false,
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: ExcludeSemantics(
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.45),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    ready ? Icons.play_arrow_rounded : Icons.build_outlined,
+                    size: 14,
+                    color: ready ? scheme.primary : Colors.white70,
+                  ),
+                ),
+              ),
+            ),
+            // The title is real text on the cover, so it stays readable by
+            // screen readers and searchable.
+            Positioned(
+              left: 10,
+              right: 10,
+              bottom: 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      height: 1.15,
+                      shadows: const [
+                        Shadow(color: Color(0x99000000), blurRadius: 8),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: ready ? Colors.white70 : const Color(0xFFFFB4A8),
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

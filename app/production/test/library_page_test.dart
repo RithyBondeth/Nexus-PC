@@ -248,6 +248,26 @@ void main() {
     expect(api.removes, 2);
   });
 
+  testWidgets('view tabs filter the page by setup state', (tester) async {
+    final api = FakeLibraryApi()
+      ..records = [
+        libraryGame('one', title: 'Ready one'),
+        libraryGame('two', title: 'Unset two')..executableRelativePath = null,
+        libraryGame('three', title: 'Ready three'),
+      ];
+    await mount(tester, api);
+    expect(find.text('All games · 3'), findsOneWidget);
+    await tapVisible(tester, 'Needs setup · 1');
+    await tester.pumpAndSettle();
+    expect(find.text('Unset two'), findsOneWidget);
+    expect(find.text('Ready one'), findsNothing);
+    await tapVisible(tester, 'Ready · 2');
+    await tester.pumpAndSettle();
+    expect(find.text('Unset two'), findsNothing);
+    expect(find.text('Ready three'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('paging renders the last page', (tester) async {
     final api = FakeLibraryApi()
       ..records = List.generate(51, (i) => libraryGame('$i', title: 'Game $i'));

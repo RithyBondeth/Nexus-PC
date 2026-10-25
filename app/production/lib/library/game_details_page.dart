@@ -205,41 +205,85 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
 
   Widget runtimeCard(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final status = runtime!;
     final available = status.state != RuntimeState.unavailable;
-    final visual = runtimeVisual(theme.colorScheme, status.state);
-    return SectionCard(
-      title: 'Play',
-      icon: Icons.sports_esports_outlined,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            IconBadge(visual.icon, color: visual.color, size: 36),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(status.message, style: theme.textTheme.bodyLarge),
-              ),
-            ),
-          ],
-        ),
-        if (available) ...[
-          const SizedBox(height: 16),
-          const NoteText(
-            'Only run games you trust. The Windows runtime can access Nexus-PC app data. Keep this screen open during preparation.',
-            icon: Icons.shield_outlined,
+    final visual = runtimeVisual(scheme, status.state);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          gradient: LinearGradient(
+            colors: [
+              Color.lerp(scheme.surfaceContainer, visual.color, 0.12)!,
+              scheme.surfaceContainer,
+            ],
           ),
-          if (unsavedChanges) ...[
-            const SizedBox(height: 8),
-            const NoteText(
-              'Save your changes before launching.',
-              icon: Icons.edit_note,
-            ),
-          ],
-        ],
-      ],
+          border: Border.all(color: visual.color.withValues(alpha: 0.35)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  IconBadge(visual.icon, color: visual.color, size: 40),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Semantics(
+                          header: true,
+                          child: Text(
+                            'Play',
+                            style: theme.textTheme.titleLarge,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          status.message,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              if (!available) ...[
+                const SizedBox(height: 14),
+                FilledButton.icon(
+                  onPressed: null,
+                  icon: const Icon(Icons.play_arrow_rounded),
+                  label: const Text('Play'),
+                ),
+                const SizedBox(height: 8),
+                const NoteText(
+                  'Playing needs the experimental Windows runtime build. Your library still works without it.',
+                ),
+              ],
+              if (available) ...[
+                const SizedBox(height: 16),
+                const NoteText(
+                  'Only run games you trust. The Windows runtime can access Nexus-PC app data. Keep this screen open during preparation.',
+                  icon: Icons.shield_outlined,
+                ),
+                if (unsavedChanges) ...[
+                  const SizedBox(height: 8),
+                  const NoteText(
+                    'Save your changes before launching.',
+                    icon: Icons.edit_note,
+                  ),
+                ],
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -304,208 +348,324 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         runtime!.state != RuntimeState.unavailable;
     return PopScope(
       canPop: !saving && !requestingRuntime,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Game details'),
-          automaticallyImplyLeading: !saving && !requestingRuntime,
+      child: NexusBackdrop(
+        tint: GameArtwork.accentOf(
+          details?.game.title ?? widget.initialTitle ?? '',
         ),
-        bottomNavigationBar: canLaunch ? launchBar(context) : null,
-        body: SafeArea(
-          bottom: !canLaunch,
-          child: ShellPage(
-            showTitle: details == null && widget.initialTitle == null,
-            banner: switch (details?.game.title ?? widget.initialTitle) {
-              final coverTitle? => AspectRatio(
-                aspectRatio: 16 / 9,
-                child: GameArtwork(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text('Game details'),
+            automaticallyImplyLeading: !saving && !requestingRuntime,
+          ),
+          bottomNavigationBar: canLaunch ? launchBar(context) : null,
+          body: SafeArea(
+            bottom: !canLaunch,
+            child: ShellPage(
+              showTitle: details == null && widget.initialTitle == null,
+              banner: switch (details?.game.title ?? widget.initialTitle) {
+                final coverTitle? => _GameBanner(
                   title: coverTitle,
                   heroTag: 'game-art-${widget.gameId}',
-                  radius: 20,
+                  ready: details?.game.executableRelativePath != null,
+                  loaded: details != null,
                 ),
-              ),
-              null => null,
-            },
-            title:
-                details?.game.title ?? widget.initialTitle ?? 'Imported game',
-            description:
-                'Stored on this device. Windows launching is experimental and compatibility is unverified.',
-            children: [
-              if (loading || saving) ...[
-                const LinearProgressIndicator(
-                  semanticsLabel: 'Updating game details',
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (error case final message?) ...[
-                Semantics(
-                  liveRegion: true,
-                  child: NoteText(message, icon: Icons.error_outline),
-                ),
-                if (details == null && !loading) ...[
-                  const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    onPressed: load,
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Retry details'),
+                null => null,
+              },
+              title:
+                  details?.game.title ?? widget.initialTitle ?? 'Imported game',
+              description:
+                  'Stored on this device. Windows launching is experimental and compatibility is unverified.',
+              children: [
+                if (loading || saving) ...[
+                  const LinearProgressIndicator(
+                    semanticsLabel: 'Updating game details',
                   ),
+                  const SizedBox(height: 16),
                 ],
-                const SizedBox(height: 16),
-              ],
-              if (details case final data?)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (final (icon, label) in [
+                if (error case final message?) ...[
+                  Semantics(
+                    liveRegion: true,
+                    child: NoteText(message, icon: Icons.error_outline),
+                  ),
+                  if (details == null && !loading) ...[
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: load,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Retry details'),
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+                ],
+                if (details case final data?)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: _StatStrip(
+                      stats: [
                         (
                           Icons.folder_outlined,
-                          '${formatFileCount(data.game.fileCount)} · ${formatLibraryBytes(data.game.sizeBytes)}',
+                          'Size',
+                          formatLibraryBytes(data.game.sizeBytes),
+                        ),
+                        (
+                          Icons.description_outlined,
+                          'Files',
+                          '${data.game.fileCount}',
                         ),
                         (
                           Icons.schedule,
-                          'Imported ${formatImportedAt(data.game.importedAtMillis)}',
+                          'Imported',
+                          formatImportedAt(data.game.importedAtMillis),
                         ),
                         if (data.game.architecture case final arch?)
-                          (Icons.memory, arch),
-                      ])
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: scheme.secondaryContainer,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                icon,
-                                size: 16,
-                                color: scheme.onSurfaceVariant,
-                              ),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  label,
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              if (details case final data?) ...[
-                if (runtime != null)
-                  AnimatedSize(
-                    duration: NexusMotion.medium,
-                    curve: NexusMotion.curve,
-                    alignment: Alignment.topCenter,
-                    child: runtimeCard(context),
-                  ),
-                SectionCard(
-                  title: 'Details',
-                  icon: Icons.tune,
-                  children: [
-                    TextField(
-                      controller: title,
-                      enabled: !saving && !runtimeBusy,
-                      maxLength: 120,
-                      decoration: const InputDecoration(
-                        labelText: 'Game title',
-                      ),
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField<String>(
-                      initialValue: executable,
-                      isExpanded: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Windows executable',
-                      ),
-                      hint: const Text('Choose an executable'),
-                      items: [
-                        for (final candidate in data.executables)
-                          DropdownMenuItem(
-                            value: candidate.relativePath,
-                            child: Text(
-                              candidate.relativePath,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
+                          (Icons.memory, 'Arch', arch),
                       ],
-                      onChanged: saving || runtimeBusy
-                          ? null
-                          : (value) => setState(() => executable = value),
-                    ),
-                    const SizedBox(height: 16),
-                    FilledButton.icon(
-                      onPressed: saving || runtimeBusy || executable == null
-                          ? null
-                          : save,
-                      icon: const Icon(Icons.check),
-                      label: const Text('Save details'),
-                    ),
-                  ],
-                ),
-                SectionCard(
-                  title: 'File information',
-                  icon: Icons.fingerprint,
-                  children: [
-                    DeviceField(
-                      'Imported copy',
-                      '${formatFileCount(data.game.fileCount)} · ${formatLibraryBytes(data.game.sizeBytes)}',
-                    ),
-                    DeviceField(
-                      'Imported',
-                      formatImportedAt(data.game.importedAtMillis),
-                    ),
-                    DeviceField(
-                      'Tree SHA-256',
-                      data.game.contentHash,
-                      selectable: true,
-                    ),
-                    for (final candidate in data.executables.where(
-                      (candidate) => candidate.relativePath == executable,
-                    )) ...[
-                      DeviceField(
-                        'Executable path',
-                        candidate.relativePath,
-                        selectable: true,
-                      ),
-                      DeviceField('Architecture', candidate.architecture),
-                      DeviceField(
-                        'Executable SHA-256',
-                        candidate.sha256,
-                        selectable: true,
-                      ),
-                    ],
-                    const NoteText(
-                      'Executable headers and hashes identify files. They do not establish game compatibility or file safety.',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: scheme.error,
-                    side: BorderSide(
-                      color: scheme.error.withValues(alpha: 0.5),
                     ),
                   ),
-                  onPressed: saving || runtimeBusy ? null : remove,
-                  icon: const Icon(Icons.delete_outline),
-                  label: const Text('Remove imported copy'),
-                ),
+                if (details case final data?) ...[
+                  if (runtime != null)
+                    AnimatedSize(
+                      duration: NexusMotion.medium,
+                      curve: NexusMotion.curve,
+                      alignment: Alignment.topCenter,
+                      child: runtimeCard(context),
+                    ),
+                  SectionCard(
+                    title: 'Details',
+                    icon: Icons.tune,
+                    children: [
+                      TextField(
+                        controller: title,
+                        enabled: !saving && !runtimeBusy,
+                        maxLength: 120,
+                        decoration: const InputDecoration(
+                          labelText: 'Game title',
+                        ),
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        initialValue: executable,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Windows executable',
+                        ),
+                        hint: const Text('Choose an executable'),
+                        items: [
+                          for (final candidate in data.executables)
+                            DropdownMenuItem(
+                              value: candidate.relativePath,
+                              child: Text(
+                                candidate.relativePath,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                        ],
+                        onChanged: saving || runtimeBusy
+                            ? null
+                            : (value) => setState(() => executable = value),
+                      ),
+                      const SizedBox(height: 16),
+                      FilledButton.icon(
+                        onPressed: saving || runtimeBusy || executable == null
+                            ? null
+                            : save,
+                        icon: const Icon(Icons.check),
+                        label: const Text('Save details'),
+                      ),
+                    ],
+                  ),
+                  SectionCard(
+                    title: 'File information',
+                    icon: Icons.fingerprint,
+                    children: [
+                      DeviceField(
+                        'Imported copy',
+                        '${formatFileCount(data.game.fileCount)} · ${formatLibraryBytes(data.game.sizeBytes)}',
+                      ),
+                      DeviceField(
+                        'Imported',
+                        formatImportedAt(data.game.importedAtMillis),
+                      ),
+                      DeviceField(
+                        'Tree SHA-256',
+                        data.game.contentHash,
+                        selectable: true,
+                      ),
+                      for (final candidate in data.executables.where(
+                        (candidate) => candidate.relativePath == executable,
+                      )) ...[
+                        DeviceField(
+                          'Executable path',
+                          candidate.relativePath,
+                          selectable: true,
+                        ),
+                        DeviceField('Architecture', candidate.architecture),
+                        DeviceField(
+                          'Executable SHA-256',
+                          candidate.sha256,
+                          selectable: true,
+                        ),
+                      ],
+                      const NoteText(
+                        'Executable headers and hashes identify files. They do not establish game compatibility or file safety.',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: scheme.error,
+                      side: BorderSide(
+                        color: scheme.error.withValues(alpha: 0.5),
+                      ),
+                    ),
+                    onPressed: saving || runtimeBusy ? null : remove,
+                    icon: const Icon(Icons.delete_outline),
+                    label: const Text('Remove imported copy'),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The wide cover at the top of a game page, with the title laid over it.
+class _GameBanner extends StatelessWidget {
+  const _GameBanner({
+    required this.title,
+    required this.heroTag,
+    required this.ready,
+    required this.loaded,
+  });
+  final String title;
+  final Object heroTag;
+  final bool ready;
+  final bool loaded;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            GameArtwork(
+              title: title,
+              heroTag: heroTag,
+              radius: 0,
+              showTitle: false,
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.35, 1],
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.8),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 18,
+              right: 18,
+              bottom: 16,
+              child: ExcludeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (loaded)
+                      StatusPill(
+                        label: ready ? 'Ready' : 'Needs setup',
+                        color: ready ? scheme.primary : scheme.tertiary,
+                        icon: ready
+                            ? Icons.check_circle_rounded
+                            : Icons.build_outlined,
+                      ),
+                    const SizedBox(height: 8),
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        shadows: const [
+                          Shadow(color: Color(0x99000000), blurRadius: 12),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Label/value pairs in one row, like the stats under a SteamOS game banner.
+class _StatStrip extends StatelessWidget {
+  const _StatStrip({required this.stats});
+  final List<(IconData, String, String)> stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainer.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: scheme.outlineVariant),
+      ),
+      child: Wrap(
+        runSpacing: 12,
+        children: [
+          for (final (icon, label, value) in stats)
+            ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 96),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(icon, size: 14, color: scheme.secondary),
+                        const SizedBox(width: 6),
+                        Text(
+                          label.toUpperCase(),
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(value, style: theme.textTheme.titleSmall),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
