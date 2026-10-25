@@ -115,6 +115,8 @@ enum RuntimeState { unavailable, idle, preparing, running, stopping, failed }
 
 enum LogLevel { debug, info, warning, error }
 
+enum AppearanceMode { system, light, dark }
+
 enum ImportKind { folder, zip }
 
 enum ImportState {
@@ -782,6 +784,79 @@ class ExecutionProbeResult {
   }
 }
 
+class BuildInfo {
+  BuildInfo({
+    required this.versionName,
+    required this.versionCode,
+    required this.commit,
+    required this.buildType,
+    required this.runtimePackaged,
+  });
+
+  String versionName;
+
+  int versionCode;
+
+  /// Short git revision, with "-dirty" when built from local edits.
+  String commit;
+
+  /// Android build type: debug, profile or release.
+  String buildType;
+
+  /// Whether the experimental Windows runtime is packaged.
+  bool runtimePackaged;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      versionName,
+      versionCode,
+      commit,
+      buildType,
+      runtimePackaged,
+    ];
+  }
+
+  Object encode() {
+    return _toList();
+  }
+
+  static BuildInfo decode(Object result) {
+    result as List<Object?>;
+    return BuildInfo(
+      versionName: result[0]! as String,
+      versionCode: result[1]! as int,
+      commit: result[2]! as String,
+      buildType: result[3]! as String,
+      runtimePackaged: result[4]! as bool,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! BuildInfo || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(versionName, other.versionName) &&
+        _deepEquals(versionCode, other.versionCode) &&
+        _deepEquals(commit, other.commit) &&
+        _deepEquals(buildType, other.buildType) &&
+        _deepEquals(runtimePackaged, other.runtimePackaged);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'BuildInfo(versionName: $versionName, versionCode: $versionCode, commit: $commit, buildType: $buildType, runtimePackaged: $runtimePackaged)';
+  }
+}
+
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
   @override
@@ -795,41 +870,47 @@ class _PigeonCodec extends StandardMessageCodec {
     } else if (value is LogLevel) {
       buffer.putUint8(130);
       writeValue(buffer, value.index);
-    } else if (value is ImportKind) {
+    } else if (value is AppearanceMode) {
       buffer.putUint8(131);
       writeValue(buffer, value.index);
-    } else if (value is ImportState) {
+    } else if (value is ImportKind) {
       buffer.putUint8(132);
       writeValue(buffer, value.index);
-    } else if (value is GameRecord) {
+    } else if (value is ImportState) {
       buffer.putUint8(133);
-      writeValue(buffer, value.encode());
-    } else if (value is ExecutableRecord) {
+      writeValue(buffer, value.index);
+    } else if (value is GameRecord) {
       buffer.putUint8(134);
       writeValue(buffer, value.encode());
-    } else if (value is GameDetails) {
+    } else if (value is ExecutableRecord) {
       buffer.putUint8(135);
       writeValue(buffer, value.encode());
-    } else if (value is LibraryResult) {
+    } else if (value is GameDetails) {
       buffer.putUint8(136);
       writeValue(buffer, value.encode());
-    } else if (value is ImportProgress) {
+    } else if (value is LibraryResult) {
       buffer.putUint8(137);
       writeValue(buffer, value.encode());
-    } else if (value is DeviceProfile) {
+    } else if (value is ImportProgress) {
       buffer.putUint8(138);
       writeValue(buffer, value.encode());
-    } else if (value is RuntimeStatus) {
+    } else if (value is DeviceProfile) {
       buffer.putUint8(139);
       writeValue(buffer, value.encode());
-    } else if (value is LaunchRequest) {
+    } else if (value is RuntimeStatus) {
       buffer.putUint8(140);
       writeValue(buffer, value.encode());
-    } else if (value is RuntimeLog) {
+    } else if (value is LaunchRequest) {
       buffer.putUint8(141);
       writeValue(buffer, value.encode());
-    } else if (value is ExecutionProbeResult) {
+    } else if (value is RuntimeLog) {
       buffer.putUint8(142);
+      writeValue(buffer, value.encode());
+    } else if (value is ExecutionProbeResult) {
+      buffer.putUint8(143);
+      writeValue(buffer, value.encode());
+    } else if (value is BuildInfo) {
+      buffer.putUint8(144);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -847,30 +928,35 @@ class _PigeonCodec extends StandardMessageCodec {
         return value == null ? null : LogLevel.values[value];
       case 131:
         final value = readValue(buffer) as int?;
-        return value == null ? null : ImportKind.values[value];
+        return value == null ? null : AppearanceMode.values[value];
       case 132:
         final value = readValue(buffer) as int?;
-        return value == null ? null : ImportState.values[value];
+        return value == null ? null : ImportKind.values[value];
       case 133:
-        return GameRecord.decode(readValue(buffer)!);
+        final value = readValue(buffer) as int?;
+        return value == null ? null : ImportState.values[value];
       case 134:
-        return ExecutableRecord.decode(readValue(buffer)!);
+        return GameRecord.decode(readValue(buffer)!);
       case 135:
-        return GameDetails.decode(readValue(buffer)!);
+        return ExecutableRecord.decode(readValue(buffer)!);
       case 136:
-        return LibraryResult.decode(readValue(buffer)!);
+        return GameDetails.decode(readValue(buffer)!);
       case 137:
-        return ImportProgress.decode(readValue(buffer)!);
+        return LibraryResult.decode(readValue(buffer)!);
       case 138:
-        return DeviceProfile.decode(readValue(buffer)!);
+        return ImportProgress.decode(readValue(buffer)!);
       case 139:
-        return RuntimeStatus.decode(readValue(buffer)!);
+        return DeviceProfile.decode(readValue(buffer)!);
       case 140:
-        return LaunchRequest.decode(readValue(buffer)!);
+        return RuntimeStatus.decode(readValue(buffer)!);
       case 141:
-        return RuntimeLog.decode(readValue(buffer)!);
+        return LaunchRequest.decode(readValue(buffer)!);
       case 142:
+        return RuntimeLog.decode(readValue(buffer)!);
+      case 143:
         return ExecutionProbeResult.decode(readValue(buffer)!);
+      case 144:
+        return BuildInfo.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1058,6 +1144,86 @@ class NexusHostApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
   final String pigeonVar_messageChannelSuffix;
+
+  Future<BuildInfo> getBuildInfo() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusHostApi.getBuildInfo$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as BuildInfo;
+  }
+
+  Future<AppearanceMode> getAppearance() async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusHostApi.getAppearance$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: false,
+    );
+    return pigeonVar_replyValue! as AppearanceMode;
+  }
+
+  Future<void> setAppearance(AppearanceMode mode) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusHostApi.setAppearance$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[mode],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
+
+  /// Opens the Android share sheet; nothing leaves the device unless the
+  /// user picks a destination.
+  Future<void> shareText(String subject, String text) async {
+    final pigeonVar_channelName =
+        'dev.flutter.pigeon.nexus_app.NexusHostApi.shareText$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(
+      <Object?>[subject, text],
+    );
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    _extractReplyValueOrThrow(
+      pigeonVar_replyList,
+      pigeonVar_channelName,
+      isNullValid: true,
+    );
+  }
 
   Future<DeviceProfile> getDeviceProfile() async {
     final pigeonVar_channelName =
