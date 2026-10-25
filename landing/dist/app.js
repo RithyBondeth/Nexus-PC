@@ -317,103 +317,19 @@ function asciiField(canvas) {
 }
 document.querySelectorAll('[data-ascii]').forEach(asciiField);
 
-// Retro concept game: parallax ridges, a striped sun and a perspective grid, drawn procedurally
-function ridge(seed, count) {
-  const points = [];
-  for (let i = 0; i <= count; i++) points.push(.5 + .5 * Math.sin(i * 1.7 + seed) * Math.cos(i * .63 + seed * 2.1));
-  return points;
-}
-const RIDGES = [ridge(1.3, 24), ridge(4.1, 18), ridge(7.7, 14)];
-const STARS = Array.from({ length: 70 }, (_, i) => [((i * 97) % 101) / 101, ((i * 53) % 61) / 61 * .55, (i % 5) / 5]);
-function gameScene(canvas) {
-  const ctx = canvas.getContext('2d');
-  let width = 0, height = 0, visible = true, last = 0;
-  const resize = () => {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    width = canvas.clientWidth; height = canvas.clientHeight;
-    if (!width || !height) return;
-    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-  const draw = time => {
-    if (!width || !height) return;
-    const t = time / 1000, horizon = height * .6;
-    const sky = ctx.createLinearGradient(0, 0, 0, horizon);
-    sky.addColorStop(0, '#05070d'); sky.addColorStop(.7, '#0c1726'); sky.addColorStop(1, '#163452');
-    ctx.fillStyle = sky; ctx.fillRect(0, 0, width, horizon);
-    STARS.forEach(([x, y, p]) => {
-      ctx.globalAlpha = .35 + .35 * Math.sin(t * 2 + p * 9);
-      ctx.fillStyle = '#dbe9f8'; ctx.fillRect(x * width, y * height, 1.5, 1.5);
-    });
-    ctx.globalAlpha = 1;
-    const sunX = width * .62, sunY = horizon * .78, sunR = height * .26;
-    const sun = ctx.createLinearGradient(0, sunY - sunR, 0, sunY + sunR);
-    sun.addColorStop(0, '#e9ffb0'); sun.addColorStop(.55, '#c3ed72'); sun.addColorStop(1, '#5c8a1c');
-    ctx.save();
-    ctx.beginPath(); ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2); ctx.clip();
-    ctx.fillStyle = sun; ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
-    ctx.fillStyle = '#0c1726';
-    for (let i = 0; i < 7; i++) {
-      const band = (i + (t * .25) % 1) / 7;
-      ctx.fillRect(sunX - sunR, sunY + band * sunR, sunR * 2, Math.max(1, band * sunR * .22));
-    }
-    ctx.restore();
-    const ridgeColors = ['#16283c', '#0f1c2b', '#08111b'];
-    RIDGES.forEach((points, layer) => {
-      const speed = (layer + 1) * 14, amp = height * (.2 - layer * .045), baseY = horizon + layer * 2;
-      const step = width / (points.length - 3), offset = (t * speed) % step;
-      const shift = Math.floor(t * speed / step);
-      ctx.beginPath(); ctx.moveTo(0, baseY);
-      for (let i = 0; i < points.length; i++) {
-        const value = points[(i + shift) % points.length];
-        ctx.lineTo(i * step - offset, baseY - value * amp - (2 - layer) * height * .03);
-      }
-      ctx.lineTo(width, baseY); ctx.closePath();
-      ctx.fillStyle = ridgeColors[layer]; ctx.fill();
-      if (layer === 2) { ctx.strokeStyle = 'rgba(195,237,114,.55)'; ctx.lineWidth = 1.2; ctx.stroke(); }
-    });
-    ctx.fillStyle = '#060a10'; ctx.fillRect(0, horizon, width, height - horizon);
-    ctx.strokeStyle = 'rgba(195,237,114,.45)'; ctx.lineWidth = 1;
-    const vx = width / 2;
-    for (let i = -12; i <= 12; i++) { ctx.beginPath(); ctx.moveTo(vx + i * width * .02, horizon); ctx.lineTo(vx + i * width * .16, height); ctx.stroke(); }
-    for (let i = 0; i < 9; i++) {
-      const p = ((i + (t * .9) % 1) / 9), y = horizon + Math.pow(p, 2.2) * (height - horizon);
-      ctx.globalAlpha = .2 + p * .7; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
-    }
-    ctx.globalAlpha = 1;
-    const shipX = vx + Math.sin(t * 1.1) * width * .12, shipY = height * .84 + Math.sin(t * 3) * 2;
-    ctx.fillStyle = '#c3ed72'; ctx.beginPath();
-    ctx.moveTo(shipX, shipY - height * .06); ctx.lineTo(shipX + width * .035, shipY + height * .03); ctx.lineTo(shipX, shipY + height * .012); ctx.lineTo(shipX - width * .035, shipY + height * .03); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = 'rgba(195,237,114,.35)'; ctx.fillRect(shipX - 2, shipY + height * .03, 4, height * .03 + Math.random() * 4);
-  };
-  const loop = time => {
-    if (visible && time - last > 33) { last = time; draw(time); }
-    if (motion) requestAnimationFrame(loop);
-  };
-  new ResizeObserver(() => { resize(); draw(performance.now()); }).observe(canvas);
-  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(canvas);
-  requestAnimationFrame(loop);
-}
-document.querySelectorAll('[data-game]').forEach(gameScene);
-
-// Boot log and score ticker on the hero phone
+// Boot log on the hero phone
 const bootLog = document.querySelector('[data-boot-log]');
 if (motion && bootLog) {
   ['Detecting chipset…', 'Snapdragon · Adreno', 'Preparing Wine + Box64…', 'Launching game'].forEach((line, i) => setTimeout(() => { bootLog.textContent = line; }, i * 600));
 }
-const score = document.querySelector('[data-score]');
-if (motion && score) {
-  let points = 0;
-  setInterval(() => { points += 10 + Math.floor(Math.random() * 40); score.textContent = String(points).padStart(6, '0'); }, 400);
-}
 
-// Hero screen alternates between the concept scene and real runtime captures
+// Hero screen walks through three framings of the concept scene; the label always says it is concept art
 const heroScreen = document.querySelector('.device-screen[data-slide]');
 const screenLabel = document.querySelector('[data-screen-label]');
 const slides = [
-  ['Concept scene', 9000],
-  ['Real capture · Xiaomi 17 Pro · Phase 0', 5000],
-  ['Real capture · Fifteen · 16 KB ARM64', 5000]
+  ['Concept art · open world', 7000],
+  ['Concept art · scope view', 5500],
+  ['Concept art · new area', 5500]
 ];
 if (motion && heroScreen) {
   let slide = 0;

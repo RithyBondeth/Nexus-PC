@@ -128,7 +128,54 @@ em{font-style:normal;color:var(--accent)}
 .key-volume{right:22%;width:70px}
 .key-power{right:12%;width:38px}
 .device-screen{position:relative;height:100%;overflow:hidden;border-radius:32px;background:#05070a;isolation:isolate}
-.game-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.device-screen{container-type:inline-size}
+/* AAA-style concept scene: one original artwork (artwork/world.jpg) framed three ways, each with its own game HUD.
+   It is concept art, not a real or supported game, and the on-screen label always says so. */
+.scene{position:absolute;inset:0;background:#05070a var(--art) center/cover no-repeat;transform-origin:var(--ox,50%) var(--oy,50%);scale:var(--zoom,1.06);transform:translate(var(--tx,0),var(--ty,0));filter:var(--grade,none);transition:scale 1.8s var(--ease),transform 1.8s var(--ease),filter 1.4s var(--ease),transform-origin 0s}
+@keyframes drift{to{translate:-1.5% -.6%}}
+/* Pans the eclipse towers into the middle of the scope */
+.device-screen[data-slide="1"] .scene{--zoom:1.9;--tx:-23%;--ty:24%}
+.device-screen[data-slide="2"] .scene{--zoom:1.5;--ox:30%;--oy:42%;--grade:hue-rotate(115deg) saturate(1.25) brightness(.92)}
+.game-hud{position:absolute;inset:0;z-index:2;font-size:1.85cqw;color:#eef3f8;pointer-events:none;text-shadow:0 1px 6px rgba(0,0,0,.55)}
+.game-hud>div{position:absolute;inset:0;opacity:0;transition:opacity .6s var(--ease)}
+.device-screen[data-slide="0"] .hud-explore,.device-screen[data-slide="1"] .hud-scope,.device-screen[data-slide="2"] .hud-discover{opacity:1}
+/* Open world: compass, quest and vitals */
+.compass{position:absolute;top:1.3em;left:50%;translate:-50% 0;width:34%;height:2.1em;display:flex;justify-content:space-between;align-items:center;padding:0 .8em;font:700 .8em Ubuntu Mono,monospace;letter-spacing:.1em;color:rgba(238,243,248,.8);mask:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 20%,#000 80%,transparent);border-bottom:1px solid rgba(238,243,248,.35)}
+.compass b{color:#c3ed72}
+.compass-pin{position:absolute;top:3.4em;left:57%;font:700 .75em Ubuntu Mono,monospace;color:#c3ed72}
+.compass-pin::before{content:'';display:block;width:.7em;height:.7em;margin:0 auto .2em;background:#c3ed72;rotate:45deg}
+.quest{position:absolute;top:4.6em;left:3.6em;max-width:16em}
+.quest small{display:block;font-size:.72em;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#c3ed72}
+.quest b{display:block;margin-top:.2em;font-size:1.05em}
+.quest span{display:block;margin-top:.15em;font-size:.82em;color:rgba(238,243,248,.75)}
+.vitals{position:absolute;left:3.6em;bottom:6.4em;width:24%}
+.vitals i{display:block;height:.42em;margin-top:.35em;border-radius:1em;background:rgba(238,243,248,.18);overflow:hidden}
+.vitals i::before{content:'';display:block;height:100%;width:var(--v);background:var(--c,#c3ed72);box-shadow:0 0 .6em var(--c,#c3ed72)}
+.vitals i+i{--c:#eef3f8;height:.3em}
+.vitals span{font:700 .78em Ubuntu Mono,monospace;letter-spacing:.06em}
+.vitals span b{color:#c3ed72}
+.hotbar{position:absolute;right:3.2em;bottom:5.6em;display:flex;gap:.45em}
+.hotbar i{display:grid;place-items:center;width:2.6em;height:2.6em;border-radius:.6em;background:rgba(8,12,18,.55);border:1px solid rgba(238,243,248,.22);font:700 .8em Ubuntu Mono,monospace;font-style:normal;color:rgba(238,243,248,.8)}
+.hotbar i.on{border-color:#c3ed72;color:#c3ed72;box-shadow:0 0 .8em rgba(195,237,114,.4)}
+/* Scope: long-range view of the aqueduct */
+.hud-scope{background:radial-gradient(circle at 50% 50%,transparent 27%,rgba(2,3,5,.96) 28%)}
+.scope-ring{position:absolute;left:50%;top:50%;width:29.8cqw;aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:1px solid rgba(195,237,114,.45)}
+.scope-ring::before,.scope-ring::after{content:'';position:absolute;background:rgba(195,237,114,.75)}
+.scope-ring::before{left:0;right:0;top:50%;height:1px}
+.scope-ring::after{top:0;bottom:0;left:50%;width:1px}
+.scope-dot{position:absolute;left:50%;top:50%;width:.5em;height:.5em;translate:-50% -50%;border-radius:50%;background:#c3ed72;box-shadow:0 0 .8em #c3ed72}
+.scope-read{position:absolute;left:calc(50% + 17.5cqw);top:50%;translate:0 -50%;font:700 .85em/1.6 Ubuntu Mono,monospace;color:#c3ed72}
+.scope-read span{display:block;color:rgba(238,243,248,.7);font-weight:400}
+.hud-scope .tag-left{position:absolute;right:calc(50% + 17.5cqw);top:50%;translate:0 -50%;font:700 .8em Ubuntu Mono,monospace;letter-spacing:.1em;color:rgba(238,243,248,.7)}
+/* New area: cinematic banner */
+.banner{position:absolute;left:0;right:0;top:34%;text-align:center}
+.banner small{display:block;font-size:.8em;font-weight:700;letter-spacing:.32em;color:#c3ed72}
+.banner b{display:block;margin-top:.25em;font-size:2.5em;font-weight:700;letter-spacing:-.01em;line-height:1.05}
+.banner span{display:block;margin-top:.5em;font:700 .85em Ubuntu Mono,monospace;color:#c3ed72}
+.banner::before,.banner::after{content:'';display:block;width:30%;height:1px;margin:0 auto .9em;background:linear-gradient(90deg,transparent,rgba(238,243,248,.7),transparent)}
+.banner::after{margin:.9em auto 0}
+.motion .device-screen[data-slide="2"] .banner{animation:banner 1.4s var(--ease) both .3s}
+@keyframes banner{from{opacity:0;letter-spacing:.3em;filter:blur(6px)}}
 .punch-hole{position:absolute;left:16px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:#020305;box-shadow:0 0 0 2px #10141a;z-index:5}
 .punch-hole.small{left:50%;top:12px;margin:0 0 0 -5px;width:10px;height:10px}
 .glare{position:absolute;inset:-20%;z-index:6;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.13) 48%,rgba(255,255,255,.04) 54%,transparent 62%);transform:translateX(var(--gx));mix-blend-mode:screen}
@@ -138,8 +185,6 @@ em{font-style:normal;color:var(--accent)}
 .hud-chip .brand-mark i{width:3px;height:11px;background:#c3ed72}
 .hud-chip .brand-mark i:nth-child(2){height:7px}
 .hud-status{display:flex;gap:6px}
-.hud-score{font:400 11px Ubuntu Mono,monospace;letter-spacing:.08em;color:#c4cfdb}
-.hud-score b{color:#c3ed72;font-weight:400}
 .hud-status .icon{width:14px;height:14px}
 .boot{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 45%,#14202e,#05070a 70%);color:#eef3f8}
 .boot .brand-mark{width:30px;height:30px;gap:5px}
@@ -154,20 +199,16 @@ em{font-style:normal;color:var(--accent)}
 .motion .boot{animation:boot-out .7s var(--ease) 2.5s forwards}
 html:not(.motion) .boot{display:none}
 @keyframes boot-out{to{opacity:0;visibility:hidden;scale:1.06}}
-.motion .device-screen .game-canvas{animation:game-in 1.4s var(--ease) 2.5s both}
-@keyframes game-in{from{opacity:0;scale:1.12;filter:blur(8px)}to{opacity:1;scale:1;filter:none}}
+.motion .device-screen .scene{animation:scene-in 1.4s var(--ease) 2.5s backwards,drift 14s var(--ease-in-out) 3.9s infinite alternate}
+.motion .device-screen .game-hud{animation:scene-in 1s var(--ease) 3s backwards}
+@keyframes scene-in{from{opacity:0}}
 .motion .glare{animation:glare-sweep 1.6s var(--ease) 2.9s both}
 @keyframes glare-sweep{from{translate:-120% 0}to{translate:0 0}}
 .motion .hud{animation:rise 1s var(--ease) 3s both}
 
 
-.capture{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;scale:1.04;transition:opacity .9s var(--ease),scale 1.2s var(--ease);z-index:1}
-.device-screen[data-slide="1"] .capture:nth-of-type(1),.device-screen[data-slide="2"] .capture:nth-of-type(2){opacity:1;scale:1}
-.device-screen:not([data-slide="0"]) .hud-score,.device-screen:not([data-slide="0"]) .hud-chip{opacity:0}
-.hud-score,.hud-chip{transition:opacity .4s}
 .screen-label{position:absolute;z-index:3;left:40px;bottom:14px;display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:999px;background:rgba(8,12,18,.72);border:1px solid rgba(220,232,250,.14);color:#e3ebf4;font:400 10.5px Ubuntu Mono,monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .4s}
 .label-dot{width:6px;height:6px;border-radius:50%;background:#ffc857}
-.device-screen:not([data-slide="0"]) .label-dot{background:#c3ed72;box-shadow:0 0 8px #c3ed72}
 .slide-dots{display:flex;gap:4px;margin-left:4px}
 .slide-dots i{width:5px;height:5px;border-radius:50%;background:rgba(220,232,250,.3);transition:background .3s,width .4s var(--ease)}
 .device-screen[data-slide="0"] .slide-dots i:nth-child(1),.device-screen[data-slide="1"] .slide-dots i:nth-child(2),.device-screen[data-slide="2"] .slide-dots i:nth-child(3){background:#c3ed72;width:14px;border-radius:3px}
@@ -390,7 +431,13 @@ html:not(.motion) .boot{display:none}
 
 .view-play{padding:0}
 .play-inner{position:absolute;top:50%;left:50%;width:100cqh;height:100cqw;translate:-50% -50%;rotate:90deg;overflow:hidden;background:#05070a}
-.play-tag{position:absolute;top:12px;right:16px;padding:3px 9px;border-radius:999px;background:rgba(8,12,18,.6);color:#d3dce6;font-size:10px}
+.play-inner{container-type:inline-size}
+.play-inner .scene{animation:none;--zoom:1.12;--ox:72%;--oy:58%}
+.play-inner .game-hud{font-size:2.1cqw}
+.play-inner .hud-explore{opacity:1}
+.play-inner .vitals{bottom:auto;top:1.4em;left:2.4em}
+.play-inner .hotbar{display:none}
+.play-tag{position:absolute;z-index:3;top:2.4cqw;right:3cqw;padding:.3em .9em;border-radius:999px;background:rgba(8,12,18,.6);color:#d3dce6;font-size:1.7cqw}
 
 
 /* Compare */
