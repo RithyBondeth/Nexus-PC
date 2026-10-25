@@ -57,6 +57,18 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # Ubuntu Font Licence 1.0 (assets/fonts/ubuntu/UFL.txt), shown on the licence page.
+  assets:
+    - assets/fonts/ubuntu/UFL.txt
+  fonts:
+    - family: Ubuntu
+      fonts:
+        - asset: assets/fonts/ubuntu/Ubuntu-Regular.ttf
+        - asset: assets/fonts/ubuntu/Ubuntu-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ubuntu/Ubuntu-Bold.ttf
+          weight: 700
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

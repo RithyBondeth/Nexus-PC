@@ -1,8 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'shell/nexus_shell.dart';
 import 'platform/nexus_platform.dart';
+import 'theme/nexus_theme.dart';
 
-void main() => runApp(const NexusApp());
+void main() {
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks([
+      'Ubuntu font',
+    ], await rootBundle.loadString('assets/fonts/ubuntu/UFL.txt'));
+  });
+  runApp(const NexusApp());
+}
 
 class NexusApp extends StatefulWidget {
   const NexusApp({super.key, this.platform, this.libraryApi});
@@ -24,14 +34,8 @@ class _NexusAppState extends State<NexusApp> {
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Nexus-PC',
-    theme: ThemeData(
-      colorSchemeSeed: Colors.blue,
-      brightness: Brightness.light,
-    ),
-    darkTheme: ThemeData(
-      colorSchemeSeed: Colors.blue,
-      brightness: Brightness.dark,
-    ),
+    theme: nexusTheme(Brightness.light),
+    darkTheme: nexusTheme(Brightness.dark),
     themeMode: appearance,
     home: NexusShell(
       platform: platform,

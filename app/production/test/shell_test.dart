@@ -146,8 +146,6 @@ void main() {
     await mountShell(tester, host);
     await tester.tap(find.text('Settings').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(DropdownButtonFormField<ThemeMode>));
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Dark').last);
     await tester.pumpAndSettle();
     expect(
@@ -259,7 +257,7 @@ void main() {
       3,
     );
     await tester.scrollUntilVisible(
-      find.byType(DropdownButtonFormField<ThemeMode>),
+      find.byType(RadioGroup<ThemeMode>),
       100,
       scrollable: find
           .descendant(
@@ -315,8 +313,6 @@ void main() {
       await mountShell(tester, CountingHost());
       for (final theme in ['Light', 'Dark']) {
         await tester.tap(find.text('Settings').last);
-        await tester.pumpAndSettle();
-        await tester.tap(find.byType(DropdownButtonFormField<ThemeMode>));
         await tester.pumpAndSettle();
         await tester.tap(find.text(theme).last);
         await tester.pumpAndSettle();
