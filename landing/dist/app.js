@@ -317,111 +317,87 @@ function asciiField(canvas) {
 }
 document.querySelectorAll('[data-ascii]').forEach(asciiField);
 
-// Retro concept game: parallax ridges, a striped sun and a perspective grid, drawn procedurally
-function ridge(seed, count) {
-  const points = [];
-  for (let i = 0; i <= count; i++) points.push(.5 + .5 * Math.sin(i * 1.7 + seed) * Math.cos(i * .63 + seed * 2.1));
-  return points;
+// Console-style launcher demo: controller focus walks the cover shelf, the hero follows, then Play launches a game.
+// The story phone's sideways screen gets a copy of the same launcher, driven by touch.
+const LX_GAMES = [
+  ['Aurora Run', 'Ready', '4.2 GB'], ['Pale Summit', 'Ready', '11.8 GB'], ['Ember Ridge', 'Needs setup', '2.6 GB'],
+  ['Deep Signal', 'Ready', '7.1 GB'], ['Glass Harbor', 'Ready', '3.4 GB'], ['Night Market', 'Ready', '9.9 GB']
+];
+const LX_STEPS = ['Matching Snapdragon profile…', 'Preparing Wine + Box64…', 'Starting game'];
+const launcherSource = document.querySelector('[data-launcher]');
+const launcherCopy = document.querySelector('[data-launcher-copy]');
+if (launcherSource && launcherCopy) {
+  const copy = launcherSource.cloneNode(true);
+  copy.classList.add('touch');
+  launcherCopy.append(copy);
 }
-const RIDGES = [ridge(1.3, 24), ridge(4.1, 18), ridge(7.7, 14)];
-const STARS = Array.from({ length: 70 }, (_, i) => [((i * 97) % 101) / 101, ((i * 53) % 61) / 61 * .55, (i % 5) / 5]);
-function gameScene(canvas) {
-  const ctx = canvas.getContext('2d');
-  let width = 0, height = 0, visible = true, last = 0;
-  const resize = () => {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    width = canvas.clientWidth; height = canvas.clientHeight;
-    if (!width || !height) return;
-    canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+function runLauncher(root, startDelay) {
+  const $ = selector => root.querySelector(selector);
+  const art = [...root.querySelectorAll('.lx-art span')];
+  const covers = [...root.querySelectorAll('.lx-cover')];
+  const play = $('.lx-play'), tap = $('.lx-tap'), title = $('[data-lx-title]');
+  let visible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
+  const sleep = ms => new Promise(done => setTimeout(done, ms));
+  const whenVisible = async () => { while (!visible) await sleep(400); };
+  // Layout offsets, not screen rects: the phones are rotated and tilted in 3D.
+  const centre = el => {
+    let x = el.offsetWidth / 2, y = el.offsetHeight / 2;
+    for (let node = el; node && node !== root; node = node.offsetParent) { x += node.offsetLeft; y += node.offsetTop; }
+    return [x, y];
   };
-  const draw = time => {
-    if (!width || !height) return;
-    const t = time / 1000, horizon = height * .6;
-    const sky = ctx.createLinearGradient(0, 0, 0, horizon);
-    sky.addColorStop(0, '#05070d'); sky.addColorStop(.7, '#0c1726'); sky.addColorStop(1, '#163452');
-    ctx.fillStyle = sky; ctx.fillRect(0, 0, width, horizon);
-    STARS.forEach(([x, y, p]) => {
-      ctx.globalAlpha = .35 + .35 * Math.sin(t * 2 + p * 9);
-      ctx.fillStyle = '#dbe9f8'; ctx.fillRect(x * width, y * height, 1.5, 1.5);
-    });
-    ctx.globalAlpha = 1;
-    const sunX = width * .62, sunY = horizon * .78, sunR = height * .26;
-    const sun = ctx.createLinearGradient(0, sunY - sunR, 0, sunY + sunR);
-    sun.addColorStop(0, '#e9ffb0'); sun.addColorStop(.55, '#c3ed72'); sun.addColorStop(1, '#5c8a1c');
-    ctx.save();
-    ctx.beginPath(); ctx.arc(sunX, sunY, sunR, 0, Math.PI * 2); ctx.clip();
-    ctx.fillStyle = sun; ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
-    ctx.fillStyle = '#0c1726';
-    for (let i = 0; i < 7; i++) {
-      const band = (i + (t * .25) % 1) / 7;
-      ctx.fillRect(sunX - sunR, sunY + band * sunR, sunR * 2, Math.max(1, band * sunR * .22));
-    }
-    ctx.restore();
-    const ridgeColors = ['#16283c', '#0f1c2b', '#08111b'];
-    RIDGES.forEach((points, layer) => {
-      const speed = (layer + 1) * 14, amp = height * (.2 - layer * .045), baseY = horizon + layer * 2;
-      const step = width / (points.length - 3), offset = (t * speed) % step;
-      const shift = Math.floor(t * speed / step);
-      ctx.beginPath(); ctx.moveTo(0, baseY);
-      for (let i = 0; i < points.length; i++) {
-        const value = points[(i + shift) % points.length];
-        ctx.lineTo(i * step - offset, baseY - value * amp - (2 - layer) * height * .03);
+  const focus = el => {
+    root.querySelectorAll('.focus').forEach(node => node.classList.remove('focus'));
+    el.classList.add('focus');
+    const [x, y] = centre(el);
+    tap.style.left = `${x}px`; tap.style.top = `${y}px`;
+    tap.classList.remove('hit'); void tap.offsetWidth; tap.classList.add('hit');
+  };
+  const show = index => {
+    const [name, state, size] = LX_GAMES[index];
+    art.forEach((layer, i) => layer.classList.toggle('on', i === index));
+    covers.forEach((cover, i) => cover.classList.toggle('selected', i === index));
+    title.classList.add('swap');
+    // Text changes while the title is faded out, so the pills never disagree with it.
+    setTimeout(() => {
+      title.textContent = name;
+      title.classList.remove('swap');
+      $('[data-lx-state]').textContent = state;
+      $('.lx-pill.state').classList.toggle('setup', state !== 'Ready');
+      $('.lx-pill.state .icon').style.setProperty('--icon', `url("assets/${state === 'Ready' ? 'check-circle-fill' : 'wrench-fill'}.svg")`);
+      $('[data-lx-size]').textContent = size;
+      $('[data-lx-play]').textContent = state === 'Ready' ? 'PLAY' : 'SET UP';
+    }, 220);
+  };
+  const loop = async () => {
+    await sleep(startDelay);
+    for (;;) {
+      for (let i = 0; i <= 3; i++) {
+        await whenVisible();
+        focus(covers[i]); show(i);
+        await sleep(1500);
       }
-      ctx.lineTo(width, baseY); ctx.closePath();
-      ctx.fillStyle = ridgeColors[layer]; ctx.fill();
-      if (layer === 2) { ctx.strokeStyle = 'rgba(195,237,114,.55)'; ctx.lineWidth = 1.2; ctx.stroke(); }
-    });
-    ctx.fillStyle = '#060a10'; ctx.fillRect(0, horizon, width, height - horizon);
-    ctx.strokeStyle = 'rgba(195,237,114,.45)'; ctx.lineWidth = 1;
-    const vx = width / 2;
-    for (let i = -12; i <= 12; i++) { ctx.beginPath(); ctx.moveTo(vx + i * width * .02, horizon); ctx.lineTo(vx + i * width * .16, height); ctx.stroke(); }
-    for (let i = 0; i < 9; i++) {
-      const p = ((i + (t * .9) % 1) / 9), y = horizon + Math.pow(p, 2.2) * (height - horizon);
-      ctx.globalAlpha = .2 + p * .7; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+      focus(play); await sleep(700);
+      play.classList.add('pressed'); await sleep(220); play.classList.remove('pressed');
+      $('[data-lx-launch]').textContent = `Launching ${LX_GAMES[3][0]}`;
+      root.classList.add('launching');
+      $('[data-lx-status]').textContent = 'Preparing';
+      for (const step of LX_STEPS) { $('[data-lx-step]').textContent = step; await sleep(950); }
+      $('[data-lx-status]').textContent = 'Game running';
+      await sleep(700);
+      root.classList.remove('launching');
+      root.querySelectorAll('.focus').forEach(node => node.classList.remove('focus'));
+      await sleep(1600);
+      $('[data-lx-status]').textContent = 'Runtime ready';
     }
-    ctx.globalAlpha = 1;
-    const shipX = vx + Math.sin(t * 1.1) * width * .12, shipY = height * .84 + Math.sin(t * 3) * 2;
-    ctx.fillStyle = '#c3ed72'; ctx.beginPath();
-    ctx.moveTo(shipX, shipY - height * .06); ctx.lineTo(shipX + width * .035, shipY + height * .03); ctx.lineTo(shipX, shipY + height * .012); ctx.lineTo(shipX - width * .035, shipY + height * .03); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = 'rgba(195,237,114,.35)'; ctx.fillRect(shipX - 2, shipY + height * .03, 4, height * .03 + Math.random() * 4);
   };
-  const loop = time => {
-    if (visible && time - last > 33) { last = time; draw(time); }
-    if (motion) requestAnimationFrame(loop);
-  };
-  new ResizeObserver(() => { resize(); draw(performance.now()); }).observe(canvas);
-  if ('IntersectionObserver' in window) new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(canvas);
-  requestAnimationFrame(loop);
+  if (motion) loop();
 }
-document.querySelectorAll('[data-game]').forEach(gameScene);
+document.querySelectorAll('[data-launcher]').forEach((root, i) => runLauncher(root, i === 0 ? 3400 : 600));
 
-// Boot log and score ticker on the hero phone
+// Boot log on the hero phone
 const bootLog = document.querySelector('[data-boot-log]');
 if (motion && bootLog) {
   ['Detecting chipset…', 'Snapdragon · Adreno', 'Preparing Wine + Box64…', 'Launching game'].forEach((line, i) => setTimeout(() => { bootLog.textContent = line; }, i * 600));
 }
-const score = document.querySelector('[data-score]');
-if (motion && score) {
-  let points = 0;
-  setInterval(() => { points += 10 + Math.floor(Math.random() * 40); score.textContent = String(points).padStart(6, '0'); }, 400);
-}
 
-// Hero screen alternates between the concept scene and real runtime captures
-const heroScreen = document.querySelector('.device-screen[data-slide]');
-const screenLabel = document.querySelector('[data-screen-label]');
-const slides = [
-  ['Concept scene', 9000],
-  ['Real capture · Xiaomi 17 Pro · Phase 0', 5000],
-  ['Real capture · Fifteen · 16 KB ARM64', 5000]
-];
-if (motion && heroScreen) {
-  let slide = 0;
-  const advance = () => {
-    slide = (slide + 1) % slides.length;
-    heroScreen.dataset.slide = slide;
-    screenLabel.textContent = slides[slide][0];
-    setTimeout(advance, slides[slide][1]);
-  };
-  setTimeout(advance, 3000 + slides[0][1]);
-}

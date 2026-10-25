@@ -128,19 +128,79 @@ em{font-style:normal;color:var(--accent)}
 .key-volume{right:22%;width:70px}
 .key-power{right:12%;width:38px}
 .device-screen{position:relative;height:100%;overflow:hidden;border-radius:32px;background:#05070a;isolation:isolate}
-.game-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.device-screen{container-type:inline-size}
+/* Console-style launcher: the app's landscape Home (app/production/lib/shell/pages/home_page.dart) condensed so the
+   cover shelf is in view. 1 --u is one dp on an 844 dp wide landscape phone. Always dark, like the app's heroes. */
+.lx{--u:calc(100cqw / 844);position:absolute;inset:0;overflow:hidden;color:#eef3f8;font-size:calc(14 * var(--u));line-height:1.3;text-align:left;background:#0a0e14}
+.lx-art span{position:absolute;inset:0;background:#05070a center/cover no-repeat;opacity:0;scale:1.04;transition:opacity .9s var(--ease),scale 6s linear}
+.lx-art span.on{opacity:1;scale:1.1}
+.lx.launching .lx-art span.on{scale:1.35;transition:opacity .9s var(--ease),scale 1.4s var(--ease)}
+.lx-scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,14,20,.88),rgba(10,14,20,.45) 45%,rgba(10,14,20,.05) 75%),linear-gradient(rgba(10,14,20,.6),transparent 22%,transparent 50%,rgba(10,14,20,.94) 82%)}
+.lx-top{position:absolute;top:0;left:0;right:0;height:calc(52 * var(--u));display:flex;align-items:center;gap:calc(10 * var(--u));padding:0 calc(16 * var(--u)) 0 calc(24 * var(--u));font-size:calc(19 * var(--u));font-weight:700;letter-spacing:calc(-.6 * var(--u))}
+.lx-top .brand-mark{width:calc(20 * var(--u));height:calc(20 * var(--u));gap:calc(3 * var(--u))}
+.lx-top .brand-mark i{width:calc(4.6 * var(--u));height:calc(18 * var(--u));border-radius:calc(1.6 * var(--u));background:#c3ed72}
+.lx-top .brand-mark i:nth-child(2){height:calc(11 * var(--u))}
+.lx-top>b span{color:#8f9cad;font-weight:400}
+.lx-chip{margin-left:auto;padding:calc(4 * var(--u)) calc(10 * var(--u));border-radius:calc(20 * var(--u));background:rgba(8,12,18,.5);border:1px solid rgba(220,232,250,.16);color:#a3afbd;font:400 calc(11 * var(--u)) Ubuntu Mono,monospace;letter-spacing:0}
+.lx-pad{display:none;gap:calc(10 * var(--u));color:#e3ebf4}
+.lx-pad em{font-style:normal;color:#c3ed72}
+.device[data-mode=controller] .lx-sample{display:none}
+.device[data-mode=controller] .lx-pad{display:inline-flex}
+.lx-status{display:inline-flex;align-items:center;gap:calc(6 * var(--u));padding:calc(5 * var(--u)) calc(11 * var(--u));border-radius:calc(20 * var(--u));background:rgba(195,237,114,.14);border:1px solid rgba(195,237,114,.32);font-size:calc(12 * var(--u));font-weight:700;letter-spacing:0}
+.lx-status i{width:calc(7 * var(--u));height:calc(7 * var(--u));border-radius:50%;background:#c3ed72;box-shadow:0 0 calc(6 * var(--u)) #c3ed72}
+.lx-rail{position:absolute;left:calc(12 * var(--u));top:calc(52 * var(--u));bottom:calc(12 * var(--u));width:calc(84 * var(--u));display:flex;flex-direction:column;gap:calc(10 * var(--u));padding-top:calc(16 * var(--u));border-radius:calc(18 * var(--u));background:rgba(22,30,40,.72);border:1px solid #263241;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.lx-rail span{display:flex;flex-direction:column;align-items:center;gap:calc(4 * var(--u));font-size:calc(12 * var(--u));color:#8f9cad}
+.lx-rail .icon{box-sizing:content-box;width:calc(22 * var(--u));height:calc(22 * var(--u));padding:calc(5 * var(--u)) calc(17 * var(--u));border-radius:calc(16 * var(--u))}
+.lx-rail .on{color:#eef3f8;font-weight:700}
+.lx-rail .on .icon{background:#14210a;mask:none;-webkit-mask:none;position:relative}
+.lx-rail .on .icon{background:#c3ed72}
+.lx-rail .on .icon::after{content:'';position:absolute;inset:calc(5 * var(--u)) calc(17 * var(--u));background:#14210a;mask:var(--icon) center/contain no-repeat;-webkit-mask:var(--icon) center/contain no-repeat}
+.lx-main{position:absolute;left:calc(118 * var(--u));top:calc(58 * var(--u));right:calc(24 * var(--u))}
+.lx-eyebrow{display:block;font-size:calc(14 * var(--u));font-weight:700;color:rgba(238,243,248,.72)}
+.lx-title{display:block;margin-top:calc(4 * var(--u));font-size:calc(40 * var(--u));font-weight:700;letter-spacing:calc(1 * var(--u));line-height:1.05;text-transform:uppercase;text-shadow:0 0 calc(24 * var(--u)) rgba(0,0,0,.5);transition:opacity .25s}
+.lx-title.swap{opacity:0}
+.lx-pills{display:flex;gap:calc(8 * var(--u));margin-top:calc(8 * var(--u))}
+.lx-pill{--pill:#eef3f8;display:inline-flex;align-items:center;gap:calc(6 * var(--u));padding:calc(5 * var(--u)) calc(11 * var(--u));border-radius:calc(20 * var(--u));background:color-mix(in srgb,var(--pill) 14%,transparent);border:1px solid color-mix(in srgb,var(--pill) 32%,transparent);font-size:calc(12 * var(--u));font-weight:700}
+.lx-pill .icon{width:calc(14 * var(--u));height:calc(14 * var(--u));color:var(--pill)}
+.lx-pill.state{--pill:#c3ed72}
+.lx-pill.state.setup{--pill:#ffc857}
+.lx-actions{display:flex;gap:calc(10 * var(--u));margin-top:calc(12 * var(--u))}
+.lx-play,.lx-grid{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:calc(10 * var(--u));height:calc(42 * var(--u));border-radius:calc(12 * var(--u));transition:scale .2s var(--ease),box-shadow .3s,outline-color .3s;outline:calc(2.5 * var(--u)) solid transparent;outline-offset:calc(3 * var(--u))}
+.lx-play{width:calc(260 * var(--u));background:#c3ed72;color:#14210a;font-size:calc(17 * var(--u));font-weight:700;letter-spacing:calc(1.5 * var(--u))}
+.lx-play .icon{width:calc(20 * var(--u));height:calc(20 * var(--u))}
+.lx-grid{width:calc(42 * var(--u));background:rgba(238,243,248,.14)}
+.lx-grid .icon{width:calc(20 * var(--u));height:calc(20 * var(--u))}
+.lx-shelf{position:absolute;left:calc(118 * var(--u));right:0;bottom:calc(14 * var(--u))}
+.lx-shelf-head{display:flex;justify-content:space-between;padding-right:calc(24 * var(--u));margin-bottom:calc(8 * var(--u))}
+.lx-shelf-head small{font-size:calc(11 * var(--u));font-weight:700;letter-spacing:calc(1.4 * var(--u));color:#8f9cad}
+.lx-shelf-head span{font-size:calc(13 * var(--u));font-weight:700;color:#1a9fff}
+.lx-covers{display:flex;gap:calc(12 * var(--u))}
+.lx-cover{position:relative;flex-shrink:0;width:calc(72 * var(--u));aspect-ratio:2/3;border-radius:calc(10 * var(--u));background:#05070a center/cover;outline:calc(2.5 * var(--u)) solid transparent;outline-offset:calc(1 * var(--u));transition:scale .3s var(--ease),box-shadow .3s,outline-color .3s}
+.lx-cover b{position:absolute;left:calc(7 * var(--u));right:calc(7 * var(--u));bottom:calc(7 * var(--u));font-size:calc(10.5 * var(--u));font-weight:700;line-height:1.15;text-shadow:0 0 calc(8 * var(--u)) rgba(0,0,0,.8)}
+.lx-cover.selected{outline-color:#c3ed72}
+/* Controller focus: the app's FocusGlow — a blue ring, a soft glow and a lift */
+.lx .focus{outline-color:#1a9fff;box-shadow:0 0 calc(22 * var(--u)) calc(1 * var(--u)) rgba(26,159,255,.55);scale:1.06;z-index:1}
+.lx-play.pressed{scale:.95}
+/* Touch mode: a fingertip lands on each choice */
+.lx-tap{position:absolute;z-index:4;left:0;top:0;width:calc(44 * var(--u));height:calc(44 * var(--u));margin:calc(-22 * var(--u)) 0 0 calc(-22 * var(--u));border-radius:50%;background:rgba(238,243,248,.28);border:calc(2 * var(--u)) solid rgba(238,243,248,.8);opacity:0;pointer-events:none;transition:left .45s var(--ease),top .45s var(--ease)}
+.lx-tap.hit{animation:tap-hit .6s var(--ease)}
+@keyframes tap-hit{0%{opacity:0;scale:1.5}30%{opacity:1;scale:.85}100%{opacity:0;scale:1.2}}
+.device:not([data-mode=touch]) .lx:not(.touch) .lx-tap{display:none}
+/* Launch: the art pushes in and the runtime spins up */
+.lx-launch{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(12 * var(--u));background:radial-gradient(circle at 50% 45%,rgba(20,32,46,.7),rgba(5,7,10,.94) 70%);opacity:0;transition:opacity .6s var(--ease)}
+.lx.launching .lx-launch{opacity:1}
+.lx-launch .brand-mark{width:calc(30 * var(--u));height:calc(30 * var(--u));gap:calc(5 * var(--u))}
+.lx-launch .brand-mark i{width:calc(7 * var(--u));height:calc(28 * var(--u));background:#c3ed72;animation:boot-bars 1s var(--ease-in-out) infinite alternate}
+.lx-launch .brand-mark i:nth-child(2){height:calc(16 * var(--u));animation-delay:.15s}
+.lx-launch .brand-mark i:nth-child(3){animation-delay:.3s}
+.lx-launch b{font-size:calc(22 * var(--u));font-weight:700}
+.lx-launch span[data-lx-step]{font:400 calc(12 * var(--u)) Ubuntu Mono,monospace;color:#a3afbd}
+.lx-progress{width:calc(180 * var(--u));height:calc(4 * var(--u));border-radius:calc(4 * var(--u));background:rgba(255,255,255,.12);overflow:hidden}
+.lx-progress i{display:block;height:100%;width:0;background:#c3ed72}
+.lx.launching .lx-progress i{width:100%;transition:width 2.6s var(--ease-in-out)}
 .punch-hole{position:absolute;left:16px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:#020305;box-shadow:0 0 0 2px #10141a;z-index:5}
 .punch-hole.small{left:50%;top:12px;margin:0 0 0 -5px;width:10px;height:10px}
 .glare{position:absolute;inset:-20%;z-index:6;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.13) 48%,rgba(255,255,255,.04) 54%,transparent 62%);transform:translateX(var(--gx));mix-blend-mode:screen}
-.hud{position:absolute;top:14px;left:40px;right:18px;z-index:3;display:flex;justify-content:space-between;align-items:center;color:#eef3f8;font-size:11px}
-.hud-chip{display:inline-flex;align-items:center;gap:7px;padding:4px 10px 4px 8px;border-radius:999px;background:rgba(8,12,18,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1)}
-.hud-chip .brand-mark{width:12px;height:12px;gap:2px}
-.hud-chip .brand-mark i{width:3px;height:11px;background:#c3ed72}
-.hud-chip .brand-mark i:nth-child(2){height:7px}
-.hud-status{display:flex;gap:6px}
-.hud-score{font:400 11px Ubuntu Mono,monospace;letter-spacing:.08em;color:#c4cfdb}
-.hud-score b{color:#c3ed72;font-weight:400}
-.hud-status .icon{width:14px;height:14px}
 .boot{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 45%,#14202e,#05070a 70%);color:#eef3f8}
 .boot .brand-mark{width:30px;height:30px;gap:5px}
 .boot .brand-mark i{width:7px;height:28px;background:#c3ed72;animation:boot-bars 1s var(--ease-in-out) infinite alternate}
@@ -154,43 +214,10 @@ em{font-style:normal;color:var(--accent)}
 .motion .boot{animation:boot-out .7s var(--ease) 2.5s forwards}
 html:not(.motion) .boot{display:none}
 @keyframes boot-out{to{opacity:0;visibility:hidden;scale:1.06}}
-.motion .device-screen .game-canvas{animation:game-in 1.4s var(--ease) 2.5s both}
-@keyframes game-in{from{opacity:0;scale:1.12;filter:blur(8px)}to{opacity:1;scale:1;filter:none}}
 .motion .glare{animation:glare-sweep 1.6s var(--ease) 2.9s both}
 @keyframes glare-sweep{from{translate:-120% 0}to{translate:0 0}}
-.motion .hud{animation:rise 1s var(--ease) 3s both}
 
 
-.capture{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;scale:1.04;transition:opacity .9s var(--ease),scale 1.2s var(--ease);z-index:1}
-.device-screen[data-slide="1"] .capture:nth-of-type(1),.device-screen[data-slide="2"] .capture:nth-of-type(2){opacity:1;scale:1}
-.device-screen:not([data-slide="0"]) .hud-score,.device-screen:not([data-slide="0"]) .hud-chip{opacity:0}
-.hud-score,.hud-chip{transition:opacity .4s}
-.screen-label{position:absolute;z-index:3;left:40px;bottom:14px;display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:999px;background:rgba(8,12,18,.72);border:1px solid rgba(220,232,250,.14);color:#e3ebf4;font:400 10.5px Ubuntu Mono,monospace;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .4s}
-.label-dot{width:6px;height:6px;border-radius:50%;background:#ffc857}
-.device-screen:not([data-slide="0"]) .label-dot{background:#c3ed72;box-shadow:0 0 8px #c3ed72}
-.slide-dots{display:flex;gap:4px;margin-left:4px}
-.slide-dots i{width:5px;height:5px;border-radius:50%;background:rgba(220,232,250,.3);transition:background .3s,width .4s var(--ease)}
-.device-screen[data-slide="0"] .slide-dots i:nth-child(1),.device-screen[data-slide="1"] .slide-dots i:nth-child(2),.device-screen[data-slide="2"] .slide-dots i:nth-child(3){background:#c3ed72;width:14px;border-radius:3px}
-.device[data-mode=controller] .screen-label{opacity:0}
-.touch-overlay{position:absolute;inset:0;z-index:3;opacity:0;scale:1.06;transition:opacity .5s var(--ease),scale .6s var(--ease);pointer-events:none}
-.device[data-mode=touch] .touch-overlay,.touch-overlay.on{opacity:1;scale:1}
-.joystick{position:absolute;bottom:22px;left:34px;width:68px;height:68px;border:1.5px solid rgba(232,240,250,.45);background:rgba(220,232,248,.08);border-radius:50%;display:grid;place-items:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-.joystick i{width:28px;height:28px;background:rgba(240,245,252,.35);border:1.5px solid rgba(245,249,255,.7);border-radius:50%;animation:nub 4s var(--ease-in-out) infinite}
-@keyframes nub{0%,100%{translate:0 0}25%{translate:12px -8px}50%{translate:-4px -14px}75%{translate:-12px 6px}}
-.touch-buttons{position:absolute;bottom:24px;right:26px;width:84px;height:84px}
-.touch-buttons i{position:absolute;display:grid;place-items:center;width:27px;height:27px;border-radius:50%;border:1.5px solid rgba(228,238,250,.55);color:#eef3f8;background:rgba(16,24,36,.4);font:500 10px Ubuntu,sans-serif;font-style:normal}
-.touch-buttons i::after{content:'';position:absolute;inset:-2px;border-radius:50%;border:2px solid #c3ed72;opacity:0;animation:tap 3.2s var(--ease) infinite}
-.touch-buttons i:nth-child(1){top:0;left:28px}
-.touch-buttons i:nth-child(2){top:28px;left:0}
-.touch-buttons i:nth-child(3){top:28px;right:0}
-.touch-buttons i:nth-child(4){bottom:0;left:28px;background:rgba(195,237,114,.25)}
-.touch-buttons i:nth-child(2)::after{animation-delay:.8s}
-.touch-buttons i:nth-child(3)::after{animation-delay:1.6s}
-.touch-buttons i:nth-child(4)::after{animation-delay:2.4s}
-@keyframes tap{0%{opacity:.9;scale:1}35%,100%{opacity:0;scale:1.7}}
-.controller-overlay{position:absolute;z-index:3;bottom:16px;left:50%;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(12,18,26,.82);border:1px solid rgba(220,232,250,.14);color:#e3ebf4;font-size:11px;white-space:nowrap;opacity:0;translate:-50% 16px;transition:opacity .5s var(--ease),translate .6s var(--ease);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.controller-overlay .icon{width:16px;height:16px;color:#c3ed72}
-.device[data-mode=controller] .controller-overlay{opacity:1;translate:-50% 0}
 .device-shadow{position:absolute;left:14%;right:10%;bottom:0;height:40px;border-radius:50%;background:var(--device-shadow);filter:blur(26px);z-index:-1;rotate:-4deg}
 
 .float-card{position:absolute;z-index:2;display:flex;align-items:center;gap:12px;padding:9px 16px 9px 9px;border-radius:14px;background:color-mix(in srgb,var(--surface) 72%,transparent);border:1px solid var(--line-strong);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 20px 50px -20px var(--device-shadow);font-size:13px;line-height:1.25;white-space:nowrap;animation:float 7s var(--ease-in-out) infinite}
@@ -389,8 +416,7 @@ html:not(.motion) .boot{display:none}
 .ui-example{position:absolute;left:50%;bottom:calc(104 * var(--dp));z-index:2;translate:-50% 0;padding:calc(5 * var(--dp)) calc(12 * var(--dp));border-radius:999px;background:color-mix(in srgb,var(--surface) 90%,transparent);border:1px solid var(--line-strong);color:var(--muted);font-size:calc(11 * var(--dp));white-space:nowrap;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 
 .view-play{padding:0}
-.play-inner{position:absolute;top:50%;left:50%;width:100cqh;height:100cqw;translate:-50% -50%;rotate:90deg;overflow:hidden;background:#05070a}
-.play-tag{position:absolute;top:12px;right:16px;padding:3px 9px;border-radius:999px;background:rgba(8,12,18,.6);color:#d3dce6;font-size:10px}
+.play-inner{position:absolute;top:50%;left:50%;width:100cqh;height:100cqw;translate:-50% -50%;rotate:90deg;container-type:inline-size;overflow:hidden;background:#05070a}
 
 
 /* Compare */
@@ -669,10 +695,6 @@ html:not(.motion) *,html:not(.motion) *::before,html:not(.motion) *::after{anima
   .device-scene{padding:64px 4px 40px}
   .device{padding:6px;border-radius:26px}
   .device-screen{border-radius:21px}
-  .hud{display:none}
-  .screen-label{left:18px;bottom:9px;font-size:9px;padding:4px 8px}
-  .joystick{scale:.7;transform-origin:bottom left;left:20px;bottom:12px}
-  .touch-buttons{scale:.7;transform-origin:bottom right;right:14px;bottom:10px}
   .float-card{font-size:11px;padding:6px 12px 6px 6px;gap:8px;border-radius:13px}
   .float-card small{font-size:10px}
   .logo-tile{width:28px;height:28px;border-radius:8px}
@@ -696,3 +718,5 @@ html:not(.motion) *,html:not(.motion) *::before,html:not(.motion) *::after{anima
   .footer-links{gap:56px}
   .scroll-cue{display:none}
 }
+.motion .device-screen .lx{animation:lx-in 1.2s var(--ease) 2.5s backwards}
+@keyframes lx-in{from{opacity:0;scale:1.05;filter:blur(6px)}}
