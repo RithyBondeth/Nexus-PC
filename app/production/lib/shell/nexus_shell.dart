@@ -473,6 +473,14 @@ class _DockBar extends StatelessWidget {
                       data: theme.navigationBarTheme.copyWith(
                         backgroundColor: Colors.transparent,
                         indicatorColor: Colors.transparent,
+                        // The sliding pill is the tap feedback, so no ripple
+                        // or press wash; keyboard and controller focus still
+                        // shows.
+                        overlayColor: WidgetStateProperty.resolveWith(
+                          (states) => states.contains(WidgetState.focused)
+                              ? scheme.secondary.withValues(alpha: 0.18)
+                              : Colors.transparent,
+                        ),
                         height: 66,
                         iconTheme: WidgetStateProperty.resolveWith(
                           (states) => IconThemeData(
@@ -500,12 +508,17 @@ class _DockBar extends StatelessWidget {
                         child: MediaQuery.removePadding(
                           context: context,
                           removeBottom: true,
-                          child: NavigationBar(
-                            selectedIndex: selected,
-                            onDestinationSelected: onSelected,
-                            labelBehavior:
-                                NavigationDestinationLabelBehavior.alwaysShow,
-                            destinations: destinations,
+                          child: Theme(
+                            data: theme.copyWith(
+                              splashFactory: NoSplash.splashFactory,
+                            ),
+                            child: NavigationBar(
+                              selectedIndex: selected,
+                              onDestinationSelected: onSelected,
+                              labelBehavior:
+                                  NavigationDestinationLabelBehavior.alwaysShow,
+                              destinations: destinations,
+                            ),
                           ),
                         ),
                       ),
