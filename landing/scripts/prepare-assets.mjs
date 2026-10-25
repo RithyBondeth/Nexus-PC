@@ -12,9 +12,9 @@ for (const weight of [300, 400, 500, 700]) {
   await copyFile(new URL(`node_modules/@fontsource/ubuntu/files/ubuntu-latin-${weight}-normal.woff2`, base), new URL(`ubuntu-${weight}.woff2`, dest));
 }
 await copyFile(new URL('node_modules/@fontsource/ubuntu-mono/files/ubuntu-mono-latin-400-normal.woff2', base), new URL('ubuntu-mono-400.woff2', dest));
-const icons = ['arrow-up-right', 'arrow-right', 'game-controller', 'hand-tap', 'plus', 'check', 'sun', 'moon', 'list', 'x', 'github-logo', 'folder-simple', 'shield-check', 'arrows-out-simple', 'cloud', 'magnifying-glass', 'wifi-high', 'battery-high', 'cell-signal-full', 'file-zip', 'hash'];
+const icons = ['arrow-up-right', 'arrow-right', 'game-controller', 'hand-tap', 'check', 'sun', 'moon', 'list', 'x', 'github-logo', 'folder-simple', 'shield-check', 'arrows-out-simple', 'cloud', 'wifi-high', 'battery-high', 'cell-signal-full', 'file-zip', 'house', 'house-fill', 'squares-four', 'squares-four-fill', 'cpu', 'cpu-fill', 'gear-six', 'gear-six-fill', 'folder-plus', 'play-fill', 'wrench', 'shield', 'stack', 'sim-card', 'device-mobile'];
 for (const name of icons) {
-  await copyFile(new URL(`node_modules/@phosphor-icons/core/assets/regular/${name}.svg`, base), new URL(`${name}.svg`, dest));
+  await copyFile(new URL(`node_modules/@phosphor-icons/core/assets/${name.endsWith('-fill') ? 'fill' : 'regular'}/${name}.svg`, base), new URL(`${name}.svg`, dest));
 }
 const brands = new URL('brands/', dest);
 await rm(brands, { recursive: true, force: true });
