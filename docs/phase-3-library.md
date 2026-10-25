@@ -161,3 +161,67 @@ device data, dark theme and Back navigation. Report:
 `app/production/build/shell-device.4npGDH/`. The normal `lib/main.dart` debug APK
 was rebuilt and restored after this integration run.
 Release signing and Windows runtime integration are still absent.
+
+## Physical Xiaomi acceptance
+
+Status: pending. Fill in each blank as the check is run; leave a result blank
+rather than guessing. Record failures with the observed behavior and logcat excerpt.
+
+- Date: ____
+- Device: Xiaomi 17 Pro, serial ____
+- HyperOS version: ____ (Android ____, security patch ____)
+- Build: commit ____, normal `lib/main.dart` debug ARM64 APK
+- Tester: ____
+
+Enable USB debugging, "Install via USB" and "USB debugging (Security settings)"
+in Developer options before running the scripts.
+
+### Automated checks
+
+Build the normal debug APK first, from `app/production`:
+
+```sh
+flutter build apk --debug --target-platform android-arm64
+```
+
+| Check | Command | Result | Evidence |
+|---|---|---|---|
+| A. Native storage/recovery (14 checks) | `ADB=/path/to/adb bash tools/run-library-storage-check.sh SERIAL` | ____ | `docs/evidence/phase-3-xiaomi17pro-storage.json` |
+| B. Shell integration (tabs, dark theme, Back) | `ADB=/path/to/adb bash tools/run-shell-device-check.sh SERIAL` | ____ | `docs/evidence/phase-3-xiaomi17pro-shell.json` |
+
+Check B installs the integration-test APK. Rebuild and reinstall the normal debug
+APK before the manual walkthrough.
+
+### Manual walkthrough
+
+Prepare a ZIP holding two executable candidates and a text file, and a folder
+with the same contents. Synthetic PE headers or two builds of
+`test/windows/smoke.c` are sufficient; these are not game-compatibility checks.
+
+| # | Step | Expected | Result |
+|---|---|---|---|
+| 1 | Import the ZIP through the system picker | Progress shown; two candidates listed | ____ |
+| 2 | Select an executable, save, swipe from Recents, reopen | Record and selection persist | ____ |
+| 3 | Import the identical folder | Duplicate rejected; existing record unchanged | ____ |
+| 4 | Add a distinct text file to the folder and import it | Import succeeds through its read grant | ____ |
+| 5 | Edit the title, select the second executable, save | List refreshes; architecture and copyable SHA-256 shown | ____ |
+| 6 | Open a picker and back out | No new record published | ____ |
+| 7 | Confirm removal of the folder's imported copy | Only the ZIP record remains; source folder/ZIP unchanged in Files | ____ |
+| 8 | Search by title with three or more records | Literal matches only; paging intact | ____ |
+| 9 | Start a large import and cancel it | No partial record published | ____ |
+| 10 | Maximum font size, dark and light theme, landscape | Layout readable; no clipped controls | ____ |
+
+### Stress cases
+
+| # | Case | Expected | Result |
+|---|---|---|---|
+| S1 | Import from a third-party provider (Google Drive, Xiaomi File Manager) | Import succeeds or fails visibly; no persisted source URI | ____ |
+| S2 | Swipe the app away or reboot mid-import | No published partial copy; cold start recovers and imports work again | ____ |
+| S3 | Import a ZIP of 1 GB or more | Progress stays responsive; no crash, memory kill or thermal shutdown | ____ |
+
+### Sign-off
+
+- [ ] Checks A and B pass with fresh reports committed under `docs/evidence`.
+- [ ] Manual steps 1–10 and stress cases S1–S3 pass, or failures are filed as issues.
+- [ ] Normal `lib/main.dart` APK reinstalled on the device after the run.
+- [ ] Final-head CI and review pass; the acceptance boxes above are updated.
