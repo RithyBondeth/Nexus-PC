@@ -124,7 +124,14 @@ class _NexusShellState extends State<NexusShell> {
               backgroundColor: Colors.transparent,
               // Pages scroll beneath the docked bar; they pad for it.
               extendBody: !wide,
-              appBar: _TopBar(controller: controller, wide: wide),
+              // Heroes run edge to edge beneath the scrimmed top bar.
+              extendBodyBehindAppBar: true,
+              appBar: _TopBar(
+                controller: controller,
+                wide: wide,
+                // Home and Library open with a dark hero beneath the bar.
+                overHero: selected <= 1,
+              ),
               body: SafeArea(
                 top: false,
                 bottom: false,
@@ -161,16 +168,30 @@ class _NexusShellState extends State<NexusShell> {
 
 /// SteamOS-style header: a wordmark on the left and live status on the right.
 class _TopBar extends StatelessWidget implements PreferredSizeWidget {
-  const _TopBar({required this.controller, required this.wide});
+  const _TopBar({
+    required this.controller,
+    required this.wide,
+    required this.overHero,
+  });
   final ShellController controller;
   final bool wide;
+
+  /// Uses light text over a dark scrim to match the hero's art.
+  final bool overHero;
 
   @override
   // Shorter beside the side menu, where landscape height is scarce.
   Size get preferredSize => Size.fromHeight(wide ? 52 : 60);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => overHero
+      ? Theme(
+          data: nexusTheme(Brightness.dark),
+          child: Builder(builder: _bar),
+        )
+      : _bar(context);
+
+  Widget _bar(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final state = controller.statusError == null
@@ -187,8 +208,22 @@ class _TopBar extends StatelessWidget implements PreferredSizeWidget {
       null when controller.statusError != null => 'Status unknown',
       null => 'Checking…',
     };
+    final fade = scheme.surfaceContainerLowest;
     return AppBar(
       toolbarHeight: wide ? 52 : 60,
+      // A scrim instead of a solid bar: art shows through at the top while
+      // the title and status stay readable over any page.
+      flexibleSpace: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [fade.withValues(alpha: 0.92), fade.withValues(alpha: 0)],
+            ),
+          ),
+        ),
+      ),
       titleSpacing: 20,
       title: Row(
         children: [
@@ -251,7 +286,12 @@ class _SideMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 0, 12),
+      padding: EdgeInsets.fromLTRB(
+        12,
+        MediaQuery.paddingOf(context).top,
+        0,
+        12,
+      ),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: scheme.surfaceContainer.withValues(alpha: 0.72),

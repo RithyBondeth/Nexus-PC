@@ -217,11 +217,16 @@ void main() {
       ];
     await tester.pumpWidget(NexusApp(platform: platform, libraryApi: api));
     await tester.pumpAndSettle();
-    expect(find.text('RECENTLY ADDED'), findsOneWidget);
-    expect(find.text('Set up game'), findsOneWidget);
-    expect(find.text('2 games'), findsOneWidget);
+    // The hero features the newest game; picking a cover features it.
+    expect(find.text('NEWEST'), findsOneWidget);
+    expect(find.text('SET UP'), findsOneWidget);
+    expect(find.text('2 games'), findsWidgets);
     expect(find.text('YOUR GAMES'), findsOneWidget);
-    expect(find.text('Older'), findsOneWidget);
+    await tester.tap(find.text('Older'));
+    await tester.pumpAndSettle();
+    expect(find.text('OLDER'), findsOneWidget);
+    expect(find.text('PLAY'), findsOneWidget);
+    expect(find.text('NEWEST'), findsNothing);
     await tester.tap(find.text('See all'));
     await tester.pumpAndSettle();
     expect(find.text('All games · 2'), findsOneWidget);

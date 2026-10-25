@@ -73,93 +73,77 @@ class _LibraryPageState extends State<LibraryPage> with WidgetsBindingObserver {
       return ShellPage(
         eyebrow: 'Games',
         title: 'Your library',
-        description:
-            'Import a DRM-free game folder or ZIP as a private copy. Keep Nexus-PC open while copying. Launching requires the experimental Windows runtime build.',
+        showTitle: false,
+        hero: _LibraryHero(
+          art: controller.games.isEmpty ? null : controller.games.first.title,
+          total: controller.total,
+          ready: controller.games
+              .where((game) => game.executableRelativePath != null)
+              .length,
+          onImport: controller.canImport ? controller.begin : null,
+        ),
+        description: '',
         children: [
-          SectionCard(
-            title: 'Add a game',
-            icon: Icons.add_box_outlined,
-            children: [
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: [
-                  FilledButton.icon(
-                    onPressed: controller.canImport
-                        ? () => controller.begin(ImportKind.folder)
-                        : null,
-                    icon: const Icon(Icons.create_new_folder_outlined),
-                    label: const Text('Import folder'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: controller.canImport
-                        ? () => controller.begin(ImportKind.zip)
-                        : null,
-                    icon: const Icon(Icons.folder_zip_outlined),
-                    label: const Text('Import ZIP'),
-                  ),
-                ],
-              ),
-              AnimatedSize(
-                duration: NexusMotion.medium,
-                curve: NexusMotion.curve,
-                alignment: Alignment.topCenter,
-                child: !showProgress
-                    ? const SizedBox(width: double.infinity)
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceContainerLow,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Semantics(
-                                  liveRegion: true,
-                                  child: Text(
-                                    controller.starting
-                                        ? 'Opening the system picker…'
-                                        : controller.progress!.message,
-                                    style: theme.textTheme.titleSmall,
-                                  ),
-                                ),
-                                if (controller.busy) ...[
-                                  const SizedBox(height: 12),
-                                  const LinearProgressIndicator(
-                                    minHeight: 6,
-                                    semanticsLabel: 'Import in progress',
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    '${formatFileCount(controller.progress?.filesCopied ?? 0)} · ${formatLibraryBytes(controller.progress?.bytesCopied ?? 0)} copied',
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const NoteText(
-                                    'Your original files stay at their source.',
-                                    icon: Icons.shield_outlined,
-                                  ),
-                                ],
-                                if (controller.canCancel) ...[
-                                  const SizedBox(height: 12),
-                                  OutlinedButton.icon(
-                                    onPressed: controller.cancel,
-                                    icon: const Icon(Icons.close),
-                                    label: const Text('Cancel import'),
-                                  ),
-                                ],
-                              ],
-                            ),
+          AnimatedSize(
+            duration: NexusMotion.medium,
+            curve: NexusMotion.curve,
+            alignment: Alignment.topCenter,
+            child: !showProgress
+                ? const SizedBox(width: double.infinity)
+                : Padding(
+                    padding: const EdgeInsets.only(bottom: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        ],
-                      ),
-              ),
-            ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Semantics(
+                                liveRegion: true,
+                                child: Text(
+                                  controller.starting
+                                      ? 'Opening the system picker…'
+                                      : controller.progress!.message,
+                                  style: theme.textTheme.titleSmall,
+                                ),
+                              ),
+                              if (controller.busy) ...[
+                                const SizedBox(height: 12),
+                                const LinearProgressIndicator(
+                                  minHeight: 6,
+                                  semanticsLabel: 'Import in progress',
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  '${formatFileCount(controller.progress?.filesCopied ?? 0)} · ${formatLibraryBytes(controller.progress?.bytesCopied ?? 0)} copied',
+                                  style: theme.textTheme.bodyMedium,
+                                ),
+                                const SizedBox(height: 8),
+                                const NoteText(
+                                  'Your original files stay at their source.',
+                                  icon: Icons.shield_outlined,
+                                ),
+                              ],
+                              if (controller.canCancel) ...[
+                                const SizedBox(height: 12),
+                                OutlinedButton.icon(
+                                  onPressed: controller.cancel,
+                                  icon: const Icon(Icons.close),
+                                  label: const Text('Cancel import'),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
           TextField(
             enabled: !controller.busy,
@@ -384,4 +368,99 @@ class _GameGrid extends StatelessWidget {
       );
     },
   );
+}
+
+/// A blurred wash of your newest cover behind a large title and counts.
+class _LibraryHero extends StatelessWidget {
+  const _LibraryHero({
+    required this.art,
+    required this.total,
+    required this.ready,
+    required this.onImport,
+  });
+  final String? art;
+  final int total;
+  final int ready;
+
+  /// Null while an import runs or cleanup is pending.
+  final ValueChanged<ImportKind>? onImport;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final import = onImport;
+    return DarkHero(
+      art: art == null
+          ? const GameArtwork(title: 'Library', radius: 0, showTitle: false)
+          : ArtBackdrop(title: art, fade: NexusPalette.dark.backdrop),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          MediaQuery.paddingOf(context).top + 16,
+          20,
+          20,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'GAMES',
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: scheme.secondary,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text('Your library', style: theme.textTheme.displaySmall),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                StatusPill(
+                  label: total == 1 ? '1 game' : '$total games',
+                  color: scheme.secondary,
+                  icon: Icons.grid_view_rounded,
+                ),
+                if (total > 0)
+                  StatusPill(
+                    label: '$ready ready to play',
+                    color: scheme.primary,
+                    icon: Icons.play_arrow_rounded,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Private copies of your DRM-free games. Keep Nexus-PC open while importing.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                FilledButton.icon(
+                  onPressed: import == null
+                      ? null
+                      : () => import(ImportKind.folder),
+                  icon: const Icon(Icons.create_new_folder_outlined),
+                  label: const Text('Import folder'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: import == null
+                      ? null
+                      : () => import(ImportKind.zip),
+                  icon: const Icon(Icons.folder_zip_outlined),
+                  label: const Text('Import ZIP'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -130,9 +130,15 @@ Future<void> tapVisible(WidgetTester tester, String text) async {
     await tester.ensureVisible(target.last);
   }
   await tester.pumpAndSettle();
-  await tester.ensureVisible(target.last);
-  await tester.pumpAndSettle();
+  await centre(tester, target.last);
   await tester.tap(target.last);
+  await tester.pumpAndSettle();
+}
+
+/// Pages scroll beneath a transparent top bar and pinned bottom bars, so
+/// targets are brought to mid-screen rather than to an edge before tapping.
+Future<void> centre(WidgetTester tester, Finder target) async {
+  await Scrollable.ensureVisible(tester.element(target), alignment: 0.5);
   await tester.pumpAndSettle();
 }
 
@@ -207,10 +213,16 @@ void main() {
       await mount(tester, api);
       await tapVisible(tester, 'Test game');
       await tester.enterText(find.byType(TextField), 'Renamed');
+      await centre(tester, find.byType(DropdownButtonFormField<String>));
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('bin/other.exe').last);
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('hash-two'),
+        200,
+        scrollable: pageScrollable(),
+      );
       expect(find.text('hash-two'), findsOneWidget);
       await tapVisible(tester, 'Save details');
       expect(api.saves, 1);
@@ -310,7 +322,7 @@ void main() {
         200,
         scrollable: pageScrollable(),
       );
-      await tester.pumpAndSettle();
+      await centre(tester, find.byType(DropdownButtonFormField<String>));
       await tester.tap(find.byType(DropdownButtonFormField<String>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('bin/other.exe').last);

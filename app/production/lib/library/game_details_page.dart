@@ -354,16 +354,25 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: const Text('Game details'),
-            automaticallyImplyLeading: !saving && !requestingRuntime,
+          extendBodyBehindAppBar: true,
+          // The bar sits over the dark cinematic banner in either theme.
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: Theme(
+              data: nexusTheme(Brightness.dark),
+              child: AppBar(
+                title: const Text('Game details'),
+                automaticallyImplyLeading: !saving && !requestingRuntime,
+              ),
+            ),
           ),
           bottomNavigationBar: canLaunch ? launchBar(context) : null,
           body: SafeArea(
+            top: false,
             bottom: !canLaunch,
             child: ShellPage(
               showTitle: details == null && widget.initialTitle == null,
-              banner: switch (details?.game.title ?? widget.initialTitle) {
+              hero: switch (details?.game.title ?? widget.initialTitle) {
                 final coverTitle? => _GameBanner(
                   title: coverTitle,
                   heroTag: 'game-art-${widget.gameId}',
@@ -535,7 +544,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   }
 }
 
-/// The wide cover at the top of a game page, with the title laid over it.
+/// The cinematic top of a game page: edge-to-edge art under the back button,
+/// fading into the page, with the title as a poster headline.
 class _GameBanner extends StatelessWidget {
   const _GameBanner({
     required this.title,
@@ -551,67 +561,66 @@ class _GameBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            GameArtwork(
-              title: title,
-              heroTag: heroTag,
-              radius: 0,
-              showTitle: false,
-            ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.35, 1],
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.8),
-                  ],
-                ),
+    final width = MediaQuery.sizeOf(context).width;
+    return DarkHero(
+      art: GameArtwork(
+        title: title,
+        heroTag: heroTag,
+        radius: 0,
+        showTitle: false,
+      ),
+      child: SizedBox(
+        height: (width < 600 ? width * 0.78 : width * 0.4).clamp(260.0, 480.0),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: ExcludeSemantics(
+              child: Builder(
+                builder: (context) {
+                  final scheme = Theme.of(context).colorScheme;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (loaded)
+                        StatusPill(
+                          label: ready ? 'Ready' : 'Needs setup',
+                          color: ready ? scheme.primary : scheme.tertiary,
+                          icon: ready
+                              ? Icons.check_circle_rounded
+                              : Icons.build_outlined,
+                        ),
+                      const SizedBox(height: 10),
+                      Text(
+                        title.toUpperCase(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.displaySmall?.copyWith(
+                          color: Colors.white,
+                          fontSize: 38,
+                          letterSpacing: 1.4,
+                          height: 1.0,
+                          shadows: [
+                            Shadow(
+                              color: GameArtwork.accentOf(
+                                title,
+                              ).withValues(alpha: 0.8),
+                              blurRadius: 24,
+                            ),
+                            const Shadow(
+                              color: Color(0x99000000),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
-            Positioned(
-              left: 18,
-              right: 18,
-              bottom: 16,
-              child: ExcludeSemantics(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (loaded)
-                      StatusPill(
-                        label: ready ? 'Ready' : 'Needs setup',
-                        color: ready ? scheme.primary : scheme.tertiary,
-                        icon: ready
-                            ? Icons.check_circle_rounded
-                            : Icons.build_outlined,
-                      ),
-                    const SizedBox(height: 8),
-                    Text(
-                      title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        shadows: const [
-                          Shadow(color: Color(0x99000000), blurRadius: 12),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -628,6 +637,7 @@ class _StatStrip extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
       decoration: BoxDecoration(
         color: scheme.surfaceContainer.withValues(alpha: 0.8),
