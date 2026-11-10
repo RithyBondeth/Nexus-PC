@@ -1,33 +1,52 @@
 # 🚀 Nexus-PC (Stratum Engine)
+
 > **The Zero-Configuration, Plug-and-Play PC Game Runner for Android**
 
 [![Flutter](https://img.shields.io/badge/Frontend-Flutter-blue?logo=flutter)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Platform-Android_12%2B-green?logo=android)](https://developer.android.com)
-[![Status](https://img.shields.io/badge/Status-Active_Development-orange)]()
+[![Status](https://img.shields.io/badge/Status-Active_Development-orange)](<>)
 
 **Nexus-PC** is an Android application, in active development, that aims to run DRM-free Windows PC games without manual Wine prefixes, driver installation or container configuration. Import a game folder or ZIP; the app keeps a validated private copy and, in the experimental runtime build, launches it through pinned Wine/Box64.
 
 ---
 
+<!-- product-images:start -->
+
+## Product preview
+
+<p align="center">
+  <img src="docs/product-images/hero.png" alt="Nexus-PC — An Android home for DRM-free Windows games and local imports." width="100%">
+</p>
+
+<table>
+<tr>
+  <td width="33%"><img src="docs/product-images/feature-01.png" alt="A library that stays local. — Import a game folder or ZIP into a validated, private local copy." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-02.png" alt="Import with clear boundaries. — Imports are checked, limited, cancellable, and recoverable." width="100%"></td>
+  <td width="33%"><img src="docs/product-images/feature-03.png" alt="An honest experiment. — The optional Wine and Box64 build is experimental; general game compatibility is unverified." width="100%"></td>
+</tr>
+</table>
+
+<!-- product-images:end -->
+
 ## ✨ Key Features
 
 Available now:
 
-* **📚 Local game library:** Folder and ZIP imports through the Android system picker into app-private copies, backed by Android SQLite (not Isar; see [ADR 0002](docs/architecture/0002-local-library.md)). Paged title search, executable selection, title edits, SHA-256 details, duplicate rejection and confirmed removal. Original sources are never modified.
-* **🛡️ Bounded, safe imports:** Path traversal, alias, link, ZIP64/encryption and compression-bomb checks; size/entry limits; progress and cancellation; interruption recovery.
-* **📱 Flutter shell:** Adaptive Home, Library, Device and Settings screens with accessible layouts and System/Light/Dark appearance.
-* **🔍 Device profile:** Typed native bridge reporting Android API, SoC, ABIs, RAM and the stock Vulkan renderer/version.
+- **📚 Local game library:** Folder and ZIP imports through the Android system picker into app-private copies, backed by Android SQLite (not Isar; see [ADR 0002](docs/architecture/0002-local-library.md)). Paged title search, executable selection, title edits, SHA-256 details, duplicate rejection and confirmed removal. Original sources are never modified.
+- **🛡️ Bounded, safe imports:** Path traversal, alias, link, ZIP64/encryption and compression-bomb checks; size/entry limits; progress and cancellation; interruption recovery.
+- **📱 Flutter shell:** Adaptive Home, Library, Device and Settings screens with accessible layouts and System/Light/Dark appearance.
+- **🔍 Device profile:** Typed native bridge reporting Android API, SoC, ABIs, RAM and the stock Vulkan renderer/version.
 
 Experimental (opt-in build, emulator-tested only):
 
-* **🧪 Windows runtime:** Pinned Wine 10.10 and a source-built Box64 interpreter (no JIT) launch saved x86-64 executables from the library at target API 36 on 4 KB and 16 KB-page ARM64 hosts. Only Windows GDI titles have been tested; Direct3D, DXVK/Turnip, sound and controllers are unverified. Games run with the app's UID — run trusted games only. The ordinary APK excludes this runtime.
+- **🧪 Windows runtime:** Pinned Wine 10.10 and a source-built Box64 interpreter (no JIT) launch saved x86-64 executables from the library at target API 36 on 4 KB and 16 KB-page ARM64 hosts. Only Windows GDI titles have been tested; Direct3D, DXVK/Turnip, sound and controllers are unverified. Games run with the app's UID — run trusted games only. The ordinary APK excludes this runtime.
 
 Planned (not yet implemented):
 
-* **🧠 Cloud profile matching** of device chipsets to community-verified execution flags.
-* **🌐 Server-side SoC alias normalization** for new Snapdragon tiers.
-* **🎮 Touch and controller input overlays.**
-* **🖥️ Mesa Turnip / DXVK graphics** for Direct3D games.
+- **🧠 Cloud profile matching** of device chipsets to community-verified execution flags.
+- **🌐 Server-side SoC alias normalization** for new Snapdragon tiers.
+- **🎮 Touch and controller input overlays.**
+- **🖥️ Mesa Turnip / DXVK graphics** for Direct3D games.
 
 ## Implementation status
 
